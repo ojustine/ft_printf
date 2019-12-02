@@ -10,6 +10,8 @@
 # include <limits.h>
 # include <float.h>
 # include <stdlib.h>
+# include <stdint.h>
+# include <sys/select.h>
 
 /*
 ** ====================== Consts and masks definition ==========================
@@ -44,7 +46,7 @@ typedef long				t_int32;
 typedef float				t_float32;
 typedef double				t_float64;
 
-# if LONG_LONG_MAX > LONG_MAX
+# if LLONG_MAX >= LONG_MAX && LONG_MAX > INT_MAX
 typedef long long			t_int64;
 typedef unsigned long long	t_uint64;
 #  define IS_LONG_LONG 1
@@ -74,8 +76,9 @@ typedef struct				s_format_spec
 	int 					fd;
 	char 					buff[BUFF_SIZE];
 	size_t					buff_index;
+	char 					*str_to_write;
 	va_list					valist;
-	char 					*format;
+	const char 				*format;
 
 
 }							t_format_spec;
