@@ -1,16 +1,28 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <wchar.h>
+#include <wctype.h>
 #include "ft_printf.h"
 
-int main() {
-	_Bool b = 0;
-	t_float128 l = LDBL_MAX;
-	wchar_t t = '\2';
-	long s = INT_MAX + 1;
+int 				ft_printf(const char *format, ...);
 
+int main()
+{
+	_Bool b = -1;
+	int c;
+	t_float80 l = (t_float80)1.7e+308;
+	l *= l;
+	//long double ll = 1.7e+4932;
+//	t_float80 l = LDBL_MAX;
+
+	//printf("%LG\n", l);
 	printf("%LG\n", l);
-	printf("%d\n", INT_MAX);
-	printf("%d\n", FD_SETSIZE);
+	printf("%zu\n", sizeof(b));
 //	ft_memset(ss, 65, 10);
+	char dst[20];
+	ft_memset(dst, 0, 20);
+	char *src = "abcdef12345678910";
+	ft_memcpy(dst, src, 14);
+	printf("%s\n\n", dst);
+	c = ft_printf("abcdef12345678910\n");
+	printf("%d\n", c);
 }

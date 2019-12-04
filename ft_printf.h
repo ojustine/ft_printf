@@ -1,16 +1,29 @@
-#ifndef FT_PRINTF
-#define FT_PRINTF
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ojustine <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/03 12:18:39 by ojustine          #+#    #+#             */
+/*   Updated: 2019/12/03 12:18:44 by ojustine         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
 /*
 ** ========================== External headers =================================
 */
 
 # include <stdarg.h>
+# include <unistd.h>
 # include <errno.h>
 # include <limits.h>
 # include <float.h>
 # include <stdlib.h>
-# include <stdint.h>
+//# include <stdint.h>
 # include <sys/select.h>
 
 /*
@@ -33,33 +46,38 @@
 # define SIZE_SIZE_T		(1 << 13)
 # define SIZE_PTR			(1 << 14)
 # define SIZE_LONG_DBL		(1 << 15)
-# define BUFF_SIZE			64
+# define BUFF_SIZE			512
+
+# ifdef __GNUC__
+#  if !defined(__GNUC_STDC_INLINE__) && !defined(__GNUC_GNU_INLINE__)
+#   define __GNUC_GNU_INLINE__ 1
+#  endif
+# endif
 
 /*
 ** =========================== Types definition ================================
 */
 
-typedef unsigned short		t_uint16;
-typedef short				t_int16;
-typedef unsigned long 		t_uint32;
-typedef long				t_int32;
+typedef uint8_t				t_uint8;
+typedef int8_t				t_int8;
+typedef uint16_t			t_uint16;
+typedef int16_t				t_int16;
+typedef uint32_t			t_uint32;
+typedef int32_t				t_int32;
+typedef unsigned long long	t_uint64;
+typedef long long			t_int64;
 typedef float				t_float32;
 typedef double				t_float64;
+typedef long double			t_float80;
 
-# if LLONG_MAX >= LONG_MAX && LONG_MAX > INT_MAX
-typedef long long			t_int64;
-typedef unsigned long long	t_uint64;
+# if LLONG_MAX == 9223372036854775807
 #  define IS_LONG_LONG 1
 # else
-typedef t_int32 			t_int64;
-typedef t_uint32			t_uint64;
 #  define IS_LONG_LONG 0
 # endif
-# if LDBL_MAX_EXP > DBL_MAX_EXP
-typedef long double			t_float128;
+# if LDBL_MAX_EXP >= 16384
 #  define IS_LONG_DBL 1
 # else
-typedef t_float64 			t_float128;
 #  define IS_LONG_DBL 0
 # endif
 
@@ -67,21 +85,25 @@ typedef t_float64 			t_float128;
 ** ======================== Structures definition ==============================
 */
 
-typedef struct				s_format_spec
+typedef struct				s_printf_info
 {
 	t_uint16				flags;
 	t_int32					width;
 	t_int32					prec;
-	char 					pad;
-	int 					fd;
-	char 					buff[BUFF_SIZE];
+	char					pad;
+	int						fd;
+	char					buff[BUFF_SIZE + 1];
 	size_t					buff_index;
-	char 					*str_to_write;
+	ssize_t					printed;
+	t_int8					write_to_str : 1;
+	char					*str_to_write;
 	va_list					valist;
-	const char 				*format;
+	const char				*format;
 
-
-}							t_format_spec;
+}							t_printf_info;
 
 void	*ft_memset(void *b, int c, size_t n);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
+void	buffer_n_print(t_printf_info *info, void *data, size_t size);
+void		print_format_arg(t_printf_info *info);
 #endif
