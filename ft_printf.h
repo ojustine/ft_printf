@@ -30,22 +30,22 @@
 ** ====================== Consts and masks definition ==========================
 */
 
-# define FLAG_LEFT_ALIGN	(1 << 0)
-# define FLAG_SHOW_SIGN		(1 << 1)
-# define FLAG_BLANK_SIGN	(1 << 2)
-# define FLAG_ALT_FORM		(1 << 3)
+# define FLAG_LEFT_ALIGN	(1U << 0U)
+# define FLAG_PLUS_SIGN		(1U << 1U)
+# define FLAG_BLANK_SIGN	(1U << 2U)
+# define FLAG_ALT_FORM		(1U << 3U)
 # define FLAG_ZERO_PAD		(1 << 4)
-# define FLAG_GROUP			(1 << 5)
-# define WIDTH_IN_ARG		(1 << 6)
-# define PREC_IN_ARG		(1 << 7)
-# define SIZE_INT16			(1 << 8)
-# define SIZE_INT32			(1 << 9)
-# define SIZE_INT64			(1 << 10)
-# define SIZE_INTMAX		(1 << 11)
-# define SIZE_CHAR			(1 << 12)
-# define SIZE_SIZE_T		(1 << 13)
-# define SIZE_PTR			(1 << 14)
-# define SIZE_LONG_DBL		(1 << 15)
+# define FLAG_GROUP			(1U << 5U)
+# define WIDTH_IN_ARG		(1 << 6)//
+# define PRINT_ARG_BY_NUM	(1 << 7)//
+# define SIZE_SHORT			(1U << 8U)
+# define SIZE_LONG			(1U << 9U)
+# define SIZE_LLONG			(1U << 10U)
+# define SIZE_INTMAX		(1U << 11U)
+# define SIZE_CHAR			(1U << 12U)
+# define SIZE_SIZE_T		(1U << 13U)
+# define SIZE_PTR			(1U << 14U)
+# define SIZE_LONG_DBL		(1U << 15U)
 # define BUFF_SIZE			512
 
 # ifdef __GNUC__
@@ -90,6 +90,7 @@ typedef struct				s_printf_info
 	t_uint16				flags;
 	t_int32					width;
 	t_int32					prec;
+	t_uint32				length;
 	char					pad;
 	int						fd;
 	char					buff[BUFF_SIZE + 1];
