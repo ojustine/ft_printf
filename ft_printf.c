@@ -1,4 +1,3 @@
-#include <mach/machine.h>
 #include "ft_printf.h"
 
 static inline int	do_print(t_printf_info *info)

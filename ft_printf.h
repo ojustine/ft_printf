@@ -23,8 +23,8 @@
 # include <limits.h>
 # include <float.h>
 # include <stdlib.h>
-//# include <stdint.h>
-# include <sys/select.h>
+# include <stdint.h>
+//# include <sys/select.h>
 
 /*
 ** ====================== Consts and masks definition ==========================
@@ -52,6 +52,10 @@
 #  if !defined(__GNUC_STDC_INLINE__) && !defined(__GNUC_GNU_INLINE__)
 #   define __GNUC_GNU_INLINE__ 1
 #  endif
+# endif
+
+# ifndef FD_SETSIZE
+#  define FD_SETSIZE 1024
 # endif
 
 /*

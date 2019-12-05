@@ -1,4 +1,4 @@
-#include <stdlib.h>
+#include <stdint.h>
 
 void	*ft_memset(void *b, int c, size_t n)
 {
