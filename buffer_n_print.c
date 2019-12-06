@@ -5,7 +5,25 @@ static inline void	buffer_flush(t_printf_info *info)
 
 }
 
-inline void			buffer_n_print(t_printf_info *info, void *data, size_t size)
+inline void			put_arg_into_buffer(t_printf_info *info, char *data,
+										size_t size)
+{
+	if (info->width > size)
+	{
+		if (!(info->flags & FLAG_LEFT_ALIGN))
+		{
+			put_in_buffer(info, data, size);
+			while ()
+		}
+		else
+		{
+
+		}
+	}
+	put_in_buffer(info, data, size);
+}
+
+void				put_in_buffer(t_printf_info *info, char *data, size_t size)
 {
 	t_int32		remaining_space;
 	size_t		data_index;

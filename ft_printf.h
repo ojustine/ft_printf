@@ -24,8 +24,12 @@
 # include <float.h>
 # include <stdlib.h>
 # include <stdint.h>
-//# include <sys/select.h>
+# include <string.h>
+# include <wctype.h>
 
+# if defined(_POSIX_VERSION) || defined(__unix__) || defined(__MACH__)
+#  include <sys/select.h>
+# endif
 /*
 ** ====================== Consts and masks definition ==========================
 */
@@ -34,9 +38,9 @@
 # define FLAG_PLUS_SIGN		(1U << 1U)
 # define FLAG_BLANK_SIGN	(1U << 2U)
 # define FLAG_ALT_FORM		(1U << 3U)
-# define FLAG_ZERO_PAD		(1 << 4)
-# define FLAG_GROUP			(1U << 5U)
-# define WIDTH_IN_ARG		(1 << 6)//
+# define FLAG_GROUP			(1U << 4U)
+# define FLAG_TRUNCATE		(1U << 5U)
+# define FLAG_ZERO_PAD		(1U << 6U)
 # define PRINT_ARG_BY_NUM	(1 << 7)//
 # define SIZE_SHORT			(1U << 8U)
 # define SIZE_LONG			(1U << 9U)
@@ -95,7 +99,6 @@ typedef struct				s_printf_info
 	t_int32					width;
 	t_int32					prec;
 	t_uint32				length;
-	char					pad;
 	int						fd;
 	char					buff[BUFF_SIZE + 1];
 	size_t					buff_index;
@@ -109,6 +112,6 @@ typedef struct				s_printf_info
 
 void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
-void	buffer_n_print(t_printf_info *info, void *data, size_t size);
+void	put_in_buffer(t_printf_info *info, char *data, size_t size);
 void		print_format_arg(t_printf_info *info);
 #endif

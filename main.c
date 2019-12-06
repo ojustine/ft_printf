@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <unistd.h>
-#include <wctype.h>
 #include "ft_printf.h"
 
 int 				ft_printf(const char *format, ...);
@@ -16,14 +14,16 @@ int main()
 //	t_float80 l = LDBL_MAX;
 
 	//printf("%LG\n", l);
-	printf("%LG\n", l);
-	printf("%llu\n", sizeof(b));
+	printf("%.1LG\n", l);
+	printf("%lu\n", sizeof(b));
 //	ft_memset(ss, 65, 10);
 	char dst[20];
 	ft_memset(dst, 0, 20);
 	char *src = "abcdef12345678910";
 	ft_memcpy(dst, src, 14);
-	printf("%s\n\n", __FUNCTION__);
+	printf("%s\n", __FUNCTION__);
 	c = ft_printf("%*abcdef12345678910\n", 10);
-	printf("%10d %-d %n %d", -5, c, &c, c);
+	printf("%d %-d %n %d %m\n", -5, c, &c, c);
+	char *sss = "(null)";
+	printf("%-10s", sss);
 }

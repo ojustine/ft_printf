@@ -3,18 +3,18 @@
 static inline int	do_print(t_printf_info *info)
 {
 	size_t		non_format_chars;
-	const char 	*non_format_str_beg;
+	char	 	*non_format_str_beg;
 
 	non_format_chars = 0;
 	while (*info->format)
 	{
-		non_format_str_beg = info->format;
+		non_format_str_beg = (char*)info->format;
 		while (*info->format && *info->format != '%')
 		{
 			non_format_chars++;
 			info->format++;
 		}
-		buffer_n_print(info, (void*)non_format_str_beg, non_format_chars);
+		put_in_buffer(info, non_format_str_beg, non_format_chars);
 		if (!*info->format || !*(++info->format))
 			break ;
 		print_format_arg(info);
