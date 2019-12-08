@@ -1,23 +1,24 @@
 #include "ft_printf.h"
 
-static inline int	do_print(t_printf_info *info)
+static inline int	do_print(register t_printf_info *info)
 {
-	size_t		non_format_chars;
-	char	 	*non_format_str_beg;
+	register size_t		non_format_chars;
+	char	 			*non_format_str_beg;
 
-	non_format_chars = 0;
-	while (*info->format)
+	while (*info->fmt)
 	{
-		non_format_str_beg = (char*)info->format;
-		while (*info->format && *info->format != '%')
+		non_format_chars = 0;
+		non_format_str_beg = (char*)info->fmt;
+		while (*info->fmt && *info->fmt != '%')
 		{
 			non_format_chars++;
-			info->format++;
+			info->fmt++;
 		}
 		put_in_buffer(info, non_format_str_beg, non_format_chars);
-		if (!*info->format || !*(++info->format))
+		if (!*info->fmt || !*(++info->fmt))
 			break ;
-		print_format_arg(info);
+		print_formatted_arg(info);
+		info->fmt++;
 	}
 	write(info->fd, info->buff, info->buff_index);
 	va_end(info->valist);
@@ -32,7 +33,7 @@ int 				ft_dprintf(int fd, const char *format, ...)
 		return (-1);
 	ft_memset(&info, 0, sizeof(t_printf_info));
 	info.fd = fd;
-	info.format = format;
+	info.fmt = format;
 	va_start(info.valist, format);
 	return (do_print(&info));
 }
@@ -43,7 +44,7 @@ int 				ft_sprintf(char *str, const char *format, ...)
 
 	ft_memset(&info, 0, sizeof(t_printf_info));
 	info.fd = 1;
-	info.format = format;
+	info.fmt = format;
 	info.write_to_str = 1;
 	info.str_to_write = str;
 	va_start(info.valist, format);
@@ -56,7 +57,7 @@ int 				ft_printf(const char *format, ...)
 
 	ft_memset(&info, 0, sizeof(t_printf_info));
 	info.fd = 1;
-	info.format = format;
+	info.fmt = format;
 	va_start(info.valist, format);
 	return (do_print(&info));
 }

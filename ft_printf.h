@@ -51,6 +51,7 @@
 # define SIZE_PTR			(1U << 14U)
 # define SIZE_LONG_DBL		(1U << 15U)
 # define BUFF_SIZE			512
+# define BINARY_INT			(sizeof(long long) * 8 + 2)
 
 # ifdef __GNUC__
 #  if !defined(__GNUC_STDC_INLINE__) && !defined(__GNUC_GNU_INLINE__)
@@ -66,7 +67,7 @@
 ** =========================== Types definition ================================
 */
 
-typedef uint8_t				t_uint8;
+typedef uint8_t				t_uint81;
 typedef int8_t				t_int8;
 typedef uint16_t			t_uint16;
 typedef int16_t				t_int16;
@@ -98,20 +99,33 @@ typedef struct				s_printf_info
 	t_uint16				flags;
 	t_int32					width;
 	t_int32					prec;
-	t_uint32				length;
-	int						fd;
+	t_uint16				capitals;
+	t_int32					fd;
 	char					buff[BUFF_SIZE + 1];
 	size_t					buff_index;
-	ssize_t					printed;
+	size_t					printed;
 	t_int8					write_to_str : 1;
 	char					*str_to_write;
 	va_list					valist;
-	const char				*format;
+	const char				*fmt;
 
 }							t_printf_info;
 
 void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
-void	put_in_buffer(t_printf_info *info, char *data, size_t size);
-void		print_format_arg(t_printf_info *info);
+size_t	ft_strlen(const char *s);
+size_t	ft_wstrlen(wchar_t *s);
+void						put_in_buffer(t_printf_info *info, char *data,
+							size_t size);
+void						print_formatted_arg(t_printf_info *info);
+void						put_arg_in_buffer(t_printf_info *info, char *data,
+							size_t size);
+inline t_int32				print_wchar(t_printf_info *info, uint32_t wc,
+							t_int16 is_single);
+inline void					print_string(t_printf_info *info);
+inline void					print_wstring(t_printf_info *info);
+inline void					print_signed_number(t_printf_info *info,
+							t_int16 base);
+inline void					print_unsigned_number(t_printf_info *info,
+							t_int16 base);
 #endif

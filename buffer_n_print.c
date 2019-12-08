@@ -5,28 +5,53 @@ static inline void	buffer_flush(t_printf_info *info)
 
 }
 
-inline void			put_arg_into_buffer(t_printf_info *info, char *data,
+static inline void	padding(t_printf_info *info, size_t size)
+{
+	const char	*zero_pad = "0000";
+	const char	*blank_pad = "    ";
+	char		*curr_pad;
+
+	curr_pad = (char*)((info->flags & FLAG_ZERO_PAD) ? zero_pad : blank_pad);
+	while (size >= 4)
+	{
+		put_in_buffer(info, curr_pad, 4);
+		size -= 4;
+	}
+	while (size--)
+		put_in_buffer(info, curr_pad, 1);
+}
+
+void				put_arg_in_buffer(t_printf_info *info, char *data,
 										size_t size)
 {
-	if (info->width > size)
+	t_int32		pad_num;
+	t_uint32	to_print;
+
+	if (info->flags & FLAG_TRUNCATE)
+		to_print = (info->prec < size) ? info->prec : size;
+	else
+		to_print = size;
+	if ((pad_num = info->width - to_print) > 0)
 	{
-		if (!(info->flags & FLAG_LEFT_ALIGN))
+		if (info->flags & FLAG_LEFT_ALIGN)
 		{
-			put_in_buffer(info, data, size);
-			while ()
+			put_in_buffer(info, data, to_print);
+			padding(info, pad_num);
 		}
 		else
 		{
-
+			padding(info, pad_num);
+			put_in_buffer(info, data, to_print);
 		}
 	}
-	put_in_buffer(info, data, size);
+	else
+		put_in_buffer(info, data, to_print);
 }
 
 void				put_in_buffer(t_printf_info *info, char *data, size_t size)
 {
-	t_int32		remaining_space;
-	size_t		data_index;
+	register t_int32		remaining_space;
+	register size_t			data_index;
 
 	data_index = 0;
 	while ((remaining_space = BUFF_SIZE - info->buff_index) < (int)size)
