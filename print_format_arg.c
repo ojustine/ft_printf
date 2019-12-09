@@ -10,7 +10,7 @@ static inline void	get_width_n_precision(t_printf_info *info)
 		info->width = va_arg(info->valist, t_int32);
 		++info->fmt;
 		if (info->width < 0 && (info->width = -info->width))
-			info->flags &= FLAG_LEFT_ALIGN;
+			info->flags |= FLAG_LEFT_ALIGN;
 	}
 	if (*info->fmt == '.')
 	{
@@ -59,8 +59,8 @@ static inline void	print_arg_by_type(t_printf_info *info)
 	if (*info->fmt == 'd' || *info->fmt == 'i' || *info->fmt == 'D')
 		print_signed_number(info, 10);
 	else if (*info->fmt == 's')
-		(info->flags & SIZE_LONG || info->flags & SIZE_LLONG)
-		? print_wstring(info) : print_string(info);
+		print_string(info, (info->flags & SIZE_LONG
+										|| info->flags & SIZE_LLONG));
 	else if (*info->fmt == 'u' || *info->fmt == 'U')
 		print_unsigned_number(info, 10);
 	else if (*info->fmt == 'o' || *info->fmt == 'O')
@@ -72,10 +72,9 @@ static inline void	print_arg_by_type(t_printf_info *info)
 //	else if (*info->fmt == 'f' || *info->fmt == 'F')
 //		(info->flags & F_APP_PRECI && !p->precision) ? pf_putnb(p) : pf_putdouble(p);
 	else if (*info->fmt == 'c' || *info->fmt == 'C')
-		(*info->fmt == 'c') ? (put_arg_in_buffer(info, (char*)info->fmt,1))
-		: print_wchar(info, *info->fmt, 1);
+		print_char(info, (*info->fmt == 'C'));
 	else if (*info->fmt == 'S')
-		print_wstring(info);
+		print_string(info, 1);
 //	else if (*info->fmt == 'p')
 //		print_pointer_address(p);
 //	else if (*info->fmt == 'n')
@@ -88,11 +87,12 @@ static inline void	print_arg_by_type(t_printf_info *info)
 //		cs_not_found(p);
 }
 
-void				print_formatted_arg(t_printf_info *info)
+void				get_formatted_arg(t_printf_info *info)
 {
 	info->flags = 0;
 	info->width = 0;
 	info->prec = 6;
+	info->capitals = 0;
 	while (*info->fmt)
 	{
 		if (*info->fmt == '#')

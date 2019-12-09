@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-static inline int	do_print(register t_printf_info *info)
+static inline int	entry(register t_printf_info *info)
 {
 	register size_t		non_format_chars;
 	char	 			*non_format_str_beg;
@@ -14,10 +14,10 @@ static inline int	do_print(register t_printf_info *info)
 			non_format_chars++;
 			info->fmt++;
 		}
-		put_in_buffer(info, non_format_str_beg, non_format_chars);
+		do_print(info, non_format_str_beg, non_format_chars);
 		if (!*info->fmt || !*(++info->fmt))
 			break ;
-		print_formatted_arg(info);
+		get_formatted_arg(info);
 		info->fmt++;
 	}
 	write(info->fd, info->buff, info->buff_index);
@@ -35,7 +35,7 @@ int 				ft_dprintf(int fd, const char *format, ...)
 	info.fd = fd;
 	info.fmt = format;
 	va_start(info.valist, format);
-	return (do_print(&info));
+	return (entry(&info));
 }
 
 int 				ft_sprintf(char *str, const char *format, ...)
@@ -48,7 +48,7 @@ int 				ft_sprintf(char *str, const char *format, ...)
 	info.write_to_str = 1;
 	info.str_to_write = str;
 	va_start(info.valist, format);
-	return (do_print(&info));
+	return (entry(&info));
 }
 
 int 				ft_printf(const char *format, ...)
@@ -59,5 +59,5 @@ int 				ft_printf(const char *format, ...)
 	info.fd = 1;
 	info.fmt = format;
 	va_start(info.valist, format);
-	return (do_print(&info));
+	return (entry(&info));
 }

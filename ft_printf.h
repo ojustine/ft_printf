@@ -30,6 +30,7 @@
 # if defined(_POSIX_VERSION) || defined(__unix__) || defined(__MACH__)
 #  include <sys/select.h>
 # endif
+
 /*
 ** ====================== Consts and masks definition ==========================
 */
@@ -51,7 +52,8 @@
 # define SIZE_PTR			(1U << 14U)
 # define SIZE_LONG_DBL		(1U << 15U)
 # define BUFF_SIZE			512
-# define BINARY_INT			(sizeof(long long) * 8 + 2)
+# define BIN_MAX_INT		(sizeof(long long) * 8 + 2)
+# define MAX(a,b)			(((a) > (b)) ? (a) : (b))
 
 # ifdef __GNUC__
 #  if !defined(__GNUC_STDC_INLINE__) && !defined(__GNUC_GNU_INLINE__)
@@ -115,17 +117,15 @@ void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 size_t	ft_strlen(const char *s);
 size_t	ft_wstrlen(wchar_t *s);
-void						put_in_buffer(t_printf_info *info, char *data,
-							size_t size);
-void						print_formatted_arg(t_printf_info *info);
-void						put_arg_in_buffer(t_printf_info *info, char *data,
-							size_t size);
-inline t_int32				print_wchar(t_printf_info *info, uint32_t wc,
-							t_int16 is_single);
-inline void					print_string(t_printf_info *info);
-inline void					print_wstring(t_printf_info *info);
-inline void					print_signed_number(t_printf_info *info,
+void						do_print(t_printf_info *info, char *data,
+									 size_t size);
+void						get_formatted_arg(t_printf_info *info);
+void						print_char(t_printf_info *info,
+							t_int16 is_wide_char);
+void					print_string(t_printf_info *info,
+							t_int16 is_wide_string);
+void					print_signed_number(t_printf_info *info,
 							t_int16 base);
-inline void					print_unsigned_number(t_printf_info *info,
+void					print_unsigned_number(t_printf_info *info,
 							t_int16 base);
 #endif

@@ -9,5 +9,5 @@ size_t	ft_strlen(const char *s)
 	tmp = s;
 	while (*tmp)
 		tmp++;
-	return (tmp - s - 1);
+	return (tmp - s);
 }
