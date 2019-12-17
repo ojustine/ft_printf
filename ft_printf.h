@@ -112,6 +112,8 @@ typedef struct				s_printf_info
 }							t_printf_info;
 void test();
 
+int errol0_dtoa(double val, char *buf);
+
 void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 size_t	ft_strlen(const char *s);
