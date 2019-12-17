@@ -69,8 +69,6 @@
 ** =========================== Types definition ================================
 */
 
-typedef uint8_t				t_uint81;
-typedef int8_t				t_int8;
 typedef uint16_t			t_uint16;
 typedef int16_t				t_int16;
 typedef uint32_t			t_uint32;
@@ -106,12 +104,13 @@ typedef struct				s_printf_info
 	char					buff[BUFF_SIZE + 1];
 	size_t					buff_index;
 	size_t					printed;
-	t_int8					write_to_str : 1;
+	char					write_to_str : 1;
 	char					*str_to_write;
 	va_list					valist;
 	const char				*fmt;
 
 }							t_printf_info;
+void test();
 
 void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
