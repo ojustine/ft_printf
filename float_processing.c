@@ -42,13 +42,20 @@ int32_t ft_ceil(double val)
 	return (((double)num == val) ? num : num + 1);
 }
 
-t_float32	get_mantissa(uint32_t bin_mantissa)
+static inline t_float32	get_mantissa(register uint32_t bin_mantissa)
 {
-	int32_t		i;
-	t_float32	res;
+	register int32_t	i;
+	register t_float32	res;
+	const t_float32		frac_powers_2[24] =
+		{1.0f, 0.5f, 0.25f, 0.125f, 6.25e-2f, 3.125e-2f, 1.5625e-2f, 7.8125e-3f,
+		3.90625e-3f, 1.953125e-3f, 9.765625e-4f, 4.8828125e-4f,	2.44140625e-4f,
+		1.220703125e-4f, 6.103515625e-5f, 3.0517578125e-5f, 1.52587890625e-5f,
+		7.62939453125e-6f, 3.814697265625e-6f, 1.9073486328125e-6f,
+		9.5367431640625e-7f, 4.76837158203125e-7f, 2.384185791015625e-7f,
+		1.1920928955078125e-7f};
 
-	i = 0;
-	res = 0.0;
+	i = 1;
+	res = frac_powers_2[0];
 	while (bin_mantissa != 0)
 	{
 		if (bin_mantissa & 0x400000U)
@@ -56,22 +63,35 @@ t_float32	get_mantissa(uint32_t bin_mantissa)
 		bin_mantissa <<= 1U;
 		i++;
 	}
+	return (res);
+}
+
+t_float32 power(double x, long n)
+{
+	if (n == 0)
+		return 1;
+	if (n < 0)
+		return power(1 / x, -n);
+	if (n & 1)
+		return x * power(x, n - 1);
+	return power(x * x, n / 2);
 }
 
 void test()
 {
 	const double log10_2 = 0.30102999566398119521373889472449;
 
-	float val = 3.14f;
+	float val = 233.14f;
 	int num = *((int*)&val);
 	int mant = (num & 8388607);
 	int exponent = ((num >> 23) & 255) - 127;
-	int mantx = LogBase2(mant);
-	int32_t digitExponent = (ft_ceil((double)(mantx + exponent) * log10_2 - 0.69));
-	printf("m%d e%d mx%d ee%d\n", mant, exponent, mantx, digitExponent);
-	char buf[1000];
-	//exponent = ftoaEngine(val, buf, 10);
-	printf("%s %d\n", buf, exponent);
-	float n = (1.0f + 0.5f + 0.0625f + 0.00390625f + 0.001953125f + 0.0009765625f + 0.00048828125f + 0.0001220703125f + 0.000030517578125f + 0.0000152587890625f + 0.00000762939453125f + 0.0000002384185791015625f + 0.00000011920928955078125f) * 2;
+	float c = power(2.0, exponent);
+	float i = 1;
+	while (c < 1)
+		c *= 10.0f;
+	while (c > 10.0f)
+		c /= 10.0f;
+	float n = (get_mantissa(mant)) * c * i;
+	printf("%.25f\n", val);
 	printf("%.25f", n);
 }
