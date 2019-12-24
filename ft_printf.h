@@ -52,7 +52,8 @@
 # define SIZE_PTR			(1U << 14U)
 # define SIZE_LONG_DBL		(1U << 15U)
 # define BUFF_SIZE			512
-# define BIN_MAX_INT		(sizeof(long long) * 8 + 2)
+# define MAX_INT_BITS		(sizeof(long long) * 8 + 2)
+# define FLT_MAX_LEN		FLT_MAX_EXP + 3
 # define MAX(a,b)			(((a) > (b)) ? (a) : (b))
 
 # ifdef __GNUC__
@@ -75,8 +76,8 @@ typedef uint32_t			t_uint32;
 typedef int32_t				t_int32;
 typedef unsigned long long	t_uint64;
 typedef long long			t_int64;
-typedef float				t_float32;
-typedef double				t_float64;
+typedef float				t_float;
+typedef double				t_double;
 typedef long double			t_float80;
 
 # if LLONG_MAX == 9223372036854775807
@@ -110,9 +111,24 @@ typedef struct				s_printf_info
 	const char				*fmt;
 
 }							t_printf_info;
-void test();
 
-int errol0_dtoa(double val, char *buf);
+typedef struct				s_float32
+{
+	union
+	{
+		struct
+		{
+			uint32_t		mantis		: 23;
+			uint16_t		bias_exp	: 8;
+			uint8_t			sign		: 1;
+		}					s_bits;
+		float				binary32;
+	}						u_value;
+	char					str_flt[FLT_MAX_LEN + 1];
+}							t_float32;
+
+
+void test();
 
 void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);

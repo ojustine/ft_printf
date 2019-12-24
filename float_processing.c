@@ -1,6 +1,7 @@
 #include "ft_printf.h"
 #include <stdio.h>
 
+
 uint32_t LogBase2(uint32_t val)
 {
 	static const uint8_t logTable[256] =
@@ -42,11 +43,11 @@ int32_t ft_ceil(double val)
 	return (((double)num == val) ? num : num + 1);
 }
 
-static inline t_float32	get_mantissa(register uint32_t bin_mantissa)
+static inline t_float	get_mantissa(register uint32_t bin_mantissa)
 {
 	register int32_t	i;
-	register t_float32	res;
-	const t_float32		frac_powers_2[24] =
+	register t_float	res;
+	const t_float		frac_powers_2[24] =
 		{1.0f, 0.5f, 0.25f, 0.125f, 6.25e-2f, 3.125e-2f, 1.5625e-2f, 7.8125e-3f,
 		3.90625e-3f, 1.953125e-3f, 9.765625e-4f, 4.8828125e-4f,	2.44140625e-4f,
 		1.220703125e-4f, 6.103515625e-5f, 3.0517578125e-5f, 1.52587890625e-5f,
@@ -66,7 +67,7 @@ static inline t_float32	get_mantissa(register uint32_t bin_mantissa)
 	return (res);
 }
 
-t_float32 power(double x, long n)
+t_float power(double x, long n)
 {
 	if (n == 0)
 		return 1;
@@ -79,19 +80,16 @@ t_float32 power(double x, long n)
 
 void test()
 {
-	const double log10_2 = 0.30102999566398119521373889472449;
+	const float log10_2 = 0.30102999566398119521373889472449f;
 
-	float val = 233.14f;
-	int num = *((int*)&val);
-	int mant = (num & 8388607);
-	int exponent = ((num >> 23) & 255) - 127;
+	float val = log10_2;
+	//t_float32 t = {.u_value.binary32 = val};
+	t_float32 t = {.u_value.binary32 = val, .str_flt = "dgrgqregqr"};
+
+	int mant = t.u_value.s_bits.mantis;
+	int exponent = t.u_value.s_bits.bias_exp - 127;
 	float c = power(2.0, exponent);
-	float i = 1;
-	while (c < 1)
-		c *= 10.0f;
-	while (c > 10.0f)
-		c /= 10.0f;
-	float n = (get_mantissa(mant)) * c * i;
+	float n = (get_mantissa(mant)) * c;
 	printf("%.25f\n", val);
-	printf("%.25f", n);
+	printf("%.25f\n", n);
 }
