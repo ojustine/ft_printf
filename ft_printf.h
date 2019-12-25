@@ -26,6 +26,7 @@
 # include <stdint.h>
 # include <string.h>
 # include <wctype.h>
+# include "const_data.h"
 
 # if defined(_POSIX_VERSION) || defined(__unix__) || defined(__MACH__)
 #  include <sys/select.h>
@@ -78,7 +79,7 @@ typedef unsigned long long	t_uint64;
 typedef long long			t_int64;
 typedef float				t_float;
 typedef double				t_double;
-typedef long double			t_float80;
+typedef long double			t_ldouble;
 
 # if LLONG_MAX == 9223372036854775807
 #  define IS_LONG_LONG 1
@@ -112,21 +113,40 @@ typedef struct				s_printf_info
 
 }							t_printf_info;
 
-typedef struct				s_float32
+typedef union				u_float
 {
-	union
-	{
 		struct
 		{
 			uint32_t		mantis		: 23;
-			uint16_t		bias_exp	: 8;
-			uint8_t			sign		: 1;
-		}					s_bits;
-		float				binary32;
-	}						u_value;
-	char					str_flt[FLT_MAX_LEN + 1];
-}							t_float32;
+			uint32_t		bias_exp	: 8;
+			uint32_t		sign		: 1;
+		}					s_parts;
+		float				val;
+}							t_binary32;
 
+typedef union				u_double
+{
+	struct
+	{
+		uint64_t			mantis		: 52;
+		uint64_t			bias_exp	: 11;
+		uint64_t			sign		: 1;
+	}						s_parts;
+	double					val;
+}							t_binary64;
+
+typedef union				u_long_double
+{
+	struct
+	{
+		uint64_t			mantis		: 64;
+		uint64_t			bias_exp	: 15;
+		uint64_t			sign		: 1;
+	}						s_parts;
+	long double				val;
+}							t_binary80;
+
+typedef char*				t_big_float;
 
 void test();
 

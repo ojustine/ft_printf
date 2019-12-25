@@ -11,7 +11,7 @@ int main()
 	char dst[20];
 	char *src = "";
 	wchar_t *nn = L"ǑabcǑ\0";
-	t_float80 l = (t_float80)1.7e+308;
+	t_ldouble l = (t_ldouble)1.7e+308;
 
 	l *= l;
 	l *= l;

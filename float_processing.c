@@ -81,13 +81,12 @@ t_float power(double x, long n)
 void test()
 {
 	const float log10_2 = 0.30102999566398119521373889472449f;
-
-	float val = log10_2;
-	//t_float32 t = {.u_value.binary32 = val};
-	t_float32 t = {.u_value.binary32 = val, .str_flt = "dgrgqregqr"};
-
-	int mant = t.u_value.s_bits.mantis;
-	int exponent = t.u_value.s_bits.bias_exp - 127;
+t_big_float d = g_str_frac_pow2[3];
+	float val = 3.14f;
+	t_binary32 t;
+	t.val = val;
+	int mant = t.s_parts.mantis;
+	int exponent = t.s_parts.bias_exp - 127;
 	float c = power(2.0, exponent);
 	float n = (get_mantissa(mant)) * c;
 	printf("%.25f\n", val);
