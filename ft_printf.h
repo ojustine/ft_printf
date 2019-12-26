@@ -35,26 +35,35 @@
 /*
 ** ====================== Consts and masks definition ==========================
 */
+enum						e_flags
+{
+	FLAG_LEFT_ALIGN = (1 << 0),
+	FLAG_PLUS_SIGN = (1 << 1),
+	FLAG_BLANK_SIGN = (1 << 2),
+	FLAG_ALT_FORM = (1 << 3),
+	FLAG_GROUP = (1 << 4),
+	FLAG_TRUNCATE = (1 << 5),
+	FLAG_ZERO_PAD = (1 << 6),
+	PRINT_ARG_BY_NUM = (1 << 7)
+};
 
-# define FLAG_LEFT_ALIGN	(1U << 0U)
-# define FLAG_PLUS_SIGN		(1U << 1U)
-# define FLAG_BLANK_SIGN	(1U << 2U)
-# define FLAG_ALT_FORM		(1U << 3U)
-# define FLAG_GROUP			(1U << 4U)
-# define FLAG_TRUNCATE		(1U << 5U)
-# define FLAG_ZERO_PAD		(1U << 6U)
-# define PRINT_ARG_BY_NUM	(1 << 7)//
-# define SIZE_SHORT			(1U << 8U)
-# define SIZE_LONG			(1U << 9U)
-# define SIZE_LLONG			(1U << 10U)
-# define SIZE_INTMAX		(1U << 11U)
-# define SIZE_CHAR			(1U << 12U)
-# define SIZE_SIZE_T		(1U << 13U)
-# define SIZE_PTR			(1U << 14U)
-# define SIZE_LONG_DBL		(1U << 15U)
+enum						e_sizes
+{
+	SIZE_SHORT = (1 << 8),
+	SIZE_LONG = (1 << 9),
+	SIZE_LLONG = (1 << 10),
+	SIZE_INTMAX = (1 << 11),
+	SIZE_CHAR = (1 << 12),
+	SIZE_SIZE_T = (1 << 13),
+	SIZE_PTR = (1 << 14),
+	SIZE_LONG_DBL = (1 << 15)
+};
+
 # define BUFF_SIZE			512
 # define MAX_INT_BITS		(sizeof(long long) * 8 + 2)
-# define FLT_MAX_LEN		FLT_MAX_EXP + 3
+# define FLT_MAX_LEN		(FLT_MAX_EXP + 3)
+# define DBL_MAX_LEN		(DBL_MAX_EXP + 3)
+# define LDBL_MAX_LEN		(LDBL_MAX_EXP + 3)
 # define MAX(a,b)			(((a) > (b)) ? (a) : (b))
 
 # ifdef __GNUC__
@@ -86,7 +95,7 @@ typedef long double			t_ldouble;
 # else
 #  define IS_LONG_LONG 0
 # endif
-# if LDBL_MAX_EXP >= 16384
+# if LDBL_MAX_EXP == 16384
 #  define IS_LONG_DBL 1
 # else
 #  define IS_LONG_DBL 0
@@ -98,39 +107,38 @@ typedef long double			t_ldouble;
 
 typedef struct				s_printf_info
 {
-	t_uint16				flags;
-	t_int32					width;
-	t_int32					prec;
-	t_uint16				capitals;
-	t_int32					fd;
+	uint16_t				flags;
+	int_fast32_t			width;
+	int_fast16_t			prec;
+	uint_fast8_t			capitals;
+	int32_t					fd;
 	char					buff[BUFF_SIZE + 1];
 	size_t					buff_index;
 	size_t					printed;
 	char					write_to_str : 1;
 	char					*str_to_write;
-	va_list					valist;
+	va_list					ap;
 	const char				*fmt;
-
 }							t_printf_info;
 
 typedef union				u_float
 {
-		struct
-		{
-			uint32_t		mantis		: 23;
-			uint32_t		bias_exp	: 8;
-			uint32_t		sign		: 1;
-		}					s_parts;
-		float				val;
+	struct
+	{
+		uint_fast32_t		mantis		: 23;
+		uint_fast32_t		bias_exp	: 8;
+		uint_fast32_t		sign		: 1;
+	}						s_parts;
+	float					val;
 }							t_binary32;
 
 typedef union				u_double
 {
 	struct
 	{
-		uint64_t			mantis		: 52;
-		uint64_t			bias_exp	: 11;
-		uint64_t			sign		: 1;
+		uint_fast64_t		mantis		: 52;
+		uint_fast64_t		bias_exp	: 11;
+		uint_fast64_t		sign		: 1;
 	}						s_parts;
 	double					val;
 }							t_binary64;
@@ -139,14 +147,19 @@ typedef union				u_long_double
 {
 	struct
 	{
-		uint64_t			mantis		: 64;
-		uint64_t			bias_exp	: 15;
-		uint64_t			sign		: 1;
+		uint_fast64_t		mantis		: 64;
+		uint_fast64_t		bias_exp	: 15;
+		uint_fast64_t		sign		: 1;
 	}						s_parts;
 	long double				val;
 }							t_binary80;
 
-typedef char*				t_big_float;
+typedef struct				s_big_float
+{
+	char					digits[FLT_MAX_LEN];
+	int_fast16_t			decimal;
+	int_fast8_t				sign;
+}							t_big_float;
 
 void test();
 
@@ -154,6 +167,7 @@ void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 size_t	ft_strlen(const char *s);
 size_t	ft_wstrlen(wchar_t *s);
+double	ft_pow(double base, int_fast16_t power);
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);
 void						get_formatted_arg(t_printf_info *info);

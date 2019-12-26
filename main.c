@@ -17,7 +17,7 @@ int main()
 	l *= l;
 
 	//printf("%LG\n", l);
-	printf("%u\n", MB_LEN_MAX);
+	printf("%u\n", MB_CUR_MAX);
 	printf("%-10.s\n", src);
 	c = ft_printf("%#09.6llx\n", LLONG_MAX);
 	printf("%#09.6llx\n", LLONG_MAX);

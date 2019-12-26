@@ -1,48 +1,6 @@
 #include "ft_printf.h"
 #include <stdio.h>
 
-
-uint32_t LogBase2(uint32_t val)
-{
-	static const uint8_t logTable[256] =
-			{
-					0, 0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
-					4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
-					5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-					5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-					6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-					6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-					6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-					6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-					7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-					7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-					7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-					7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-					7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-					7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-					7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
-					7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7
-			};
-
-	uint32_t temp;
-	temp = val >> 24U;
-	if (temp)
-		return 24 + logTable[temp];
-	temp = val >> 16U;
-	if (temp)
-		return 16 + logTable[temp];
-	temp = val >> 8U;
-	if (temp)
-		return 8 + logTable[temp];
-	return logTable[val];
-}
-
-int32_t ft_ceil(double val)
-{
-	int32_t num = (int32_t)val;
-	return (((double)num == val) ? num : num + 1);
-}
-
 static inline t_float	get_mantissa(register uint32_t bin_mantissa)
 {
 	register int32_t	i;
@@ -67,27 +25,15 @@ static inline t_float	get_mantissa(register uint32_t bin_mantissa)
 	return (res);
 }
 
-t_float power(double x, long n)
-{
-	if (n == 0)
-		return 1;
-	if (n < 0)
-		return power(1 / x, -n);
-	if (n & 1)
-		return x * power(x, n - 1);
-	return power(x * x, n / 2);
-}
-
 void test()
 {
 	const float log10_2 = 0.30102999566398119521373889472449f;
-t_big_float d = g_str_frac_pow2[3];
 	float val = 3.14f;
 	t_binary32 t;
 	t.val = val;
 	int mant = t.s_parts.mantis;
 	int exponent = t.s_parts.bias_exp - 127;
-	float c = power(2.0, exponent);
+	float c = ft_pow(2.0, exponent);
 	float n = (get_mantissa(mant)) * c;
 	printf("%.25f\n", val);
 	printf("%.25f\n", n);

@@ -80,12 +80,12 @@ void						print_char(t_printf_info *info,
 
 	if (is_wide_char)
 	{
-		wc = va_arg(info->valist, wchar_t);
+		wc = va_arg(info->ap, wchar_t);
 		print_wchar(info, wc, 1);
 	}
 	else
 	{
-		c = (char)va_arg(info->valist, int);
+		c = (char)va_arg(info->ap, int);
 		do_print_string(info, &c, 1);
 	}
 }
@@ -98,7 +98,7 @@ void						print_string(t_printf_info *info,
 	int			wstr_len;
 
 	if (is_wide_string)
-		if (!(wstr = va_arg(info->valist, wchar_t*)))
+		if (!(wstr = va_arg(info->ap, wchar_t*)))
 			do_print_string(info, "(null)", 6);
 		else
 		{
@@ -108,7 +108,7 @@ void						print_string(t_printf_info *info,
 					wstr_len -= print_wchar(info, *wstr++, 0);
 		}
 	else
-		if (!(str = va_arg(info->valist, char*)))
+		if (!(str = va_arg(info->ap, char*)))
 			do_print_string(info, "(null)", 6);
 		else
 			do_print_string(info, str, ft_strlen(str));

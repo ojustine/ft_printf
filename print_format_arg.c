@@ -1,5 +1,9 @@
 #include "ft_printf.h"
 
+#define IS_FMT(X) (*info->fmt == (X))
+#define SET_FLAG(FLAG) (info->flags |= FLAG)
+#define RM_FLAG(FLAG) (info->flags |= FLAG)
+
 static inline void	get_width_n_precision(t_printf_info *info)
 {
 	if (*info->fmt >= '0' && *info->fmt <= '9')
@@ -7,10 +11,10 @@ static inline void	get_width_n_precision(t_printf_info *info)
 			info->width = 10 * info->width + (*info->fmt++ - '0');
 	else if (*info->fmt == '*')
 	{
-		info->width = va_arg(info->valist, t_int32);
+		info->width = va_arg(info->ap, t_int32);
 		++info->fmt;
 		if (info->width < 0 && (info->width = -info->width))
-			info->flags |= FLAG_LEFT_ALIGN;
+			SET_FLAG(FLAG_LEFT_ALIGN);
 	}
 	if (*info->fmt == '.')
 	{
@@ -21,7 +25,7 @@ static inline void	get_width_n_precision(t_printf_info *info)
 				info->prec = 10 * info->prec + (*info->fmt++ - '0');
 		else if (*info->fmt == '*')
 		{
-			info->prec = va_arg(info->valist, t_int32);
+			info->prec = va_arg(info->ap, t_int32);
 			++info->fmt;
 		}
 		info->flags |= FLAG_TRUNCATE;
@@ -33,7 +37,7 @@ static inline void	get_size_modifier(t_printf_info *info)
 	while (*info->fmt)
 	{
 		if (*info->fmt == 'z')
-			info->flags |= SIZE_SIZE_T;
+			SET_FLAG(SIZE_SIZE_T);
 		else if (*info->fmt == 'l')
 			info->flags |= (*(info->fmt + 1) == 'l' && ++info->fmt)
 			? SIZE_LLONG : SIZE_LONG;
@@ -54,9 +58,9 @@ static inline void	get_size_modifier(t_printf_info *info)
 
 static inline void	print_arg_by_type(t_printf_info *info)
 {
-	if (*info->fmt == 'B' || *info->fmt == 'X')
+	if (IS_FMT('B') || IS_FMT('X'))
 		info->capitals = 16;
-	if (*info->fmt == 'd' || *info->fmt == 'i' || *info->fmt == 'D')
+	if (IS_FMT('d') || IS_FMT('i') || IS_FMT('D'))
 		print_signed_number(info, 10);
 	else if (*info->fmt == 's')
 		print_string(info, (info->flags & SIZE_LONG
