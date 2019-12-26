@@ -1,98 +1,91 @@
 #include "ft_printf.h"
 
-void	big_float_parse(t_big_float *bf, const char *str, int_fast16_t prec)
+static inline void	big_float_multiply_line(t_big_float *a, t_big_float *line,
+							const int_fast16_t mult, const int_fast16_t prec)
 {
-	register size_t	i;
-	size_t			index;
-	size_t			len;
+	register ssize_t		i;
+	register int_fast32_t	result;
+	register int_fast32_t	carry;
 
-	i = 0;
-	if (str[0] == '-')
+	i = prec - 1;
+	carry = 0;
+	while (i >= 0)
 	{
-		bf->sign = 1;
-		i = 1;
-	}
-	else
-		bf->sign = 0;
-	index = 0;
-	len = ft_strlen(str);
-	while (i < len && index < prec)
-	{
-		if (str[i] == '.')
-			bf->decimal = (bf->sign) ? i - 1 : i;
-		else
-			bf->digits[index++] = (char)(str[i] - '0');
-		i++;
+		result = carry;
+		result += a->digits[i] * mult;
+		carry = result / 10;
+		line->digits[i--] = (char)(result % 10);
 	}
 }
 
-void	big_float_shift_right(t_big_float *a, int_fast16_t length,
-							  uint_fast16_t shift)
+static inline void	big_float_align_each_other(t_big_float *a, t_big_float *b,
+					  int_fast16_t prec)
 {
-	register ssize_t	i;
-
-	i = length;
-	while (--i >= 0)
+	if (b->point_pos > a->point_pos)
 	{
-		if (i - shift >= 0)
-			a->digits[i] = a->digits[i - shift];
-		else
-			a->digits[i] = 0;
+		big_float_shift_right(a, prec, b->point_pos - a->point_pos);
+		a->point_pos = b->point_pos;
+	}
+	else if (b->point_pos < a->point_pos)
+	{
+		big_float_shift_right(b, prec, a->point_pos - b->point_pos);
+		b->point_pos = a->point_pos;
 	}
 }
 
-void	big_float_shift_left(t_big_float *a, int_fast16_t length,
-							 uint_fast16_t shift)
+void	big_float_multiply(t_big_float *a, t_big_float *b, t_big_float *res,
+							const int_fast16_t prec)
 {
-	register ssize_t	i;
+	register ssize_t		i;
+	t_big_float				line;
+	t_big_float				temp;
 
-	i = -1;
-	while (++i < length)
+	big_float_parse(&line, "0.0", prec);
+	big_float_parse(&temp, "0.0", prec);
+	ft_memset(res, 0, sizeof(t_big_float));
+	res->point_pos = prec;
+	line.point_pos = prec;
+	big_float_move_value(a, prec, 1);
+	big_float_move_value(b, prec, 1);
+	i = prec - 1;
+	while (i >= 0)
 	{
-		if (i + shift < length)
-			a->digits[i] = a->digits[i + shift];
-		else
-			a->digits[i] = 0;
+		big_float_multiply_line(a, &line, b->digits[i], prec);
+		big_float_shift_left(&line, prec, prec - i--);
+		big_float_add(res, &line, &temp, prec);
+		line.point_pos = prec;
+		big_float_move_value(&temp, prec, 1);
+		ft_memcpy(res, &temp, sizeof(t_big_float));
 	}
+	res->point_pos -= prec - a->point_pos + prec - b->point_pos + 1;
+	big_float_move_value(res, prec, 0);
+	res->sign = ((a->sign || b->sign) && !(a->sign && b->sign)) ? 1 : 0;
 }
 
-void big_float_align_each_other(t_big_float *a, t_big_float *b,
-								int_fast16_t prec)
+void	big_float_add(t_big_float *a, t_big_float *b, t_big_float *res,
+						const int_fast16_t prec)
 {
-	if (b->decimal > a->decimal)
-	{
-		big_float_shift_right(a, prec, b->decimal - a->decimal);
-		a->decimal = b->decimal;
-	}
-	else if (b->decimal < a->decimal)
-	{
-		big_float_shift_right(b, prec, a->decimal - b->decimal);
-		b->decimal = a->decimal;
-	}
-}
+	register ssize_t		i;
+	register int_fast32_t	result;
+	register int_fast32_t	carry;
 
-void	big_float_move_value(t_big_float *a, int_fast16_t prec,
-								int_fast8_t is_move_to_tail)
-{
-	register ssize_t	i;
-	int start;
-
-	if (is_move_to_tail)
+	carry = 0;
+	big_float_align_each_other(a, b, prec);
+	ft_memset(res, 0, sizeof(t_big_float));
+	res->point_pos = a->point_pos;
+	i = prec - 1;
+	while (i >= 0)
 	{
-		for (i = prec - 1; i >= 0 && !a->digits[i]; i--);
-		start = i;
-		big_float_shift_right(a, prec, prec - start - 1);
-		a->decimal += prec - start - 1;
+		result = carry;
+		result += a->digits[i] + b->digits[i];
+		carry = result / 10;
+		res->digits[i--] = (char)(result % 10);
 	}
-}
-
-void trailingZeros(BigFloat *a) {
-	int i, start;
-	for (i = 0; i < prec && !a->digits[i]; i++);
-	if (a->decimal - i < 1) {
-		i = a->decimal - 1;
+	if (carry != 0)
+	{
+		big_float_shift_right(res, prec, 1);
+		res->point_pos++;
+		res->digits[0] = carry;
 	}
-	start = i;
-	shiftUpBy(a->digits, prec, start);
-	a->decimal -= start;
+	big_float_move_value(res, prec, 0);
 }
