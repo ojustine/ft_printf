@@ -2,7 +2,8 @@
 
 #define IS_FMT(X) (*info->fmt == (X))
 #define SET_FLAG(FLAG) (info->flags |= FLAG)
-#define RM_FLAG(FLAG) (info->flags |= FLAG)
+#define RM_FLAG(FLAG) (info->flags &= ~FLAG)
+#define IS_FLAG(FLAG) (info->flags & FLAG)
 
 static inline void	get_width_n_precision(t_printf_info *info)
 {
@@ -28,7 +29,7 @@ static inline void	get_width_n_precision(t_printf_info *info)
 			info->prec = va_arg(info->ap, t_int32);
 			++info->fmt;
 		}
-		info->flags |= FLAG_TRUNCATE;
+		SET_FLAG(FLAG_TRUNCATE);
 	}
 }
 
@@ -36,20 +37,20 @@ static inline void	get_size_modifier(t_printf_info *info)
 {
 	while (*info->fmt)
 	{
-		if (*info->fmt == 'z')
+		if (IS_FMT('z'))
 			SET_FLAG(SIZE_SIZE_T);
 		else if (*info->fmt == 'l')
-			info->flags |= (*(info->fmt + 1) == 'l' && ++info->fmt)
-			? SIZE_LLONG : SIZE_LONG;
+			SET_FLAG((*(info->fmt + 1) == 'l' && ++info->fmt)
+			? SIZE_LLONG : SIZE_LONG);
 		else if (*info->fmt == 'h')
-			info->flags |= (*(info->fmt + 1) == 'h' && ++info->fmt)
-			? SIZE_CHAR : SIZE_SHORT;
+			SET_FLAG((*(info->fmt + 1) == 'h' && ++info->fmt)
+			? SIZE_CHAR : SIZE_SHORT);
 		else if (*info->fmt == 'j')
-			info->flags |= SIZE_INTMAX;
+			SET_FLAG(SIZE_INTMAX);
 		else if (*info->fmt == 'L')
-			info->flags |= SIZE_LONG_DBL;
+			SET_FLAG(SIZE_LONG_DBL);
 		else if (*info->fmt == 't')
-			info->flags |= SIZE_PTR;
+			SET_FLAG(SIZE_PTR);
 		else
 			break ;
 		++info->fmt;

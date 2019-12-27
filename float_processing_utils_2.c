@@ -1,64 +1,73 @@
 #include "ft_printf.h"
 
-void	big_float_parse(t_big_float *bf, const char *str, int_fast16_t prec)
+void	big_float_parse(t_big_float *f, const char *str,
+						const int_fast16_t prec)
 {
 	register size_t	i;
-	size_t			index;
+	register size_t	j;
 	size_t			len;
 
 	i = 0;
-	ft_memset(bf, 0, sizeof(t_big_float));
-	if (str[0] == '-')
-	{
-		bf->sign = 1;
-		i = 1;
-	}
-	else
-		bf->sign = 0;
-	index = 0;
+	j = 0;
 	len = ft_strlen(str);
-	while (i < len && index < prec)
+	ft_memset(f, 0, sizeof(t_big_float));
+	if (str[0] == '-')
+		f->sign = ++i;
+	while (i < len)
 	{
 		if (str[i] == '.')
-			bf->point_pos = (bf->sign) ? i - 1 : i;
+		{
+			f->point_pos = (f->sign) ? i - 1 : i;
+			len = MIN(len, i + prec + 1);
+		}
 		else
-			bf->digits[index++] = (char)(str[i] - '0');
+			f->digits[j++] = (char)(str[i] - '0');
 		i++;
 	}
 }
 
-void	big_float_shift_right(t_big_float *a, int_fast16_t length,
-							  uint_fast16_t shift)
+void	big_float_shift_right(t_big_float *a, const int_fast16_t length,
+		const int_fast16_t shift)
 {
 	register ssize_t	i;
 
 	i = length;
-	while (--i >= 0)
+	if (shift < 0)
+	{
+		big_float_shift_left(a, length, -shift);
+		return ;
+	}
+	while (--i >= 0 && shift > 0)
 	{
 		if (i - shift >= 0)
-			a->digits[i] = a->digits[i - shift];
+			ft_memmove(&a->digits[i], &a->digits[i - shift], 1);//a->digits[i] = a->digits[i - shift];
 		else
 			a->digits[i] = 0;
 	}
 }
 
-void	big_float_shift_left(t_big_float *a, int_fast16_t length,
-							 uint_fast16_t shift)
+void	big_float_shift_left(t_big_float *a, const int_fast16_t length,
+		const int_fast16_t shift)
 {
 	register ssize_t	i;
 
 	i = -1;
+	if (shift < 0)
+	{
+		big_float_shift_right(a, length, -shift);
+		return ;
+	}
 	while (++i < length)
 	{
 		if (i + shift < length)
-			a->digits[i] = a->digits[i + shift];
+			ft_memmove(&a->digits[i], &a->digits[i + shift], 1);//a->digits[i] = a->digits[i + shift];
 		else
 			a->digits[i] = 0;
 	}
 }
 
-void	big_float_move_value(t_big_float *a, int_fast16_t prec,
-								int_fast8_t is_move_to_tail)
+void	big_float_move_value(t_big_float *a, const int_fast16_t prec,
+		int_fast8_t is_move_to_tail)
 {
 	register ssize_t	i;
 	int_fast16_t		start;

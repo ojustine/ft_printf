@@ -62,9 +62,10 @@ enum						e_sizes
 # define BUFF_SIZE			512
 # define MAX_INT_BITS		(sizeof(long long) * 8 + 2)
 # define FLT_MAX_LEN		(FLT_MAX_10_EXP + 3)
-# define DBL_MAX_LEN		(DBL_MAX_EXP + 3)
-# define LDBL_MAX_LEN		(LDBL_MAX_EXP + 3)
+# define DBL_MAX_LEN		(DBL_MAX_10_EXP + 3)
+# define LDBL_MAX_LEN		(LDBL_MAX_10_EXP + 3)
 # define MAX(a,b)			(((a) > (b)) ? (a) : (b))
+# define MIN(a,b)			(((a) < (b)) ? (a) : (b))
 
 # ifdef __GNUC__
 #  if !defined(__GNUC_STDC_INLINE__) && !defined(__GNUC_GNU_INLINE__)
@@ -168,18 +169,20 @@ void	*ft_memcpy(void *dst, const void *src, size_t n);
 size_t	ft_strlen(const char *s);
 size_t	ft_wstrlen(wchar_t *s);
 double	ft_pow(double base, int_fast16_t power);
+long double	ft_long_pow(long double base, int_fast16_t power);
+void	*ft_memmove(void *dst, const void *src, size_t len);
 
-void	big_float_parse(t_big_float *bf, const char *str, int_fast16_t prec);
-void	big_float_shift_right(t_big_float *a, int_fast16_t length,
-							  uint_fast16_t shift);
-void	big_float_shift_left(t_big_float *a, int_fast16_t length,
-							 uint_fast16_t shift);
-void	big_float_move_value(t_big_float *a, int_fast16_t prec,
+void	big_float_parse(t_big_float *f, const char *str, const int_fast16_t prec);
+void	big_float_shift_right(t_big_float *a, const int_fast16_t length,
+							  const int_fast16_t shift);
+void	big_float_shift_left(t_big_float *a, const int_fast16_t length,
+							 const int_fast16_t shift);
+void	big_float_move_value(t_big_float *a, const int_fast16_t prec,
 							 int_fast8_t is_move_to_tail);
 void	big_float_add(t_big_float *a, t_big_float *b, t_big_float *res,
 					  const int_fast16_t prec);
 void	big_float_multiply(t_big_float *a, t_big_float *b, t_big_float *res,
-						   const int_fast16_t prec);
+						   int_fast16_t prec);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);

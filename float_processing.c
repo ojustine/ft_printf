@@ -39,9 +39,9 @@ void test()
 	printf("%.25f\n", n);
 	t_big_float a;
 	t_big_float b;
-	big_float_parse(&a, "0.0022", 6);
-	big_float_parse(&b, "0.0099", 6);
+	big_float_parse(&a, "10.1", 2);
+	big_float_parse(&b, "100.111", 4);
 	t_big_float res;
-	big_float_add(&a, &b, &res, 9);
-	big_float_multiply(&a, &b, &res, 19);
+	//big_float_add(&a, &b, &res, 3);
+	big_float_multiply(&a, &b, &res, 3);
 }
