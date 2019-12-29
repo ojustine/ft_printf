@@ -1,29 +1,24 @@
 #include "ft_printf.h"
 
-void	big_float_parse(t_big_float *f, const char *str,
-						const int_fast16_t prec)
+void	big_float_parse(t_big_float *f, const char *str)
 {
-	register size_t	i;
 	register size_t	j;
-	size_t			len;
 
-	i = 0;
 	j = 0;
-	len = ft_strlen(str);
 	ft_memset(f, 0, sizeof(t_big_float));
-	if (str[0] == '-')
-		f->sign = ++i;
-	while (i < len)
+	if (*str == '-' && *(str++))
+		f->sign = 1;
+	while (*str && j < FLT_MAX_LEN)
 	{
-		if (str[i] == '.')
-		{
-			f->point_pos = (f->sign) ? i - 1 : i;
-			len = MIN(len, i + prec + 1);
-		}
+		if (*str >= '0' && *str <= '9')
+			f->digits[j++] = (char)(*str - '0');
+		else if (*str == '.')
+			f->point_pos = j;
 		else
-			f->digits[j++] = (char)(str[i] - '0');
-		i++;
+			break ;
+		str++;
 	}
+	f->length = j;
 }
 
 void	big_float_shift_right(t_big_float *a, const int_fast16_t length,
