@@ -172,18 +172,17 @@ size_t	ft_wstrlen(wchar_t *s);
 double	ft_pow(double base, int_fast16_t power);
 long double	ft_long_pow(long double base, int_fast16_t power);
 void	*ft_memmove(void *dst, const void *src, size_t len);
+void	ft_assert(int_fast32_t to_check, const char *func, const char *message);
 
-void	big_float_parse(t_big_float *f, const char *str);
-void	big_float_shift_right(t_big_float *a, const int_fast16_t length,
-							  const int_fast16_t shift);
-void	big_float_shift_left(t_big_float *a, const int_fast16_t length,
-							 const int_fast16_t shift);
-void	big_float_move_value(t_big_float *a, const int_fast16_t prec,
-							 int_fast8_t is_move_to_tail);
-void	big_float_add(t_big_float *a, t_big_float *b, t_big_float *res,
-					  const int_fast16_t prec);
-void	big_float_multiply(t_big_float *a, t_big_float *b, t_big_float *res,
-						   int_fast16_t prec);
+void	bf_parse(t_big_float *f, const char *str);
+void	bf_shift_right(t_big_float *a, const int_fast16_t shift);
+void	bf_shift_left(t_big_float *a, const int_fast16_t shift);
+void	bf_move_value(t_big_float *a, const int_fast16_t prec,
+					  int_fast8_t is_move_to_tail);
+void	bf_add(t_big_float *a, t_big_float *b, t_big_float *res,
+			   const int_fast16_t prec);
+void	bf_multiply(t_big_float *a, t_big_float *b, t_big_float *res,
+					int_fast16_t prec);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);

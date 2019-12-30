@@ -1,58 +1,66 @@
 #include "ft_printf.h"
 
-void	big_float_parse(t_big_float *f, const char *str)
+void	bf_parse(t_big_float *f, const char *str)
 {
-	register size_t	j;
+	register size_t	i;
 
-	j = 0;
+	i = 0;
 	ft_memset(f, 0, sizeof(t_big_float));
-	if (*str == '-' && *(str++))
-		f->sign = 1;
-	while (*str && j < FLT_MAX_LEN)
+	if (*str == '-' || *str == '+')
+	{
+		f->sign = (*str == '-');
+		str++;
+	}
+	while (i < FLT_MAX_LEN)
 	{
 		if (*str >= '0' && *str <= '9')
-			f->digits[j++] = (char)(*str - '0');
-		else if (*str == '.')
-			f->point_pos = j;
+			f->digits[i++] = (char)(*str - '0');
+		else if ((*str == '.' || *str == ',') && !f->point_pos)
+			f->point_pos = ((i == 0) ? 1 : i);
+		else if (*str == ' ' || *str == '\t')
+			continue ;
 		else
 			break ;
 		str++;
 	}
-	f->length = j;
+	f->length = i;
 }
 
-void	big_float_shift_right(t_big_float *a, const int_fast16_t length,
-		const int_fast16_t shift)
+void	bf_shift_right(t_big_float *a, const int_fast16_t shift)
 {
 	register ssize_t	i;
 
-	i = length;
 	if (shift < 0)
 	{
-		big_float_shift_left(a, length, -shift);
+		bf_shift_left(a, -shift);
 		return ;
 	}
-	while (--i >= 0 && shift > 0)
+	a->length += shift;
+	if (a->length > FLT_MAX_LEN)
+		a->length = FLT_MAX_LEN;
+	i = a->length;
+	while (--i >= 0)
 	{
 		if (i - shift >= 0)
-			ft_memmove(&a->digits[i], &a->digits[i - shift], 1);//a->digits[i] = a->digits[i - shift];
+			a->digits[i] = a->digits[i - shift];
 		else
 			a->digits[i] = 0;
 	}
 }
 
-void	big_float_shift_left(t_big_float *a, const int_fast16_t length,
-		const int_fast16_t shift)
+void	bf_shift_left(t_big_float *a, const int_fast16_t shift)
 {
 	register ssize_t	i;
+	int_fast16_t		stop;
 
-	i = -1;
 	if (shift < 0)
 	{
-		big_float_shift_right(a, length, -shift);
+		bf_shift_right(a, -shift);
 		return ;
 	}
-	while (++i < length)
+	i = -1;
+	a->length -= shift;
+	while (++i + shift < FLT_MAX_LEN)
 	{
 		if (i + shift < length)
 			ft_memmove(&a->digits[i], &a->digits[i + shift], 1);//a->digits[i] = a->digits[i + shift];
@@ -61,8 +69,8 @@ void	big_float_shift_left(t_big_float *a, const int_fast16_t length,
 	}
 }
 
-void	big_float_move_value(t_big_float *a, const int_fast16_t prec,
-		int_fast8_t is_move_to_tail)
+void	bf_move_value(t_big_float *a, const int_fast16_t prec,
+					  int_fast8_t is_move_to_tail)
 {
 	register ssize_t	i;
 	int_fast16_t		start;
@@ -73,7 +81,7 @@ void	big_float_move_value(t_big_float *a, const int_fast16_t prec,
 		while (i >= 0 && !a->digits[i])
 			i--;
 		start = i;
-		big_float_shift_right(a, prec, prec - start - 1);
+		bf_shift_right(a, prec - start - 1);
 		a->point_pos += prec - start - 1;
 	}
 	else
@@ -84,7 +92,7 @@ void	big_float_move_value(t_big_float *a, const int_fast16_t prec,
 		if (a->point_pos - i < 1)
 			i = a->point_pos - 1;
 		start = i;
-		big_float_shift_left(a, prec, start);
+		bf_shift_left(a, prec, start);
 		a->point_pos -= start;
 	}
 }
