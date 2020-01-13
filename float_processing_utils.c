@@ -19,8 +19,7 @@ static inline void	big_float_multiply_line(t_big_float *a, t_big_float *line,
 	}
 }
 
-static inline void	big_float_align_each_other(t_big_float *a, t_big_float *b,
-					const int_fast16_t prec)
+static inline void	big_float_align_each_other(t_big_float *a, t_big_float *b)
 {
 	if (b->point_pos > a->point_pos)
 	{
@@ -40,7 +39,7 @@ void				bf_multiply(t_big_float *a, t_big_float *b,
 	register ssize_t		i;
 	t_big_float				line;
 	t_big_float				temp;
-prec += a->point_pos + b->point_pos - 1;
+
 	bf_parse(&line, "0.0");
 	bf_parse(&temp, "0.0");
 	ft_memset(res, 0, sizeof(t_big_float));
@@ -52,7 +51,7 @@ prec += a->point_pos + b->point_pos - 1;
 	while (i >= 0)
 	{
 		big_float_multiply_line(a, &line, b->digits[i], prec);
-		bf_shift_left(&line, prec, prec - i);
+		bf_shift_left(&line, prec - i);
 		bf_add(res, &line, &temp, prec);
 		line.point_pos = prec;
 		bf_move_value(&temp, prec, 1);
@@ -86,7 +85,7 @@ void				bf_add(t_big_float *a, t_big_float *b, t_big_float *res,
 	}
 	if (carry != 0)
 	{
-		bf_shift_right(res, prec, 1);
+		bf_shift_right(res, 1);
 		res->point_pos++;
 		res->digits[0] = carry;
 	}
