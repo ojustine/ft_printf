@@ -71,7 +71,7 @@ void				bf_add(t_big_float *a, t_big_float *b, t_big_float *res,
 	register int_fast32_t	carry;
 
 	carry = 0;
-	big_float_align_each_other(a, b, prec);
+	big_float_align_each_other(a, b);
 	ft_memset(res, 0, sizeof(t_big_float));
 	res->point_pos = a->point_pos;
 	i = prec - 1;
