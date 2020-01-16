@@ -66,17 +66,17 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 {
 	const char			digits[] = "0123456789abcdef0123456789ABCDEF";
 	register char		*ptr;
-	char				buff[MAX_INT_BITS];
+	char				buff[MAX_INT_BITS_NUM];
 	t_int16				num_len;
 
 	num_len = 1;
-	ptr = &buff[MAX_INT_BITS - 1];
+	ptr = &buff[MAX_INT_BITS_NUM - 1];
 	while (num_len-- == 1 || num != 0)
 	{
 		*ptr-- = digits[(num % base) + info->capitals];
 		num /= base;
 	}
-	num_len = (&buff[MAX_INT_BITS - 1] - ptr);
+	num_len = (&buff[MAX_INT_BITS_NUM - 1] - ptr);
 	info->width -= sign != 0;
 	if (base != 10 && (info->flags & FLAG_ALT_FORM))
 		info->width -= (base == 8) ? 1 : 2;

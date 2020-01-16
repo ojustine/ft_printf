@@ -60,7 +60,7 @@ enum						e_sizes
 };
 
 # define BUFF_SIZE			512
-# define MAX_INT_BITS		(sizeof(long long) * 8 + 2)
+# define MAX_INT_BITS_NUM	(sizeof(long long) * 8 + 2)
 # define FLT_MAX_LEN		(FLT_MAX_10_EXP + 3)
 # define DBL_MAX_LEN		(DBL_MAX_10_EXP + 3)
 # define LDBL_MAX_LEN		(LDBL_MAX_10_EXP + 3)
@@ -162,6 +162,15 @@ typedef struct				s_big_float
 	int_fast16_t			length;
 	int_fast8_t				sign;
 }							t_big_float;
+
+typedef struct				s_fxd_point_dbl
+{
+	uint32_t				ints[DBL_MAX_10_EXP];
+	uint32_t				frac[DBL_MAX_10_EXP];
+	int_fast16_t			high;
+	int_fast16_t			depth;
+	int_fast8_t				sign;
+}							t_fxd_point_dbl;
 
 void test();
 
