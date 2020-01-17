@@ -81,13 +81,14 @@ enum						e_sizes
 ** =========================== Types definition ================================
 */
 
-typedef uint16_t			t_uint16;
-typedef int16_t				t_int16;
-typedef uint32_t			t_uint32;
-typedef int32_t				t_int32;
-typedef unsigned long long	t_uint64;
-typedef long long			t_int64;
-typedef float				t_float;
+typedef uint8_t				t_u8;
+typedef int8_t				t_s8;
+typedef uint16_t			t_u16;
+typedef int16_t				t_s16;
+typedef uint32_t			t_u32;
+typedef int32_t				t_s32;
+typedef uint64_t 			t_u64;
+typedef int64_t			t_s64;
 typedef double				t_double;
 typedef long double			t_ldouble;
 
@@ -197,11 +198,11 @@ void						do_print(t_printf_info *info, char *data,
 									 size_t size);
 void						get_formatted_arg(t_printf_info *info);
 void						print_char(t_printf_info *info,
-							t_int16 is_wide_char);
+									   t_s16 is_wide_char);
 void					print_string(t_printf_info *info,
-							t_int16 is_wide_string);
+									 t_s16 is_wide_string);
 void					print_signed_number(t_printf_info *info,
-							t_int16 base);
+											t_s16 base);
 void					print_unsigned_number(t_printf_info *info,
-							t_int16 base);
+											  t_s16 base);
 #endif

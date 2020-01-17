@@ -11,7 +11,7 @@ int main()
 	char dst[20];
 	char *src = "";
 	wchar_t *nn = L"ǑabcǑ\0";
-	t_ldouble l = (t_ldouble)1.7e+308;
+	long double l = (long double)1.7e+308;
 
 	l *= l;
 	l *= l;
@@ -27,8 +27,8 @@ int main()
 	//int r = errol0_dtoa(0.34125159818571591295293549719509501958915810514058, buff);
 	//printf("%s %d %.78lf\n", buff, r, 0.34125159818571591295293549719509501958915810514058);
 
-	float f = 3.14f;
-	int bbb = *((int*)&f);
-	printf("%d\n", bbb);
+	printf("%+12.2A\n", 1.0/0.0);
+	printf("%012.2s\n", "-inf");
+	ft_printf("%012.2s\n", "-inf");
 	test();
 }

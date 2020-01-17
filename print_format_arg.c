@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-#define IS_FMT(X) (*info->fmt == (X))
+#define IS_FMT(FMT) (*info->fmt == (FMT))
 #define SET_FLAG(FLAG) (info->flags |= FLAG)
 #define RM_FLAG(FLAG) (info->flags &= ~FLAG)
 #define IS_FLAG(FLAG) (info->flags & FLAG)
@@ -12,7 +12,7 @@ static inline void	get_width_n_precision(t_printf_info *info)
 			info->width = 10 * info->width + (*info->fmt++ - '0');
 	else if (*info->fmt == '*')
 	{
-		info->width = va_arg(info->ap, t_int32);
+		info->width = va_arg(info->ap, t_s32);
 		++info->fmt;
 		if (info->width < 0 && (info->width = -info->width))
 			SET_FLAG(FLAG_LEFT_ALIGN);
@@ -26,7 +26,7 @@ static inline void	get_width_n_precision(t_printf_info *info)
 				info->prec = 10 * info->prec + (*info->fmt++ - '0');
 		else if (*info->fmt == '*')
 		{
-			info->prec = va_arg(info->ap, t_int32);
+			info->prec = va_arg(info->ap, t_s32);
 			++info->fmt;
 		}
 		SET_FLAG(FLAG_TRUNCATE);

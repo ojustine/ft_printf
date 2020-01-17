@@ -19,7 +19,7 @@ static inline void			padding(t_printf_info *info)
 static inline void			do_print_string(t_printf_info *info, char *data,
 											  size_t size)
 {
-	t_uint32	to_print;
+	t_u32	to_print;
 
 	if (info->flags & FLAG_TRUNCATE)
 		to_print = (info->prec < size) ? info->prec : size;
@@ -29,6 +29,7 @@ static inline void			do_print_string(t_printf_info *info, char *data,
 	{
 		if (info->flags & FLAG_LEFT_ALIGN)
 		{
+			info->flags &= ~FLAG_ZERO_PAD;
 			do_print(info, data, to_print);
 			padding(info);
 		}
@@ -43,8 +44,8 @@ static inline void			do_print_string(t_printf_info *info, char *data,
 }
 
 
-static inline t_int32		print_wchar(t_printf_info *info, uint32_t wc,
-										t_int16 is_single)
+static inline t_s32		print_wchar(t_printf_info *info, uint32_t wc,
+									   t_s16 is_single)
 {
 	char	utf_8[4];
 	size_t	bytes;
@@ -73,7 +74,7 @@ static inline t_int32		print_wchar(t_printf_info *info, uint32_t wc,
 }
 
 void						print_char(t_printf_info *info,
-										t_int16 is_wide_char)
+									   t_s16 is_wide_char)
 {
 	char	c;
 	wchar_t wc;
@@ -91,7 +92,7 @@ void						print_char(t_printf_info *info,
 }
 
 void						print_string(t_printf_info *info,
-										t_int16 is_wide_string)
+										 t_s16 is_wide_string)
 {
 	char		*str;
 	wchar_t		*wstr;
