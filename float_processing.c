@@ -25,27 +25,44 @@
 //	return (res);
 //}
 
-void	print_floating_point_number(t_printf_info *info, t_s16 base)
+void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 {
-	char		sign;
+	t_fxd_point_dbl	fxd_p_dbl;
+
+	ft_memcpy(&fxd_p_dbl, 0, sizeof(t_fxd_point_dbl));
+	while (bin64.s_parts.mantis != 0)
+	{
+//		if (bin_mantissa & 0x400000U)
+//			res += frac_powers_2[i];
+//		bin_mantissa <<= 1U;
+//		i++;
+	}
+
+}
+
+void	print_floating_point_number(t_printf_info *info)
+{
 	t_binary64	bin64;
 	t_binary80	bin80;
 
 	if (info->flags & SIZE_LONG_DBL && IS_LONG_DBL)
 	{
 		bin80.val = va_arg(info->ap, long double);
-		if (bin80.s_parts.bias_exp == 0xffff)
-		{
-			if (bin80.s_parts.mantis != 0)
-
-		}
+//		if (bin80.s_parts.bias_exp == 0xffff)
+//		{
+//			if (bin80.s_parts.mantis != 0)
+//
+//		}
 	}
 	else
+	{
 		bin64.val = va_arg(info->ap, double);
-	if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
-		sign = (info->flags & FLAG_PLUS_SIGN) ? '+' : ' ';
-	else
-		sign = 0;
+		do_print_dbl(info, bin64);
+	}
+//	if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
+//		sign = (info->flags & FLAG_PLUS_SIGN) ? '+' : ' ';
+//	else
+//		sign = 0;
 //	do_print_num(info, num, base, sign);
 }
 

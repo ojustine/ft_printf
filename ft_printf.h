@@ -166,10 +166,10 @@ typedef struct				s_big_float
 
 typedef struct				s_fxd_point_dbl
 {
-	uint32_t				ints[DBL_MAX_10_EXP];
-	uint32_t				frac[DBL_MAX_10_EXP];
-	int_fast16_t			high;
-	int_fast16_t			depth;
+	uint32_t				ints[DBL_MAX_10_EXP + 1];
+	uint32_t				frac[DBL_MAX_10_EXP + 1];
+	int_fast16_t			int_len;
+	int_fast16_t			frac_len;
 	int_fast8_t				sign;
 }							t_fxd_point_dbl;
 
