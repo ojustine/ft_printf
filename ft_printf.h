@@ -168,9 +168,8 @@ typedef struct				s_fxd_point_dbl
 {
 	uint32_t				ints[DBL_MAX_10_EXP + 1];
 	uint32_t				frac[DBL_MAX_10_EXP + 1];
-	int_fast16_t			int_len;
-	int_fast16_t			frac_len;
-	int_fast8_t				sign;
+	int_fast16_t			int_inx;
+	int_fast16_t			frac_inx;
 }							t_fxd_point_dbl;
 
 void test();
@@ -193,6 +192,9 @@ void	bf_add(t_big_float *a, t_big_float *b, t_big_float *res,
 			   const int_fast16_t prec);
 void	bf_multiply(t_big_float *a, t_big_float *b, t_big_float *res,
 					int_fast16_t prec);
+
+void				fxd_point_build_mantis(t_binary64 bin64,
+										   t_fxd_point_dbl *fxd_point_dbl);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);

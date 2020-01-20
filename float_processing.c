@@ -29,15 +29,8 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 {
 	t_fxd_point_dbl	fxd_p_dbl;
 
-	ft_memcpy(&fxd_p_dbl, 0, sizeof(t_fxd_point_dbl));
-	while (bin64.s_parts.mantis != 0)
-	{
-//		if (bin_mantissa & 0x400000U)
-//			res += frac_powers_2[i];
-//		bin_mantissa <<= 1U;
-//		i++;
-	}
-
+	ft_memset(&fxd_p_dbl, 0, sizeof(t_fxd_point_dbl));
+	fxd_point_build_mantis(bin64, &fxd_p_dbl);
 }
 
 void	print_floating_point_number(t_printf_info *info)
@@ -68,5 +61,10 @@ void	print_floating_point_number(t_printf_info *info)
 
 void test()
 {
+	t_printf_info p;
+	t_binary64 bin;
 
+	p.flags = 0;
+	bin.val = 1.5;
+	do_print_dbl(&p, bin);
 }
