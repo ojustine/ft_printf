@@ -26,7 +26,7 @@
 # include <stdint.h>
 # include <string.h>
 # include <wctype.h>
-# include "const_data.h"
+# include "ft_printf_const_data.h"
 
 # if defined(_POSIX_VERSION) || defined(__unix__) || defined(__MACH__)
 #  include <sys/select.h>
@@ -62,8 +62,8 @@ enum						e_sizes
 # define BUFF_SIZE			512
 # define MAX_INT_BITS_NUM	(sizeof(long long) * 8 + 2)
 # define FLT_MAX_LEN		(FLT_MAX_10_EXP + 3)
-# define DBL_MAX_LEN		(DBL_MAX_10_EXP + 3)
-# define LDBL_MAX_LEN		(LDBL_MAX_10_EXP + 3)
+# define FXD_POINT_DBL_LEN	((DBL_MAX_10_EXP / 9) + 1)
+# define FXD_POINT_LDBL_LEN	((LDBL_MAX_10_EXP / 9) + 1)
 # define MAX(a,b)			(((a) > (b)) ? (a) : (b))
 # define MIN(a,b)			(((a) < (b)) ? (a) : (b))
 
@@ -166,8 +166,8 @@ typedef struct				s_big_float
 
 typedef struct				s_fxd_point_dbl
 {
-	uint32_t				ints[DBL_MAX_10_EXP + 1];
-	uint32_t				frac[DBL_MAX_10_EXP + 1];
+	uint32_t				ints[];
+	uint32_t				*frac;
 	int_fast16_t			int_inx;
 	int_fast16_t			frac_inx;
 }							t_fxd_point_dbl;

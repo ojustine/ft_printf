@@ -1,5 +1,5 @@
-#ifndef FT_PRINTF_CONST_DATA_H
-# define FT_PRINTF_CONST_DATA_H
+#ifndef FT_PRINTF_FT_PRINTF_CONST_DATA_H
+# define FT_PRINTF_FT_PRINTF_CONST_DATA_H
 
 # include "ft_printf.h"
 

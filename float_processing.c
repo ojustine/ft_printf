@@ -28,8 +28,13 @@
 void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 {
 	t_fxd_point_dbl	fxd_p_dbl;
+	uint32_t		ints[FXD_POINT_DBL_LEN];
+	uint32_t		frac[FXD_POINT_DBL_LEN];
 
-	ft_memset(&fxd_p_dbl, 0, sizeof(t_fxd_point_dbl));
+	ft_memset(ints, 0, sizeof(uint32_t) * FXD_POINT_DBL_LEN);
+	ft_memset(frac, 0, sizeof(uint32_t) * FXD_POINT_DBL_LEN);
+	fxd_p_dbl.ints = ints;
+	fxd_p_dbl.frac = frac;
 	fxd_point_build_mantis(bin64, &fxd_p_dbl);
 }
 

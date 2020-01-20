@@ -32,5 +32,5 @@ void				fxd_point_build_exp(t_binary64 bin64,
 {
 	register int_fast16_t	i;
 
-	t_fxd_point_dbl d = {{0}, {0}, 0, 0};
+	t_fxd_point_dbl d = {g_neg_powers_2[0], 0, 0, 0};
 }
