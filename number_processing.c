@@ -14,9 +14,9 @@
 
 static inline void		padding(t_printf_info *info)
 {
-	const t_s8	zero_pad[] = "0000";
-	const t_s8	blank_pad[] = "    ";
-	t_s8		*curr_pad;
+	const char	zero_pad[] = "0000";
+	const char	blank_pad[] = "    ";
+	char		*curr_pad;
 
 	if (info->width > 0)
 	{
@@ -37,7 +37,7 @@ static inline void		padding(t_printf_info *info)
 static inline t_s16	add_prefix(t_printf_info *info, const t_s16 base,
 								  char sign)
 {
-	t_s16	ret;
+	int_fast16_t	ret;
 
 	ret = 0;
 	if (sign)
@@ -64,10 +64,10 @@ static inline t_s16	add_prefix(t_printf_info *info, const t_s16 base,
 static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 									   const t_s16 base, char sign)
 {
-	const t_s8			digits[] = "0123456789abcdef0123456789ABCDEF";
-	register t_s8		*ptr;
-	t_s8				buff[MAX_INT_BITS_NUM];
-	t_s16				num_len;
+	const char			digits[] = "0123456789abcdef0123456789ABCDEF";
+	register char		*ptr;
+	char				buff[MAX_INT_BITS_NUM];
+	int_fast16_t		num_len;
 
 	num_len = 1;
 	ptr = &buff[MAX_INT_BITS_NUM - 1];
@@ -93,7 +93,7 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 
 void					print_signed_number(t_printf_info *info, t_s16 base)
 {
-	t_s8		sign;
+	char		sign;
 	intmax_t	num;
 
 	if (info->flags & SIZE_LONG || info->flags & SIZE_LLONG)
@@ -123,7 +123,7 @@ void					print_signed_number(t_printf_info *info, t_s16 base)
 void					print_unsigned_number(t_printf_info *info, t_s16 base)
 {
 	uintmax_t	num;
-	t_s8		sign;
+	char		sign;
 
 	if (info->flags & SIZE_LONG || info->flags & SIZE_LLONG)
 		num = (info->flags & SIZE_LLONG)

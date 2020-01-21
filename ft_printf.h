@@ -35,7 +35,7 @@
 /*
 ** ====================== Consts and masks definition ==========================
 */
-enum						e_flags
+enum						e_printf_flags
 {
 	FLAG_LEFT_ALIGN = (1 << 0),
 	FLAG_PLUS_SIGN = (1 << 1),
@@ -44,10 +44,10 @@ enum						e_flags
 	FLAG_GROUP = (1 << 4),
 	FLAG_TRUNCATE = (1 << 5),
 	FLAG_ZERO_PAD = (1 << 6),
-	PRINT_ARG_BY_NUM = (1 << 7)
+	PRINT_ARG_BY_NUM = (sizeof(long long))
 };
 
-enum						e_sizes
+enum						e_printf_sizes
 {
 	SIZE_SHORT = (1 << 8),
 	SIZE_LONG = (1 << 9),
@@ -60,9 +60,9 @@ enum						e_sizes
 };
 
 # define BUFF_SIZE			512
-# define MAX_INT_BITS_NUM	(sizeof(long long) * 8 + 2)
-# define FLT_MAX_LEN		(FLT_MAX_10_EXP + 3)
-# define FXD_POINT_DBL_LEN	((DBL_MAX_10_EXP / 9) + 1)
+# define MAX_INT_BITS_NUM	((sizeof(long long)) * 8 + 2)
+# define FLT_MAX_LEN		FLT_MAX_10_EXP + 3
+# define FXD_DBL_LEN		((DBL_MAX_10_EXP / 9) + 1)
 # define FXD_POINT_LDBL_LEN	((LDBL_MAX_10_EXP / 9) + 1)
 # define MAX(a,b)			(((a) > (b)) ? (a) : (b))
 # define MIN(a,b)			(((a) < (b)) ? (a) : (b))
@@ -87,8 +87,8 @@ typedef uint16_t			t_u16;
 typedef int16_t				t_s16;
 typedef uint32_t			t_u32;
 typedef int32_t				t_s32;
-typedef uint64_t 			t_u64;
-typedef int64_t			t_s64;
+typedef uint64_t			t_u64;
+typedef int64_t				t_s64;
 typedef double				t_double;
 typedef long double			t_ldouble;
 
@@ -164,13 +164,13 @@ typedef struct				s_big_float
 	int_fast8_t				sign;
 }							t_big_float;
 
-typedef struct				s_fxd_point_dbl
+typedef struct				s_fxd_dbl
 {
-	uint32_t				ints[];
+	uint32_t				*ints;
 	uint32_t				*frac;
 	int_fast16_t			int_inx;
 	int_fast16_t			frac_inx;
-}							t_fxd_point_dbl;
+}							t_fxd_dbl;
 
 void test();
 
@@ -193,8 +193,8 @@ void	bf_add(t_big_float *a, t_big_float *b, t_big_float *res,
 void	bf_multiply(t_big_float *a, t_big_float *b, t_big_float *res,
 					int_fast16_t prec);
 
-void				fxd_point_build_mantis(t_binary64 bin64,
-										   t_fxd_point_dbl *fxd_point_dbl);
+void				fxd_dbl_build_mantis(t_binary64 bin64,
+										 t_fxd_dbl *fxd_dbl);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);
