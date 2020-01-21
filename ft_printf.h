@@ -166,8 +166,8 @@ typedef struct				s_big_float
 
 typedef struct				s_fxd_dbl
 {
-	uint32_t				*ints;
-	uint32_t				*frac;
+	uint32_t				ints[FXD_DBL_LEN];
+	uint32_t				frac[FXD_DBL_LEN];
 	int_fast16_t			int_inx;
 	int_fast16_t			frac_inx;
 }							t_fxd_dbl;

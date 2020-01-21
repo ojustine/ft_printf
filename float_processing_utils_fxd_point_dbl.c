@@ -1,4 +1,5 @@
 #include "ft_printf.h"
+#define RANK_LIMITER 1000000000
 
 void				fxd_dbl_add(t_fxd_dbl *res, t_fxd_dbl *term)
 {
@@ -12,8 +13,8 @@ void				fxd_dbl_add(t_fxd_dbl *res, t_fxd_dbl *term)
 	while (i >= 0)
 	{
 		res->frac[i] += (term->frac[i] + carry);
-		carry = res->frac[i] / 1000000000;
-		res->frac[i] %= 1000000000;
+		carry = res->frac[i] / RANK_LIMITER;
+		res->frac[i] %= RANK_LIMITER;
 		i--;
 	}
 	i = 0;
@@ -21,8 +22,8 @@ void				fxd_dbl_add(t_fxd_dbl *res, t_fxd_dbl *term)
 	while (i <= int_inx)
 	{
 		res->ints[i] += (term->ints[i] + carry);
-		carry = res->ints[i] / 1000000000;
-		res->ints[i] %= 1000000000;
+		carry = res->ints[i] / RANK_LIMITER;
+		res->ints[i] %= RANK_LIMITER;
 		i++;
 	}
 	res->ints[i] = carry;
@@ -37,7 +38,6 @@ void				fxd_dbl_mult_by_num(t_fxd_dbl *res, int_fast16_t offset,
 
 void				fxd_dbl_mult(t_fxd_dbl *res, t_fxd_dbl *mult)
 {
-	int_fast32_t	factor;
 	register int_fast16_t	i;
 	register int_fast32_t	tens;
 
@@ -47,9 +47,18 @@ void				fxd_dbl_mult(t_fxd_dbl *res, t_fxd_dbl *mult)
 		tens = 1;
 		while (mult->frac[i] != 0)
 		{
-			factor = mult->frac[i] % 10;
+			fxd_dbl_mult_by_num(res, -i, ((mult->frac[i] % 10) * tens));
 			mult->frac[i] /= 10;
-			fxd_dbl_mult_by_num(res, -i, factor * tens);
+			tens *= 10;
+		}
+	}
+	while (++i <= mult->int_inx)
+	{
+		tens = 1;
+		while (mult->ints[i] != 0)
+		{
+			fxd_dbl_mult_by_num(res, i, ((mult->ints[i] % 10) * tens));
+			mult->ints[i] /= 10;
 			tens *= 10;
 		}
 	}
@@ -83,8 +92,8 @@ void				fxd_dbl_build_mantis(t_binary64 bin64, t_fxd_dbl *fxd_dbl)
 			while (j >= 0)
 			{
 				fxd_dbl->frac[j] += (g_powers_2_neg[i][j] + carry);
-				carry = fxd_dbl->frac[j] / 1000000000;
-				fxd_dbl->frac[j] %= 1000000000;
+				carry = fxd_dbl->frac[j] / RANK_LIMITER;
+				fxd_dbl->frac[j] %= RANK_LIMITER;
 				j--;
 			}
 		bin64.s_parts.mantis >>= 1U;
@@ -100,12 +109,7 @@ void				fxd_dbl_build_exp(t_binary64 bin64,
 {
 	register int_fast16_t	i;
 	t_fxd_dbl		exp;
-	uint32_t		exp_ints[FXD_DBL_LEN];
-	uint32_t		exp_frac[FXD_DBL_LEN];
 
-	ft_memset(exp_ints, 0, sizeof(uint32_t) * FXD_DBL_LEN);
-	ft_memset(exp_frac, 0, sizeof(uint32_t) * FXD_DBL_LEN);
-	exp.ints = exp_ints;
-	exp.frac = exp_frac;
+	ft_memset(&exp, 0, sizeof(t_fxd_dbl));
 	bin64.s_parts.bias_exp -= 1023;
 }

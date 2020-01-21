@@ -28,13 +28,8 @@
 void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 {
 	t_fxd_dbl		fxd_dbl;
-	uint32_t		ints[FXD_DBL_LEN];
-	uint32_t		frac[FXD_DBL_LEN];
 
-	ft_memset(ints, 0, sizeof(uint32_t) * FXD_DBL_LEN);
-	ft_memset(frac, 0, sizeof(uint32_t) * FXD_DBL_LEN);
-	fxd_dbl.ints = ints;
-	fxd_dbl.frac = frac;
+	ft_memset(&fxd_dbl, 0, sizeof(t_fxd_dbl));
 	fxd_dbl_build_mantis(bin64, &fxd_dbl);
 }
 
