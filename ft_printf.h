@@ -182,6 +182,7 @@ double	ft_pow(double base, int_fast16_t power);
 long double	ft_long_pow(long double base, int_fast16_t power);
 void	*ft_memmove(void *dst, const void *src, size_t len);
 void	ft_assert(int_fast32_t to_check, const char *func, const char *message);
+intmax_t	ft_moddiv(intmax_t dividend, intmax_t divisor, intmax_t *quotient);
 
 void	bf_parse(t_big_float *f, const char *str);
 void	bf_shift_right(t_big_float *a, const int_fast16_t shift);

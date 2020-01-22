@@ -30,8 +30,8 @@ void				fxd_dbl_add(t_fxd_dbl *res, t_fxd_dbl *term)
 	res->int_inx = (carry) ? i : (i - 1);
 }
 
-void				fxd_dbl_mult_by_num(t_fxd_dbl *res, int_fast16_t offset,
-										int_fast32_t num)
+void				fxd_dbl_mult_by_num(t_fxd_dbl *res, int_fast32_t num,
+					int_fast16_t offset, int_fast16_t rank_offset)
 {
 
 }
@@ -40,26 +40,26 @@ void				fxd_dbl_mult(t_fxd_dbl *res, t_fxd_dbl *mult)
 {
 	register int_fast16_t	i;
 	register int_fast32_t	tens;
+	t_fxd_dbl				tmp;
 
+	ft_memset(&tmp, 0, sizeof(t_fxd_dbl));
 	i = mult->frac_inx + 1;
 	while (--i >= 0)
 	{
-		tens = 1;
-		while (mult->frac[i] != 0)
+		tens = RANK_LIMITER;
+		while (mult->frac[i] != 0 && ((tens /= 10) > 0))
 		{
-			fxd_dbl_mult_by_num(res, -i, ((mult->frac[i] % 10) * tens));
-			mult->frac[i] /= 10;
-			tens *= 10;
+			fxd_dbl_mult_by_num(&tmp, ft_moddiv(mult->frac[i], 10, (intmax_t*)&mult->frac[i]), -i, tens);
+			fxd_dbl_add(res, &tmp);
 		}
 	}
 	while (++i <= mult->int_inx)
 	{
 		tens = 1;
-		while (mult->ints[i] != 0)
+		while (mult->ints[i] != 0 && ((tens *= 10) < RANK_LIMITER))
 		{
-			fxd_dbl_mult_by_num(res, i, ((mult->ints[i] % 10) * tens));
+			fxd_dbl_mult_by_num(res, (mult->ints[i] % 10), i, tens);
 			mult->ints[i] /= 10;
-			tens *= 10;
 		}
 	}
 }
