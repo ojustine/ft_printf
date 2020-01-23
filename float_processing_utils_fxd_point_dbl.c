@@ -4,22 +4,21 @@
 void				fxd_dbl_add(t_fxd_dbl *res, t_fxd_dbl *term)
 {
 	register int_fast16_t	i;
-	int_fast16_t			int_inx;
+	int_fast16_t			int_len;
 	int_fast32_t			carry;
 
-	i = (res->frac_inx > term->frac_inx) ? res->frac_inx : term->frac_inx;
-	res->frac_inx = i;
+	i = (res->frac_len > term->frac_len) ? res->frac_len : term->frac_len;
+	res->frac_len = i;
 	carry = 0;
-	while (i >= 0)
+	while (--i >= 0)
 	{
 		res->frac[i] += (term->frac[i] + carry);
 		carry = res->frac[i] / RANK_LIMITER;
 		res->frac[i] %= RANK_LIMITER;
-		i--;
 	}
 	i = 0;
-	int_inx = (res->int_inx > term->int_inx) ? res->int_inx : term->int_inx;
-	while (i <= int_inx)
+	int_len = (res->int_len > term->int_len) ? res->int_len : term->int_len;
+	while (i < int_len)
 	{
 		res->ints[i] += (term->ints[i] + carry);
 		carry = res->ints[i] / RANK_LIMITER;
@@ -27,33 +26,58 @@ void				fxd_dbl_add(t_fxd_dbl *res, t_fxd_dbl *term)
 		i++;
 	}
 	res->ints[i] = carry;
-	res->int_inx = (carry) ? i : (i - 1);
+	res->int_len = (carry) ? (i + 1) : i;
 }
 
-void				fxd_dbl_mult_by_num(t_fxd_dbl *res, int_fast32_t num,
-					int_fast16_t offset, int_fast16_t rank_offset)
+void				fxd_dbl_mult_by_num(t_fxd_dbl *res, t_fxd_dbl *line,
+					int_fast32_t num, int_fast16_t offset)
 {
+	register int_fast32_t	rank;
+	register int_fast32_t	tens;
+	register int_fast16_t	i;
 
+	i = res->frac_len;
+	while (--i >= 0)
+	{
+		rank = res->frac[i];
+		tens = RANK_LIMITER;
+		while (rank && ((tens /= 10) > 0))
+			line->frac[i - offset + 1] += (ft_moddiv(res->frac[-offset] * num, tens,
+			(intmax_t*)&line->frac[i - offset]) * tens);
+//			line->frac[i - offset] = res->frac[-offset] * num;
+//			line->frac[i - offset + 1] = line->frac[i - offset] % tens;
+//			line->frac[i - offset] /= tens;
+	}
+	i = res->frac_len;
+	while (--i >= 0)
+	{
+		rank = res->frac[i];
+		tens = RANK_LIMITER;
+		while (rank && ((tens /= 10) > 0))
+			line->frac[i - offset + 1] += (ft_moddiv(res->frac[-offset] * num, tens,
+													 (intmax_t*)&line->frac[i - offset]) * tens);
+	}
 }
 
 void				fxd_dbl_mult(t_fxd_dbl *res, t_fxd_dbl *mult)
 {
 	register int_fast16_t	i;
-	register int_fast32_t	tens;
 	t_fxd_dbl				tmp;
+	t_fxd_dbl				line;
 
 	ft_memset(&tmp, 0, sizeof(t_fxd_dbl));
-	i = mult->frac_inx + 1;
-	while (--i >= 0)
+	i = mult->frac_len + 1;
+	while (--i > 0)
 	{
 		tens = RANK_LIMITER;
-		while (mult->frac[i] != 0 && ((tens /= 10) > 0))
+		while (mult->frac[i - 1] != 0 && ((tens /= 10) > 0))
 		{
-			fxd_dbl_mult_by_num(&tmp, ft_moddiv(mult->frac[i], 10, (intmax_t*)&mult->frac[i]), -i, tens);
-			fxd_dbl_add(res, &tmp);
+			ft_memset(&line, 0, sizeof(t_fxd_dbl));
+			fxd_dbl_mult_by_num(res, &line, ft_moddiv(mult->frac[i - 1], 10, (intmax_t*)&mult->frac[i - 1]), -i);
+			fxd_dbl_add(&tmp, &line);
 		}
 	}
-	while (++i <= mult->int_inx)
+	while (++i <= mult->int_len)
 	{
 		tens = 1;
 		while (mult->ints[i] != 0 && ((tens *= 10) < RANK_LIMITER))
@@ -99,9 +123,9 @@ void				fxd_dbl_build_mantis(t_binary64 bin64, t_fxd_dbl *fxd_dbl)
 		bin64.s_parts.mantis >>= 1U;
 		i--;
 	}
-	fxd_dbl->frac_inx = 7;
-	fxd_dbl->int_inx = 0;
-	fxd_dbl->ints[0] += (bin64.s_parts.bias_exp != 0);
+	fxd_dbl->frac_len = 8;
+	fxd_dbl->ints[0] = (bin64.s_parts.bias_exp != 0);
+	fxd_dbl->int_len = fxd_dbl->ints[0];
 }
 
 void				fxd_dbl_build_exp(t_binary64 bin64,

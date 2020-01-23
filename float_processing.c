@@ -65,6 +65,6 @@ void test()
 	t_binary64 bin;
 
 	p.flags = 0;
-	bin.val = 1.8573382;
+	bin.val = 1.5;
 	do_print_dbl(&p, bin);
 }
