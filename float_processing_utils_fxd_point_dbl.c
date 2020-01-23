@@ -48,14 +48,14 @@ void				fxd_dbl_mult_by_num(t_fxd_dbl *res, t_fxd_dbl *line,
 //			line->frac[i - offset + 1] = line->frac[i - offset] % tens;
 //			line->frac[i - offset] /= tens;
 	}
-	i = res->frac_len;
-	while (--i >= 0)
+	i = 0;
+	while (++i < res->int_len)
 	{
-		rank = res->frac[i];
-		tens = RANK_LIMITER;
-		while (rank && ((tens /= 10) > 0))
-			line->frac[i - offset + 1] += (ft_moddiv(res->frac[-offset] * num, tens,
-													 (intmax_t*)&line->frac[i - offset]) * tens);
+		rank = res->ints[i];
+		tens = 1;
+		while (rank && ((tens *= 10) > RANK_LIMITER))
+			line->ints[i + offset + 1] += (ft_moddiv(res->frac[-offset] * num, tens,
+													 (intmax_t*)&line->frac[i + offset]) * tens);
 	}
 }
 
@@ -64,6 +64,7 @@ void				fxd_dbl_mult(t_fxd_dbl *res, t_fxd_dbl *mult)
 	register int_fast16_t	i;
 	t_fxd_dbl				tmp;
 	t_fxd_dbl				line;
+	register int_fast32_t	tens;
 
 	ft_memset(&tmp, 0, sizeof(t_fxd_dbl));
 	i = mult->frac_len + 1;
