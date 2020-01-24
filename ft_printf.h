@@ -59,10 +59,17 @@ enum						e_printf_sizes
 	SIZE_LONG_DBL = (1 << 15)
 };
 
+enum						e_fxd_dbl_assets
+{
+	FXD_DBL_LEN = ((DBL_MAX_10_EXP / 9) * 2),
+	FXD_DBL_POINT = (DBL_MAX_10_EXP / 9),
+	INT_0 = FXD_DBL_POINT,
+	FRC_0 = FXD_DBL_POINT + 1,
+};
+
 # define BUFF_SIZE			512
 # define MAX_INT_BITS_NUM	((sizeof(long long)) * 8 + 2)
 # define FLT_MAX_LEN		FLT_MAX_10_EXP + 3
-# define FXD_DBL_LEN		((DBL_MAX_10_EXP / 9) + 1)
 # define FXD_POINT_LDBL_LEN	((LDBL_MAX_10_EXP / 9) + 1)
 # define MAX(a,b)			(((a) > (b)) ? (a) : (b))
 # define MIN(a,b)			(((a) < (b)) ? (a) : (b))
@@ -166,10 +173,9 @@ typedef struct				s_big_float
 
 typedef struct				s_fxd_dbl
 {
-	uint32_t				ints[FXD_DBL_LEN];
-	uint32_t				frac[FXD_DBL_LEN];
+	uint32_t				val[FXD_DBL_LEN];
 	int_fast16_t			int_len;
-	int_fast16_t			frac_len;
+	int_fast16_t			frc_len;
 }							t_fxd_dbl;
 
 void test();
@@ -197,7 +203,8 @@ void	bf_multiply(t_big_float *a, t_big_float *b, t_big_float *res,
 
 void				fxd_dbl_build_mantis(t_binary64 bin64,
 										 t_fxd_dbl *fxd_dbl);
-void				fxd_dbl_add(t_fxd_dbl *res, t_fxd_dbl *term);
+void				fxd_dbl_add(t_fxd_dbl *res, t_fxd_dbl *trm);
+void				fxd_dbl_mult(t_fxd_dbl *res, t_fxd_dbl *mult);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);
