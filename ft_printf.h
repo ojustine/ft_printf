@@ -204,7 +204,7 @@ void	bf_multiply(t_big_float *a, t_big_float *b, t_big_float *res,
 void				fxd_dbl_build_mantis(t_binary64 bin64,
 										 t_fxd_dbl *fxd_dbl);
 void				fxd_dbl_add(t_fxd_dbl *res, t_fxd_dbl *trm);
-void				fxd_dbl_mult(t_fxd_dbl *res, t_fxd_dbl *mult);
+void				fxd_dbl_mul(t_fxd_dbl *res, t_fxd_dbl *mul);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);

@@ -37,7 +37,7 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	fxd_dbl_build_mantis(bin64, &fxd_dbl);
 	fxd_dbl_build_mantis(bin1, &fxd_dbl1);
 	fxd_dbl_add(&fxd_dbl, &fxd_dbl);
-	fxd_dbl_mult(&fxd_dbl, &fxd_dbl);
+	fxd_dbl_mul(&fxd_dbl, &fxd_dbl);
 }
 
 void	print_floating_point_number(t_printf_info *info)
