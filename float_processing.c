@@ -28,16 +28,15 @@
 void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 {
 	t_fxd_dbl		fxd_dbl;
-	t_fxd_dbl		fxd_dbl1;
-	t_binary64 bin1;
+	t_fxd_dbl		exp;
 
 	ft_memset(&fxd_dbl, 0, sizeof(t_fxd_dbl));
-	ft_memset(&fxd_dbl1, 0, sizeof(t_fxd_dbl));
-	bin1.val = 1.545452;
+	ft_memset(&exp, 0, sizeof(t_fxd_dbl));
+
 	fxd_dbl_build_mantis(bin64, &fxd_dbl);
-	fxd_dbl_build_mantis(bin1, &fxd_dbl1);
-	fxd_dbl_add(&fxd_dbl, &fxd_dbl);
-	fxd_dbl_mul(&fxd_dbl, &fxd_dbl);
+	fxd_dbl_build_exp(bin64.s_parts.bias_exp, &exp);
+
+	fxd_dbl_mul(&fxd_dbl, &exp);
 }
 
 void	print_floating_point_number(t_printf_info *info)
@@ -72,6 +71,6 @@ void test()
 	t_binary64 bin;
 
 	p.flags = 0;
-	bin.val = 1.545452;
+	bin.val = 0.105;
 	do_print_dbl(&p, bin);
 }
