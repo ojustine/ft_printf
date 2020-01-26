@@ -61,10 +61,12 @@ enum						e_printf_sizes
 
 enum						e_fxd_dbl_assets
 {
-	FXD_DBL_LEN = ((DBL_MAX_10_EXP / 9) * 2),
-	FXD_DBL_POINT = (DBL_MAX_10_EXP / 9),
-	INT_0 = FXD_DBL_POINT,
-	FRC_0 = FXD_DBL_POINT + 1,
+	D_R_LIMITER = 1000000000,
+	D_R_SIZE = 4,
+	D_LEN = ((DBL_MAX_10_EXP / 9) * 4 + 14),
+	D_POINT = (DBL_MAX_10_EXP / 9),
+	D_I0 = D_POINT,
+	D_F0 = D_POINT + 1,
 };
 
 # define BUFF_SIZE			512
@@ -105,7 +107,7 @@ typedef long double			t_ldouble;
 #  define IS_LONG_LONG 0
 # endif
 # if LDBL_MAX_EXP == 16384
-#  define IS_LONG_DBL 1
+#  define IS_LONG_DBL_DEFINED 1
 # else
 #  define IS_LONG_DBL 0
 # endif
@@ -130,17 +132,6 @@ typedef struct				s_printf_info
 	const char				*fmt;
 }							t_printf_info;
 
-typedef union				u_float
-{
-	struct
-	{
-		uint_fast32_t		mantis		: 23;
-		uint_fast32_t		bias_exp	: 8;
-		uint_fast32_t		sign		: 1;
-	}						s_parts;
-	float					val;
-}							t_binary32;
-
 typedef union				u_double
 {
 	struct
@@ -163,22 +154,12 @@ typedef union				u_long_double
 	long double				val;
 }							t_binary80;
 
-typedef struct				s_big_float
-{
-	char					digits[FLT_MAX_LEN];
-	int_fast16_t			point_pos;
-	int_fast16_t			length;
-	int_fast8_t				sign;
-}							t_big_float;
-
 typedef struct				s_fxd_dbl
 {
-	uint32_t				val[FXD_DBL_LEN];
+	uint32_t				val[D_LEN];
 	int_fast16_t			int_len;
 	int_fast16_t			frc_len;
 }							t_fxd_dbl;
-
-void test();
 
 void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
@@ -191,21 +172,11 @@ void	ft_assert(int_fast32_t to_check, const char *func, const char *message);
 intmax_t	ft_moddiv(intmax_t dividend, intmax_t divisor, intmax_t *quotient);
 intmax_t	ft_divmod(intmax_t dividend, intmax_t divisor, intmax_t *remainder);
 
-void	bf_parse(t_big_float *f, const char *str);
-void	bf_shift_right(t_big_float *a, const int_fast16_t shift);
-void	bf_shift_left(t_big_float *a, const int_fast16_t shift);
-void	bf_move_value(t_big_float *a, const int_fast16_t prec,
-					  int_fast8_t is_move_to_tail);
-void	bf_add(t_big_float *a, t_big_float *b, t_big_float *res,
-			   const int_fast16_t prec);
-void	bf_multiply(t_big_float *a, t_big_float *b, t_big_float *res,
-					int_fast16_t prec);
 
 void				fxd_dbl_build_mantis(t_binary64 bin64,
 										 t_fxd_dbl *mantis);
-void				fxd_dbl_add(t_fxd_dbl *base, t_fxd_dbl *trm);
 void				fxd_dbl_mul(t_fxd_dbl *base, t_fxd_dbl *mul);
-void				fxd_dbl_build_exp(int_fast16_t b_exp, t_fxd_dbl *base);
+void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd_dbl *base);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);
