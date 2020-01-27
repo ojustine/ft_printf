@@ -12,7 +12,7 @@ static inline void	get_width_n_precision(t_printf_info *info)
 			info->width = 10 * info->width + (*info->fmt++ - '0');
 	else if (*info->fmt == '*')
 	{
-		info->width = va_arg(info->ap, t_s32);
+		info->width = va_arg(info->ap, int32_t);
 		++info->fmt;
 		if (info->width < 0 && (info->width = -info->width))
 			SET_FLAG(FLAG_LEFT_ALIGN);
@@ -26,7 +26,7 @@ static inline void	get_width_n_precision(t_printf_info *info)
 				info->prec = 10 * info->prec + (*info->fmt++ - '0');
 		else if (*info->fmt == '*')
 		{
-			info->prec = va_arg(info->ap, t_s32);
+			info->prec = va_arg(info->ap, int32_t);
 			++info->fmt;
 		}
 		SET_FLAG(FLAG_TRUNCATE);
@@ -62,24 +62,24 @@ static inline void	print_arg_by_type(t_printf_info *info)
 	if (IS_FMT('B') || IS_FMT('X'))
 		info->capitals = 16;
 	if (IS_FMT('d') || IS_FMT('i') || IS_FMT('D'))
-		print_signed_number(info, 10);
+		get_signed_arg(info, 10);
 	else if (*info->fmt == 's')
-		print_string(info, (info->flags & SIZE_LONG
-										|| info->flags & SIZE_LLONG));
+		get_string_arg(info, (info->flags & SIZE_LONG
+							  || info->flags & SIZE_LLONG));
 	else if (*info->fmt == 'u' || *info->fmt == 'U')
-		print_unsigned_number(info, 10);
+		get_unsigned_arg(info, 10);
 	else if (*info->fmt == 'o' || *info->fmt == 'O')
-		print_unsigned_number(info, 8);
+		get_unsigned_arg(info, 8);
 	else if (*info->fmt == 'x' || *info->fmt == 'X')
-		print_unsigned_number(info, 16);
+		get_unsigned_arg(info, 16);
 	else if (*info->fmt == 'b' || *info->fmt == 'B')
-		print_unsigned_number(info, 2);
+		get_unsigned_arg(info, 2);
 //	else if (*info->fmt == 'f' || *info->fmt == 'F')
 //		(info->flags & F_APP_PRECI && !p->precision) ? pf_putnb(p) : pf_putdouble(p);
 	else if (*info->fmt == 'c' || *info->fmt == 'C')
-		print_char(info, (*info->fmt == 'C'));
+		get_char_arg(info, (*info->fmt == 'C'));
 	else if (*info->fmt == 'S')
-		print_string(info, 1);
+		get_string_arg(info, 1);
 //	else if (*info->fmt == 'p')
 //		print_pointer_address(p);
 //	else if (*info->fmt == 'n')

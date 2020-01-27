@@ -73,8 +73,8 @@ static inline t_s32		print_wchar(t_printf_info *info, uint32_t wc,
 	return (bytes);
 }
 
-void						print_char(t_printf_info *info,
-									   t_s16 is_wide_char)
+void						get_char_arg(t_printf_info *info,
+										 t_s16 is_wide_char)
 {
 	char	c;
 	wchar_t wc;
@@ -91,8 +91,8 @@ void						print_char(t_printf_info *info,
 	}
 }
 
-void						print_string(t_printf_info *info,
-										 t_s16 is_wide_string)
+void						get_string_arg(t_printf_info *info,
+										   t_s16 is_wide_string)
 {
 	char		*str;
 	wchar_t		*wstr;

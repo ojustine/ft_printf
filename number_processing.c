@@ -91,7 +91,7 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 	padding(info);
 }
 
-void					print_signed_number(t_printf_info *info, t_s16 base)
+void					get_signed_arg(t_printf_info *info, t_s16 base)
 {
 	char		sign;
 	intmax_t	num;
@@ -120,7 +120,7 @@ void					print_signed_number(t_printf_info *info, t_s16 base)
 	do_print_num(info, num, base, sign);
 }
 
-void					print_unsigned_number(t_printf_info *info, t_s16 base)
+void					get_unsigned_arg(t_printf_info *info, t_s16 base)
 {
 	uintmax_t	num;
 	char		sign;

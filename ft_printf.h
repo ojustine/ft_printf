@@ -61,8 +61,9 @@ enum						e_printf_sizes
 
 enum						e_fxd_dbl_assets
 {
-	D_R_LIMITER = 1000000000,
-	D_R_SIZE = 4,
+	R_LIMITER = 1000000000,
+	R_LEN = 9,
+	R_SIZE = 4,
 	D_LEN = ((DBL_MAX_10_EXP / 9) * 4 + 14),
 	D_POINT = (DBL_MAX_10_EXP / 9),
 	D_I0 = D_POINT,
@@ -161,6 +162,13 @@ typedef struct				s_fxd_dbl
 	int_fast16_t			frc_len;
 }							t_fxd_dbl;
 
+typedef struct				s_fxd_pattern
+{
+	uint32_t				*val;
+	int_fast16_t			int_len;
+	int_fast16_t			frc_len;
+}							t_fxd_pattern;
+
 void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 size_t	ft_strlen(const char *s);
@@ -171,6 +179,7 @@ void	*ft_memmove(void *dst, const void *src, size_t len);
 void	ft_assert(int_fast32_t to_check, const char *func, const char *message);
 intmax_t	ft_moddiv(intmax_t dividend, intmax_t divisor, intmax_t *quotient);
 intmax_t	ft_divmod(intmax_t dividend, intmax_t divisor, intmax_t *remainder);
+size_t	ft_intlen(int32_t n);
 
 
 void				fxd_dbl_build_mantis(t_binary64 bin64,
@@ -181,12 +190,14 @@ void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd_dbl *base);
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);
 void						get_formatted_arg(t_printf_info *info);
-void						print_char(t_printf_info *info,
-									   t_s16 is_wide_char);
-void					print_string(t_printf_info *info,
-									 t_s16 is_wide_string);
-void					print_signed_number(t_printf_info *info,
-											t_s16 base);
-void					print_unsigned_number(t_printf_info *info,
-											  t_s16 base);
+void						get_char_arg(t_printf_info *info,
+										 t_s16 is_wide_char);
+void					get_string_arg(t_printf_info *info,
+									   t_s16 is_wide_string);
+void					get_signed_arg(t_printf_info *info,
+									   t_s16 base);
+void					get_unsigned_arg(t_printf_info *info,
+										 t_s16 base);
+
+void test();
 #endif

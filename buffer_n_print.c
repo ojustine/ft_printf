@@ -5,8 +5,7 @@ static inline void	buffer_flush(t_printf_info *info)
 	return ;
 }
 
-void				do_print(t_printf_info *info, char *data, size_t
-size)
+void				do_print(t_printf_info *info, char *data, size_t size)
 {
 	register t_s32		remaining_space;
 	register size_t			data_index;
