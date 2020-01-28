@@ -74,8 +74,8 @@ static inline void	print_arg_by_type(t_printf_info *info)
 		get_unsigned_arg(info, 16);
 	else if (*info->fmt == 'b' || *info->fmt == 'B')
 		get_unsigned_arg(info, 2);
-//	else if (*info->fmt == 'f' || *info->fmt == 'F')
-//		(info->flags & F_APP_PRECI && !p->precision) ? pf_putnb(p) : pf_putdouble(p);
+	else if (*info->fmt == 'f' || *info->fmt == 'F')
+		get_floating_point_arg(info);
 	else if (*info->fmt == 'c' || *info->fmt == 'C')
 		get_char_arg(info, (*info->fmt == 'C'));
 	else if (*info->fmt == 'S')

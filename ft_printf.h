@@ -190,7 +190,9 @@ void				fxd_dbl_build_mantis(t_binary64 bin64,
 										 t_fxd_dbl *mantis);
 void				fxd_dbl_mul(t_fxd_dbl *base, t_fxd_dbl *mul);
 void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd_dbl *base);
-void	print_fp_decimal_form(t_printf_info *info, t_fxd_dbl *fp);
+void	get_floating_point_arg(t_printf_info *info);
+void	print_fp_decimal_form(t_printf_info *info, uint32_t *fp,
+							  uint_fast16_t int_len);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);

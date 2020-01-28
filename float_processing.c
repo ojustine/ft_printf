@@ -4,7 +4,6 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 {
 	t_fxd_dbl		fxd_dbl;
 	t_fxd_dbl		exp;
-	t_fxd_img		e;
 
 	if (*info->fmt == 'a' || *info->fmt == 'A')
 	{
@@ -16,12 +15,9 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	fxd_dbl_build_mantis(bin64, &fxd_dbl);
 	fxd_dbl_build_exp(bin64.s_parts.bias_exp, &exp);
 	fxd_dbl_mul(&fxd_dbl, &exp);
-	e.int_len = fxd_dbl.int_len;
-	e.frc_len = fxd_dbl.frc_len;
-	e.val = fxd_dbl.val;
 	if (*info->fmt == 'f' || *info->fmt == 'F')
 	{
-		print_fp_decimal_form(info, &fxd_dbl);
+		print_fp_decimal_form(info, fxd_dbl.val, fxd_dbl.int_len);
 		return ;
 	}
 	else if (*info->fmt == 'e' || *info->fmt == 'E')
@@ -53,15 +49,4 @@ void	get_floating_point_arg(t_printf_info *info)
 		bin64.val = va_arg(info->ap, double);
 		do_print_dbl(info, bin64);
 	}
-}
-
-void test()
-{
-	t_printf_info p;
-	t_binary64 b;
-
-	p.prec = 12;
-	p.fmt = "f";
-	b.val = 3.14;
-	do_print_dbl(&p, b);
 }
