@@ -68,6 +68,10 @@ enum						e_fxd_dbl_assets
 	D_POINT = (DBL_MAX_10_EXP / 9),
 	D_I0 = D_POINT,
 	D_F0 = D_POINT + 1,
+	LD_LEN = ((LDBL_MAX_10_EXP / 9) * 4 + 14),
+	LD_POINT = (LDBL_MAX_10_EXP / 9),
+	LD_I0 = LD_POINT,
+	LD_F0 = LD_POINT + 1,
 };
 
 # define BUFF_SIZE			512
@@ -167,7 +171,7 @@ typedef struct				s_fxd_pattern
 	uint32_t				*val;
 	int_fast16_t			int_len;
 	int_fast16_t			frc_len;
-}							t_fxd_pattern;
+}							t_fxd_img;
 
 void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
@@ -186,6 +190,7 @@ void				fxd_dbl_build_mantis(t_binary64 bin64,
 										 t_fxd_dbl *mantis);
 void				fxd_dbl_mul(t_fxd_dbl *base, t_fxd_dbl *mul);
 void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd_dbl *base);
+void	print_fp_decimal_form(t_printf_info *info, t_fxd_dbl *fp);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);

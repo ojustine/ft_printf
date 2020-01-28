@@ -22,18 +22,27 @@ static inline void		padding(t_printf_info *info)
 	}
 }
 
-void	print_fp_decimal_form(t_printf_info *info, t_fxd_pattern *fp)
+void	print_fp_decimal_form(t_printf_info *info, t_fxd_dbl *fp)
 {
-	register int16_t	i;
-	register int32_t	rank;
-	const int16_t		len = ft_intlen(fp->val[D_I0 - fp->int_len - 1]);
-	char				output[fp->int_len * R_LEN + info->prec + R_LEN + 1];
-	register char		*ptr;
+	register int_fast16_t	i;
+	register int_fast16_t	j;
+	char					out[fp->int_len * R_LEN + info->prec + R_LEN + 1];
+	register char			*ptr;
 
-	i = 0;
-	ptr = &output[fp->int_len * R_LEN + info->prec + R_LEN];
-	while (i++ < fp->int_len + info->prec)
+	ptr = &out[fp->int_len * R_LEN + info->prec + R_LEN];
+	i = info->prec / R_LEN;
+	while (--i > -fp->int_len)
 	{
-		output[i] = fp->val[--fp->int_len];
+		j = R_LEN;
+		if (i == -1)
+			*ptr-- = '.';
+		while (--j >= 0)
+		{
+			if (i - 1 == -fp->int_len && fp->val[D_F0 + i] == 0 && j < 8)
+				break ;
+			*ptr-- = (char)(fp->val[D_F0 + i] % 10 + '0');
+			fp->val[D_F0 + i] /= 10;
+		}
 	}
+	do_print(info, ptr + 1, (&out[fp->int_len * R_LEN + info->prec + R_LEN] - ptr));
 }
