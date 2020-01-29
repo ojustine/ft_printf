@@ -29,6 +29,7 @@ void	print_fp_decimal_form(t_printf_info *info, uint32_t *fp,
 	register int_fast16_t	j;
 	char					buff[int_len * R_LEN + info->prec + R_LEN + 1];
 	register char			*ptr;
+	size_t					to_print;
 
 	ptr = &buff[int_len * R_LEN + info->prec + R_LEN];
 	i = info->prec / R_LEN + 1;
@@ -39,13 +40,15 @@ void	print_fp_decimal_form(t_printf_info *info, uint32_t *fp,
 			*ptr-- = '.';
 		while (--j >= 0)
 		{
-			if (i == -int_len && fp[D_F0 + i] == 0 && j < 8)
-				break ;
 			*ptr-- = (char)(fp[D_F0 + i] % 10 + '0');
 			fp[D_F0 + i] /= 10;
+			if (i - 1 < -int_len && fp[D_F0 + i] == 0)
+				break ;
 		}
 	}
-	do_print(info, ptr + 1, &buff[int_len * R_LEN + info->prec + R_LEN] - ptr);
+	to_print = (&buff[int_len * R_LEN + info->prec + R_LEN] - ptr);
+	to_print -= R_LEN - (info->prec % R_LEN);
+	do_print(info, ptr + 1, to_print);
 }
 //void	pprint_fp_decimal_form(t_printf_info *info, uint32_t *fp,
 //		uint_fast16_t int_len)

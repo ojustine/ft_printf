@@ -34,9 +34,7 @@ void				fxd_dbl_mul(t_fxd_dbl *base, t_fxd_dbl *mul)
 	ft_memset(&tmp, 0, sizeof(t_fxd_dbl));
 	ft_memset(&line, 0, sizeof(t_fxd_dbl));
 	i = mul->frc_len;
-	while (--i >= -mul->int_len)
-	{
-		j = base->frc_len;
+	while (--i >= -mul->int_len && (j = base->frc_len) < D_LEN)
 		while (--j >= -base->int_len)
 		{
 			if ((res = (uint64_t)base->val[D_F0 + j] * mul->val[D_F0 + i]) == 0)
@@ -44,11 +42,13 @@ void				fxd_dbl_mul(t_fxd_dbl *base, t_fxd_dbl *mul)
 			line.val[D_F0 + i + j + 1] += res % R_LIMITER;
 			line.val[D_F0 + i + j] += res / R_LIMITER;
 			line.frc_len = (i + j + 1 >= 0) ? (i + j + 2) : 0;
-			line.int_len = (i + j < 0) ? -(i + j) : 0;
+			if (i + j < 0)
+				line.int_len = (i + j == -1) ? 1 : -(i + j + 1);
+			else
+				line.int_len = 0;
 			fxd_dbl_add(&tmp, &line);
 			ft_memset(&line.val[D_F0 + i + j], 0, R_SIZE * 2);
 		}
-	}
 	ft_memcpy(base, &tmp, sizeof(t_fxd_dbl));
 }
 
@@ -131,7 +131,7 @@ void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd_dbl *base)
 	{
 		ft_memcpy(&mul.val[D_I0 - 2], g_pow_2[exp - 1], R_SIZE * 3);
 		mul.int_len += (exp < 30) ? 1 : 2;
-		mul.int_len += (mul.val[D_I0 - 2] != 0);
+		mul.int_len += (exp < 60) ? 0 : 1;
 		fxd_dbl_mul(base, &mul);
 	}
 	else

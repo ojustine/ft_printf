@@ -30,6 +30,6 @@ int main()
 	printf("%.2a\n", 16.16);
 	printf("%12.2s\n", "-inf");
 	ft_printf("%012.2s\n", "-inf");
-	ft_printf("%f\n", 3.121343454);
-	printf("%.9f\n", 3.121343454);
+	ft_printf("%.1f\n", 0.000000000000000123);
+	printf("%.111f\n", 0.000000000000000123);
 }

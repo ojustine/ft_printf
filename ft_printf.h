@@ -125,7 +125,7 @@ typedef struct				s_printf_info
 {
 	uint16_t				flags;
 	int_fast32_t			width;
-	int_fast16_t			prec;
+	int_fast32_t			prec;
 	uint_fast8_t			capitals;
 	int32_t					fd;
 	char					buff[BUFF_SIZE + 1];
