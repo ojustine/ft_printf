@@ -74,7 +74,7 @@ enum						e_fxd_dbl_assets
 	LD_F0 = LD_POINT + 1,
 };
 
-# define BUFF_SIZE			512
+# define BUFF_SIZE			5
 # define MAX_INT_BITS_NUM	((sizeof(long long)) * 8 + 2)
 # define FLT_MAX_LEN		FLT_MAX_10_EXP + 3
 # define FXD_POINT_LDBL_LEN	((LDBL_MAX_10_EXP / 9) + 1)
@@ -191,8 +191,8 @@ void				fxd_dbl_build_mantis(t_binary64 bin64,
 void				fxd_dbl_mul(t_fxd_dbl *base, t_fxd_dbl *mul);
 void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd_dbl *base);
 void	get_floating_point_arg(t_printf_info *info);
-void	print_fp_decimal_form(t_printf_info *info, uint32_t *fp,
-							  uint_fast16_t int_len);
+void	print_fp_dec_form(t_printf_info *info, uint32_t *fp,
+						  uint_fast16_t int_len);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);

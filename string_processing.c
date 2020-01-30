@@ -14,7 +14,7 @@ static inline void			padding(t_printf_info *info)
 	}
 	while (info->width--)
 		do_print(info, curr_pad, 1);
-}
+}//TODO: rm 0-flag
 
 static inline void			do_print_string(t_printf_info *info, char *data,
 											  size_t size)
