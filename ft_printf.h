@@ -65,6 +65,7 @@ enum						e_fxd_dbl_assets
 	R_LEN = 9,
 	R_SIZE = 4,
 	D_LEN = ((DBL_MAX_10_EXP / 9) * 4 + 14),
+	D_MAX_PREC = 1035,
 	D_POINT = (DBL_MAX_10_EXP / 9),
 	D_I0 = D_POINT,
 	D_F0 = D_POINT + 1,
@@ -159,12 +160,19 @@ typedef union				u_long_double
 	long double				val;
 }							t_binary80;
 
-typedef struct				s_fxd_dbl
+typedef struct				s_fxd
+{
+	uint32_t				*val;
+	int_fast16_t			int_len;
+	int_fast16_t			frc_len;
+}							t_fxd;
+
+typedef struct				s_fxd_dbl_fast
 {
 	uint32_t				val[D_LEN];
 	int_fast16_t			int_len;
 	int_fast16_t			frc_len;
-}							t_fxd_dbl;
+}							t_fxd_dbl_fast;
 
 typedef struct				s_fxd_pattern
 {
@@ -184,15 +192,17 @@ void	ft_assert(int_fast32_t to_check, const char *func, const char *message);
 intmax_t	ft_moddiv(intmax_t dividend, intmax_t divisor, intmax_t *quotient);
 intmax_t	ft_divmod(intmax_t dividend, intmax_t divisor, intmax_t *remainder);
 size_t	ft_intlen(int32_t n);
+void	*ft_bzero(void *b, size_t n);
 
 
 void				fxd_dbl_build_mantis(t_binary64 bin64,
-										 t_fxd_dbl *mantis);
-void				fxd_dbl_mul(t_fxd_dbl *base, t_fxd_dbl *mul);
-void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd_dbl *base);
+										 t_fxd *mantis);
+void				fxd_dbl_mul(t_fxd *base, t_fxd *mul);
+void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd *base);
 void	get_floating_point_arg(t_printf_info *info);
-void	print_fp_dec_form(t_printf_info *info, uint32_t *fp,
-						  uint_fast16_t int_len);
+void					print_fp_dec_form(t_printf_info *info, t_fxd *fp);
+t_fxd	*fxd_new(size_t size, int_fast16_t is_long_dbl);
+void	fxd_del(t_fxd *fp);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);

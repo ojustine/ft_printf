@@ -31,7 +31,7 @@ int 				ft_dprintf(int fd, const char *format, ...)
 
 	if (fd < 0 || fd > FD_SETSIZE)
 		return (-1);
-	ft_memset(&info, 0, sizeof(t_printf_info));
+	ft_bzero(&info, sizeof(t_printf_info));
 	info.fd = fd;
 	info.fmt = format;
 	va_start(info.ap, format);
@@ -42,7 +42,7 @@ int 				ft_sprintf(char *str, const char *format, ...)
 {
 	t_printf_info	info;
 
-	ft_memset(&info, 0, sizeof(t_printf_info));
+	ft_bzero(&info, sizeof(t_printf_info));
 	info.fd = 1;
 	info.fmt = format;
 	info.write_to_str = 1;
@@ -55,7 +55,7 @@ int 				ft_printf(const char *format, ...)
 {
 	t_printf_info	info;
 
-	ft_memset(&info, 0, sizeof(t_printf_info));
+	ft_bzero(&info, sizeof(t_printf_info));
 	info.fd = 1;
 	info.fmt = format;
 	va_start(info.ap, format);

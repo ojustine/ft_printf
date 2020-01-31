@@ -30,7 +30,8 @@ int main()
 	printf("%.2a\n", 16.16);
 	printf("%12.2s\n", "-inf");
 	ft_printf("%012.2s\n", "-inf");
-	ft_printf("%.9f\n", 9.999999999999);
+	ft_printf("%.20000f\n", DBL_MIN);
+	printf("%.1035f\n", DBL_MIN);
 	printf("%.2f\n", 9.999999999999);
-	printf("%.25f\n", 0.025);
+	printf("%.9f\n", 0.025);
 }

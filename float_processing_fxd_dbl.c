@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-static inline void	fxd_dbl_add(t_fxd_dbl *base, t_fxd_dbl *term)
+static inline void	fxd_dbl_add(t_fxd *base, t_fxd *term)
 {
 	register int_fast16_t	i;
 	register int_fast32_t	carry;
@@ -23,16 +23,16 @@ static inline void	fxd_dbl_add(t_fxd_dbl *base, t_fxd_dbl *term)
 	base->int_len = (carry) ? (-i) : base->int_len;
 }
 
-void				fxd_dbl_mul(t_fxd_dbl *base, t_fxd_dbl *mul)
+void				fxd_dbl_mul(t_fxd *base, t_fxd *mul)
 {
 	register uint64_t		res;
 	register int_fast16_t	i;
 	register int_fast16_t	j;
-	t_fxd_dbl				tmp;
-	t_fxd_dbl				line;
+	t_fxd_dbl_fast		line;
+	t_fxd				*tmp;
 
-	ft_memset(&tmp, 0, sizeof(t_fxd_dbl));
-	ft_memset(&line, 0, sizeof(t_fxd_dbl));
+	ft_bzero(&line, sizeof(t_fxd_dbl_fast));
+	tmp = fxd_new(D_LEN, 0);
 	i = mul->frc_len;
 	while (--i >= -mul->int_len && (j = base->frc_len) < D_LEN)
 		while (--j >= -base->int_len)
@@ -46,13 +46,15 @@ void				fxd_dbl_mul(t_fxd_dbl *base, t_fxd_dbl *mul)
 				line.int_len = (i + j == -1) ? 1 : -(i + j + 1);
 			else
 				line.int_len = 0;
-			fxd_dbl_add(&tmp, &line);
-			ft_memset(&line.val[D_F0 + i + j], 0, R_SIZE * 2);
+			fxd_dbl_add(tmp, &line);
+			ft_bzero(&line.val[D_F0 + i + j], R_SIZE * 2);
 		}
-	ft_memcpy(base, &tmp, sizeof(t_fxd_dbl));
+	//ft_memcpy(base, tmp, sizeof(t_fxd_dbl_fast));
+	fxd_del(base);
+	base = tmp;
 }
 
-void				fxd_dbl_build_mantis(t_binary64 bin64, t_fxd_dbl *mantis)
+void				fxd_dbl_build_mantis(t_binary64 bin64, t_fxd *mantis)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
@@ -79,8 +81,8 @@ void				fxd_dbl_build_mantis(t_binary64 bin64, t_fxd_dbl *mantis)
 	mantis->int_len = mantis->val[D_I0];
 }
 
-static inline void	fxd_dbl_build_frac_exp(int_fast16_t exp, t_fxd_dbl *base,
-					t_fxd_dbl *mul)
+static inline void	fxd_dbl_build_frac_exp(int_fast16_t exp, t_fxd *base,
+											 t_fxd *mul)
 {
 	if (exp == 0)
 		return ;
@@ -109,23 +111,23 @@ static inline void	fxd_dbl_build_frac_exp(int_fast16_t exp, t_fxd_dbl *base,
 	}
 }
 
-void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd_dbl *base)
+void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd *base)
 {
-	t_fxd_dbl mul;
+	t_fxd		mul;
+	uint32_t	short_fxd_dbl[D_POINT + 8];
 
 	base->val[D_I0] = 1;
 	base->int_len = 1;
 	exp -= 1023;
-	ft_memset(&mul, 0, sizeof(t_fxd_dbl));
+	ft_bzero(&mul, sizeof(t_fxd));
+	ft_bzero(short_fxd_dbl, D_POINT + 8);
+	mul.val = short_fxd_dbl;
 	if (exp > 64)
 	{
 		ft_memcpy(&mul.val[D_I0 - 2], g_pow_2[63], R_SIZE * 3);
 		mul.int_len += 3;
-		while (exp > 64)
-		{
+		while (exp > 64 && (exp -= 64))
 			fxd_dbl_mul(base, &mul);
-			exp -= 64;
-		}
 	}
 	if (exp <= 64 && exp > 0)
 	{
