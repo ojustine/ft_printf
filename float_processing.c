@@ -1,36 +1,53 @@
 #include "ft_printf.h"
 
-void	fxd_del(t_fxd *fp)
+void	fxd_del(t_fxd *fp1, t_fxd *fp2, t_fxd *fp3)
 {
-	if (fp != NULL)
+	if (fp1 != NULL)
 	{
-		if (fp->val != NULL)
-			free(fp->val);
-		free(fp);
-		fp = NULL;
+		if (fp1->val != NULL)
+			free(fp1->val);
+		free(fp1);
+		fp1 = NULL;
+	}
+	if (fp2 != NULL)
+	{
+		if (fp2->val != NULL)
+			free(fp2->val);
+		free(fp2);
+		fp2 = NULL;
+	}
+	if (fp3 != NULL)
+	{
+		if (fp3->val != NULL)
+			free(fp3->val);
+		free(fp3);
+		fp3 = NULL;
 	}
 }
 
-t_fxd	*fxd_new(size_t size, int_fast16_t is_long_dbl)
+t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl)
 {
 	t_fxd *fxd_new;
 
-	fxd_new = malloc(sizeof(t_fxd));
+	fxd_new = (t_fxd*)malloc(sizeof(t_fxd));
 	ft_assert(fxd_new != NULL, __FUNCTION__, "malloc error");
 	ft_bzero(fxd_new, sizeof(t_fxd));
-	if (size == 0)
-		return (fxd_new);
 	if (is_long_dbl)
 	{
-		if (size > LD_LEN)
-			size = LD_LEN;
+		if (frac_size > LD_LEN - LD_POINT)
+			frac_size = LD_LEN - LD_POINT;
+		fxd_new->val = malloc(sizeof(uint32_t) * (LD_POINT + frac_size));
+		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
+		ft_bzero(fxd_new->val, sizeof(uint32_t) * (LD_POINT + frac_size));
 	}
 	else
-		if (size > D_LEN)
-			size = D_LEN;
-	fxd_new->val = malloc(size);
-	ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
-	ft_bzero(fxd_new->val, size);
+	{
+		if (frac_size > D_LEN - D_POINT)
+			frac_size = D_LEN - D_POINT;
+		fxd_new->val = malloc(sizeof(uint32_t) * (D_POINT + frac_size));
+		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
+		ft_bzero(fxd_new->val, sizeof(uint32_t) * (D_POINT + frac_size));
+	}
 	return (fxd_new);
 }
 
@@ -38,24 +55,29 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 {
 	t_fxd		*mantis;
 	t_fxd		*exp;
+	t_fxd		*fp;
 
-	exp = fxd_new(D_LEN, 0);
-	mantis = fxd_new(D_LEN, 0);
+	exp = fxd_new(/*(bin64.s_parts.bias_exp - 1023) / 9 * R_LEN + 1*/D_LEN, 0);
+	mantis = fxd_new(9, 0);
+
 	fxd_dbl_build_mantis(bin64, mantis);
-	print_fp_dec_form(info, mantis);
-
+//	print_fp_dec_form(info, mantis);
+	do_print(info, "\n", 1);
 	fxd_dbl_build_exp(bin64.s_parts.bias_exp, exp);
+	//print_fp_dec_form(info, exp);
+
 	if (*info->fmt == 'a' || *info->fmt == 'A')
 	{
 		//TODO: print_hex
 		return ;
 	}
-	fxd_dbl_mul(mantis, exp);
+	fp = fxd_new(/*mantis->frc_len + exp->frc_len*/D_LEN, 0);
+	fxd_dbl_mul(fp, mantis, exp);
 	mantis->int_len = (mantis->int_len) ? mantis->int_len : 1;
 	info->prec = (info->prec > D_MAX_PREC) ? D_MAX_PREC : info->prec;
-	if (*info->fmt == 'f' || *info->fmt == 'F')
-		print_fp_dec_form(info, mantis);
-	else if (*info->fmt == 'e' || *info->fmt == 'E')
+//	if (*info->fmt == 'f' || *info->fmt == 'F')
+//		print_fp_dec_form(info, fp);
+//	else if (*info->fmt == 'e' || *info->fmt == 'E')
 		//TODO: print_exp
 		return;
 }
