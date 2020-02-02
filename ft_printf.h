@@ -63,7 +63,7 @@ enum						e_fxd_dbl_assets
 {
 	R_LIMITER = 1000000000,
 	R_LEN = 9,
-	R_SIZE = 4,
+	R_SIZE = sizeof(uint32_t),
 	D_LEN = ((DBL_MAX_10_EXP / 9) * 4 + 14),
 	D_MAX_PREC = 1035,
 	D_POINT = (DBL_MAX_10_EXP / 9),

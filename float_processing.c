@@ -29,24 +29,24 @@ t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl)
 {
 	t_fxd *fxd_new;
 
-	fxd_new = (t_fxd*)malloc(sizeof(t_fxd));
+	fxd_new = malloc(sizeof(t_fxd));
 	ft_assert(fxd_new != NULL, __FUNCTION__, "malloc error");
 	ft_bzero(fxd_new, sizeof(t_fxd));
 	if (is_long_dbl)
 	{
 		if (frac_size > LD_LEN - LD_POINT)
 			frac_size = LD_LEN - LD_POINT;
-		fxd_new->val = malloc(sizeof(uint32_t) * (LD_POINT + frac_size));
+		fxd_new->val = malloc(R_SIZE * (LD_POINT + frac_size + 1));
 		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
-		ft_bzero(fxd_new->val, sizeof(uint32_t) * (LD_POINT + frac_size));
+		ft_bzero(fxd_new->val, R_SIZE * (LD_POINT + frac_size + 1));
 	}
 	else
 	{
 		if (frac_size > D_LEN - D_POINT)
 			frac_size = D_LEN - D_POINT;
-		fxd_new->val = malloc(sizeof(uint32_t) * (D_POINT + frac_size));
+		fxd_new->val = malloc(R_SIZE * (D_POINT + frac_size + 1));
 		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
-		ft_bzero(fxd_new->val, sizeof(uint32_t) * (D_POINT + frac_size));
+		ft_bzero(fxd_new->val, R_SIZE * (D_POINT + frac_size + 1));
 	}
 	return (fxd_new);
 }
@@ -61,8 +61,7 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	mantis = fxd_new(9, 0);
 
 	fxd_dbl_build_mantis(bin64, mantis);
-//	print_fp_dec_form(info, mantis);
-	do_print(info, "\n", 1);
+	print_fp_dec_form(info, mantis);
 	fxd_dbl_build_exp(bin64.s_parts.bias_exp, exp);
 	//print_fp_dec_form(info, exp);
 
@@ -71,15 +70,15 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 		//TODO: print_hex
 		return ;
 	}
-	fp = fxd_new(/*mantis->frc_len + exp->frc_len*/D_LEN, 0);
+	fp = fxd_new(mantis->frc_len + exp->frc_len, 0);
 	fxd_dbl_mul(fp, mantis, exp);
 	mantis->int_len = (mantis->int_len) ? mantis->int_len : 1;
 	info->prec = (info->prec > D_MAX_PREC) ? D_MAX_PREC : info->prec;
 //	if (*info->fmt == 'f' || *info->fmt == 'F')
 //		print_fp_dec_form(info, fp);
 //	else if (*info->fmt == 'e' || *info->fmt == 'E')
-		//TODO: print_exp
-		return;
+//		//TODO: print_exp
+//		return;
 }
 
 void	get_floating_point_arg(t_printf_info *info)

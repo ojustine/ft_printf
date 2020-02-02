@@ -133,5 +133,6 @@ void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd *res)
 		mul->int_len += (exp < 60) ? 0 : 1;
 		fxd_dbl_mul(res, res, mul);
 	}
+
 	fxd_dbl_build_frac_exp(exp, res, mul);
 }
