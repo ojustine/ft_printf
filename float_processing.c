@@ -68,6 +68,7 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	}
 	fp = fxd_new(mantis->frc_len + exp->frc_len, 0);
 	fxd_dbl_mul(fp, mantis, exp);
+	print_fp_exp_form(info, fp);
 	mantis->int_len = (mantis->int_len) ? mantis->int_len : 1;
 	info->prec = (info->prec > D_MAX_PREC) ? D_MAX_PREC : info->prec;
 //	if (*info->fmt == 'f' || *info->fmt == 'F')

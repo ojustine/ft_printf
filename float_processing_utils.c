@@ -64,22 +64,16 @@ void					print_fp_exp_form(t_printf_info *info, t_fxd *fp)
 	int_fast16_t	offset;
 	int_fast16_t	index;
 
-	index = 1;
-	offset = 0;
+	index = 0;
 	if (fp->int_len == 0 && fp->frc_len > 0)
-	{
-		while (fp->val[D_I0 + index] == 0 && index < fp->frc_len)
+		while (fp->val[D_F0 + index] == 0 && index < fp->frc_len)
 			index++;
-		offset = ft_intlen(fp->val[D_I0 + index]) - 1;
-	}
 	else if (fp->int_len > 0)
-	{
 		index = -fp->int_len;
-		offset = ft_intlen(fp->val[D_F0 + index]) - 1;
-	}
-	if (index < 0)
-	{
-		mul->val[D_I0 + index] = ft_pow(10, offset);
-		mul->frc_len =
-	}
+	offset = ft_intlen(fp->val[D_F0 + index]) - 1;
+	mul = fxd_new((index > 0) ? index : 0, 0);
+	mul->frc_len = (index > 0) ? index + 1 : 0;
+	mul->int_len = (index < 0) ? -index : 0;
+	mul->val[D_F0 + index] = ft_pow(10, offset);
+	fxd_dbl_mul(fp, fp, mul);
 }
