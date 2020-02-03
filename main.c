@@ -2,7 +2,6 @@
 #include "ft_printf.h"
 
 int 				ft_printf(const char *format, ...);
-void test();
 
 int main()
 {
@@ -31,7 +30,7 @@ int main()
 	printf("%12.2s\n", "-inf");
 	ft_printf("%012.2s\n", "-inf");
 	ft_printf("%.10f\n", 100.14);
-	printf("%.10f\n", 3.14);
+	printf("%.10e\n", 0.00);
 	//printf("%.2f\n", 9.999999999999);
 	//printf("%.9f\n", 0.025);
 }

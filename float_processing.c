@@ -57,14 +57,10 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	t_fxd		*exp;
 	t_fxd		*fp;
 
-	exp = fxd_new(/*(bin64.s_parts.bias_exp - 1023) / 9 * R_LEN + 1*/D_LEN, 0);
-	mantis = fxd_new(9, 0);
-
+	exp = fxd_new((bin64.s_parts.bias_exp - 1023) / 9 * R_LEN + 1, 0);
+	mantis = fxd_new(8, 0);
 	fxd_dbl_build_mantis(bin64, mantis);
-	print_fp_dec_form(info, mantis);
 	fxd_dbl_build_exp(bin64.s_parts.bias_exp, exp);
-	//print_fp_dec_form(info, exp);
-
 	if (*info->fmt == 'a' || *info->fmt == 'A')
 	{
 		//TODO: print_hex
@@ -79,6 +75,7 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 //	else if (*info->fmt == 'e' || *info->fmt == 'E')
 //		//TODO: print_exp
 //		return;
+	fxd_del(fp, mantis, exp);
 }
 
 void	get_floating_point_arg(t_printf_info *info)

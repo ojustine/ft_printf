@@ -58,11 +58,28 @@ void					print_fp_dec_form(t_printf_info *info, t_fxd *fp)
 										- (R_LEN - (info->prec % R_LEN)));
 }
 
-void					print_fp_exp_form(t_printf_info *info, uint32_t *fp,
-											  uint_fast16_t int_len)
+void					print_fp_exp_form(t_printf_info *info, t_fxd *fp)
 {
-	t_fxd		*mul;
+	t_fxd			*mul;
 	int_fast16_t	offset;
+	int_fast16_t	index;
 
-	offset = ft_intlen(fp[D_I0 - int_len]) - 1;
+	index = 1;
+	offset = 0;
+	if (fp->int_len == 0 && fp->frc_len > 0)
+	{
+		while (fp->val[D_I0 + index] == 0 && index < fp->frc_len)
+			index++;
+		offset = ft_intlen(fp->val[D_I0 + index]) - 1;
+	}
+	else if (fp->int_len > 0)
+	{
+		index = -fp->int_len;
+		offset = ft_intlen(fp->val[D_F0 + index]) - 1;
+	}
+	if (index < 0)
+	{
+		mul->val[D_I0 + index] = ft_pow(10, offset);
+		mul->frc_len =
+	}
 }

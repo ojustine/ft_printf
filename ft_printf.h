@@ -193,12 +193,13 @@ intmax_t	ft_moddiv(intmax_t dividend, intmax_t divisor, intmax_t *quotient);
 intmax_t	ft_divmod(intmax_t dividend, intmax_t divisor, intmax_t *remainder);
 size_t	ft_intlen(int32_t n);
 void	*ft_bzero(void *b, size_t n);
+void				ft_memswap(void *mem1, void *mem2, size_t size);
 
 
 void				fxd_dbl_build_mantis(t_binary64 bin64,
 										 t_fxd *res);
 void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b);
-void				fxd_dbl_build_exp(int_fast16_t exp, t_fxd *res);
+void				fxd_dbl_build_exp(int_fast16_t b_exp, t_fxd *exp);
 void	get_floating_point_arg(t_printf_info *info);
 void					print_fp_dec_form(t_printf_info *info, t_fxd *fp);
 t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
@@ -216,5 +217,4 @@ void					get_signed_arg(t_printf_info *info,
 void					get_unsigned_arg(t_printf_info *info,
 										 t_s16 base);
 
-void test();
 #endif
