@@ -31,15 +31,22 @@ static inline void		roundup(t_printf_info *info, char *fp)
 	it = (int)(fp[D_F0 + i] / ft_pow(10, (R_LEN - (info->prec % R_LEN)))) % 10;
 }
 
-void					print_fp_dec_form(t_printf_info *info, t_fxd *fp)
+size_t					print_fp_dec_form(t_printf_info *info, t_fxd *fp, char *buff)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
-	char					buff[fp->int_len * R_LEN + info->prec + R_LEN + 1];
-	register char			*ptr;
 
-	ptr = &buff[fp->int_len * R_LEN + info->prec + R_LEN];
-	i = (info->prec <= R_LEN * 115) ? info->prec / R_LEN + 1 : 116;
+	i = -fp->int_len;
+	fp->val[D_F0 + i] *= ft_pow(10, ft_intlen(R_LEN - fp->val[D_F0 + i]));
+	while ((fp->val[D_F0 + i] *= 10 > 0) && i < 0)
+	{
+		*buff++ = (char)(fp->val[D_F0 + i] / R_LIMITER + '0');
+		fp->val[D_F0 + i] %= R_LIMITER;
+	}
+	while (++i < 0)
+	{
+		*buff++ = fp->val[D_F0 - fp->int_len];
+	}
 //	roundup(info, fp);
 	while (--i >= -fp->int_len)
 	{
@@ -54,8 +61,7 @@ void					print_fp_dec_form(t_printf_info *info, t_fxd *fp)
 				break ;
 		}
 	}
-	do_print(info, ptr + 1, (&buff[fp->int_len * R_LEN + info->prec + R_LEN] - ptr)
-										- (R_LEN - (info->prec % R_LEN)));
+	do_print(info, ptr + 1, (&buff[D_LEN] - ptr) - (R_LEN - (info->prec % R_LEN)));
 }
 
 void					print_fp_exp_form(t_printf_info *info, t_fxd *fp)

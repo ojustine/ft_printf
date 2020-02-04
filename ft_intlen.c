@@ -17,4 +17,5 @@ size_t	ft_intlen(int32_t n)
 	while (i++ < 11)
 		if (n <= sizes[i - 1])
 			return (i);
+	return (10);
 }

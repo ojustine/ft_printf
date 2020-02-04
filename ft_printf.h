@@ -165,6 +165,7 @@ typedef struct				s_fxd
 	uint32_t				*val;
 	int_fast16_t			int_len;
 	int_fast16_t			frc_len;
+	int_fast16_t			p0;
 }							t_fxd;
 
 typedef struct				s_fxd_dbl_fast
@@ -202,7 +203,7 @@ void				fxd_dbl_build_mantis(t_binary64 bin64,
 void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b);
 void				fxd_dbl_build_exp(int_fast16_t b_exp, t_fxd *exp);
 void	get_floating_point_arg(t_printf_info *info);
-void					print_fp_dec_form(t_printf_info *info, t_fxd *fp);
+size_t					print_fp_dec_form(t_printf_info *info, t_fxd *fp, char *buff);
 void					print_fp_exp_form(t_printf_info *info, t_fxd *fp);
 t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
 void	fxd_del(t_fxd *fp1, t_fxd *fp2, t_fxd *fp3);

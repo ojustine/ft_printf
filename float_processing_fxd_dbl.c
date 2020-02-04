@@ -20,7 +20,10 @@ static inline void	fxd_dbl_add(t_fxd *res, t_fxd *a)
 		res->val[D_F0 + i] %= R_LIMITER;
 	}
 	res->val[D_F0 + i] = carry;
-	res->int_len = (carry) ? (-i) : res->int_len;
+	//res->int_len = (carry) ? (-i) : res->int_len;
+	while (res->val[D_F0 + i] == 0 && i < 0)
+		i++;
+	res->int_len = -i;
 }
 
 void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b)

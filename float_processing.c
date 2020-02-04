@@ -56,6 +56,7 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	t_fxd		*mantis;
 	t_fxd		*exp;
 	t_fxd		*fp;
+	char		buff[D_LEN + 1];
 
 	exp = fxd_new((bin64.s_parts.bias_exp - 1023) / 9 * R_LEN + 1, 0);
 	mantis = fxd_new(8, 0);
@@ -68,11 +69,8 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	}
 	fp = fxd_new(mantis->frc_len + exp->frc_len, 0);
 	fxd_dbl_mul(fp, mantis, exp);
-	print_fp_exp_form(info, fp);
-	mantis->int_len = (mantis->int_len) ? mantis->int_len : 1;
-	info->prec = (info->prec > D_MAX_PREC) ? D_MAX_PREC : info->prec;
-//	if (*info->fmt == 'f' || *info->fmt == 'F')
-//		print_fp_dec_form(info, fp);
+	if (*info->fmt == 'f' || *info->fmt == 'F')
+		print_fp_dec_form(info, fp, buff);
 //	else if (*info->fmt == 'e' || *info->fmt == 'E')
 //		//TODO: print_exp
 //		return;
