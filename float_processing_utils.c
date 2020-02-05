@@ -103,14 +103,11 @@ size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff)
 		index = -fp->int_len;
 	else
 		return (fxd_ftoa_dec_form(info, fp, buff));
-	if (index < 0)
-		offset = RANK_LEN - ft_intlen(fp->val[D_F0 + index]);
-	else
-		offset = ft_intlen(fp->val[D_F0 + index]) - 1;
+	offset = ft_intlen(fp->val[D_F0 + index]) - 1;
 	mul = fxd_new((index < 0) ? index : 0, 0);
 	mul->frc_len = (index < 0) ? -index : 0;
 	mul->int_len = (index >= 0) ? index + 1 : 0;
-	mul->val[D_F0 - 1 - index] = ft_pow(10, offset);
+	mul->val[D_F0 - 1 - index] = ft_pow(10, RANK_LEN - offset);
 	fxd_dbl_mul(fp, fp, mul);
 	return (fxd_ftoa_dec_form(info, fp, buff));
 }
