@@ -61,9 +61,10 @@ enum						e_printf_sizes
 
 enum						e_fxd_dbl_assets
 {
-	R_LIMITER = 1000000000,
-	R_LEN = 9,
-	R_SIZE = sizeof(uint32_t),
+	RANK_LIMITER = 1000000000,
+	RANK_TOP = 100000000,
+	RANK_LEN = 9,
+	RANK_SIZE = sizeof(uint32_t),
 	D_LEN = ((DBL_MAX_10_EXP / 9) * 4 + 14),
 	D_MAX_PREC = 1035,
 	D_POINT = (DBL_MAX_10_EXP / 9),
@@ -203,8 +204,8 @@ void				fxd_dbl_build_mantis(t_binary64 bin64,
 void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b);
 void				fxd_dbl_build_exp(int_fast16_t b_exp, t_fxd *exp);
 void	get_floating_point_arg(t_printf_info *info);
-size_t					print_fp_dec_form(t_printf_info *info, t_fxd *fp, char *buff);
-void					print_fp_exp_form(t_printf_info *info, t_fxd *fp);
+size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp, char *buff);
+size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff);
 t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
 void	fxd_del(t_fxd *fp1, t_fxd *fp2, t_fxd *fp3);
 

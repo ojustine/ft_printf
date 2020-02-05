@@ -29,8 +29,8 @@ int main()
 	printf("%.2a\n", 16.16);
 	printf("%12.2s\n", "-inf");
 	ft_printf("%012.2s\n", "-inf");
-	printf("%f\n", DBL_MIN);
-	ft_printf("%.10f\n", DBL_MIN);
+	printf("%021a\n", -1.0);
+	ft_printf("%e\n", 0.45);
 	//printf("%.2f\n", 9.999999999999);
-	//printf("%.9f\n", 0.025);
+	//printf("%d\n", D_LEN * RANK_LEN);
 }

@@ -16,8 +16,8 @@ static inline void	fxd_dbl_add(t_fxd *res, t_fxd *a)
 		if (a->val[D_F0 + i] == 0 && carry == 0)
 			continue ;
 		res->val[D_F0 + i] += (a->val[D_F0 + i] + carry);
-		carry = res->val[D_F0 + i] / R_LIMITER;
-		res->val[D_F0 + i] %= R_LIMITER;
+		carry = res->val[D_F0 + i] / RANK_LIMITER;
+		res->val[D_F0 + i] %= RANK_LIMITER;
 	}
 	res->val[D_F0 + i] = carry;
 	//res->int_len = (carry) ? (-i) : res->int_len;
@@ -42,14 +42,14 @@ void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b)
 		{
 			if ((rank = (uint64_t)a->val[D_F0 + j] * b->val[D_F0 + i]) == 0)
 				continue ;
-			line->val[D_F0 + i + j + 1] += rank % R_LIMITER;
-			line->val[D_F0 + i + j] += rank / R_LIMITER;
+			line->val[D_F0 + i + j + 1] += rank % RANK_LIMITER;
+			line->val[D_F0 + i + j] += rank / RANK_LIMITER;
 			line->frc_len = (i + j + 1 >= 0) ? (i + j + 2) : 0;
 			line->int_len = 0;
 			if (i + j < 0)
 				line->int_len = (i + j == -1) ? 1 : -(i + j + 1);
 			fxd_dbl_add(tmp, line);
-			ft_bzero(&(line->val[D_F0 + i + j]), R_SIZE * 2);
+			ft_bzero(&(line->val[D_F0 + i + j]), RANK_SIZE * 2);
 		}
 	ft_memswap(res, tmp, sizeof(t_fxd));
 	fxd_del(tmp, line, 0);
@@ -70,8 +70,8 @@ void				fxd_dbl_build_mantis(t_binary64 bin64, t_fxd *res)
 			while (j >= 0)
 			{
 				res->val[D_F0 + j] += (g_pow_2_n[i][j] + carry);
-				carry = res->val[D_F0 + j] / R_LIMITER;
-				res->val[D_F0 + j] %= R_LIMITER;
+				carry = res->val[D_F0 + j] / RANK_LIMITER;
+				res->val[D_F0 + j] %= RANK_LIMITER;
 				j--;
 			}
 		bin64.s_parts.mantis >>= 1;
@@ -87,7 +87,7 @@ static inline void	fxd_dbl_build_frac_exp(int_fast16_t b_exp, t_fxd *exp,
 {
 	if (b_exp < -64)
 	{
-		ft_memcpy(&mul->val[D_F0], g_pow_2_n[63], R_SIZE * 8);
+		ft_memcpy(&mul->val[D_F0], g_pow_2_n[63], RANK_SIZE * 8);
 		mul->frc_len = 8;
 		while (b_exp < -64)
 		{
@@ -97,7 +97,7 @@ static inline void	fxd_dbl_build_frac_exp(int_fast16_t b_exp, t_fxd *exp,
 	}
 	if (b_exp >= -64 && b_exp < 0)
 	{
-		ft_memcpy(&mul->val[D_F0], g_pow_2_n[-b_exp - 1], R_SIZE * 8);
+		ft_memcpy(&mul->val[D_F0], g_pow_2_n[-b_exp - 1], RANK_SIZE * 8);
 		if (b_exp >= -18)
 			mul->frc_len = (b_exp >= -9) ? 1 : 2;
 		else if (b_exp >= -36)
@@ -123,14 +123,14 @@ void				fxd_dbl_build_exp(int_fast16_t b_exp, t_fxd *exp)
 	mul = fxd_new(8, 0);
 	if (b_exp > 64)
 	{
-		ft_memcpy(&mul->val[D_I0 - 2], g_pow_2[63], R_SIZE * 3);
+		ft_memcpy(&mul->val[D_I0 - 2], g_pow_2[63], RANK_SIZE * 3);
 		mul->int_len += 3;
 		while (b_exp > 64 && (b_exp -= 64))
 			fxd_dbl_mul(exp, exp, mul);
 	}
 	if (b_exp <= 64 && b_exp > 0)
 	{
-		ft_memcpy(&mul->val[D_I0 - 2], g_pow_2[b_exp - 1], R_SIZE * 3);
+		ft_memcpy(&mul->val[D_I0 - 2], g_pow_2[b_exp - 1], RANK_SIZE * 3);
 		mul->int_len += (b_exp < 30) ? 1 : 2;
 		mul->int_len += (b_exp < 60) ? 0 : 1;
 		fxd_dbl_mul(exp, exp, mul);

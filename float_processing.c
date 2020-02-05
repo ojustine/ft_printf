@@ -36,17 +36,17 @@ t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl)
 	{
 		if (frac_size > LD_LEN - LD_POINT)
 			frac_size = LD_LEN - LD_POINT;
-		fxd_new->val = malloc(R_SIZE * (LD_POINT + frac_size + 1));
+		fxd_new->val = malloc(RANK_SIZE * (LD_POINT + frac_size + 1));
 		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
-		ft_bzero(fxd_new->val, R_SIZE * (LD_POINT + frac_size + 1));
+		ft_bzero(fxd_new->val, RANK_SIZE * (LD_POINT + frac_size + 1));
 	}
 	else
 	{
 		if (frac_size > D_LEN - D_POINT)
 			frac_size = D_LEN - D_POINT;
-		fxd_new->val = malloc(R_SIZE * (D_POINT + frac_size + 1));
+		fxd_new->val = malloc(RANK_SIZE * (D_POINT + frac_size + 1));
 		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
-		ft_bzero(fxd_new->val, R_SIZE * (D_POINT + frac_size + 1));
+		ft_bzero(fxd_new->val, RANK_SIZE * (D_POINT + frac_size + 1));
 	}
 	return (fxd_new);
 }
@@ -57,11 +57,13 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	t_fxd		*exp;
 	t_fxd		*fp;
 	char		buff[D_LEN + 1];
+	size_t		to_print;
 
-	exp = fxd_new((bin64.s_parts.bias_exp - 1023) / 9 * R_LEN + 1, 0);
+	exp = fxd_new((bin64.s_parts.bias_exp - 1023) / 9 * RANK_LEN + 1, 0);
 	mantis = fxd_new(8, 0);
 	fxd_dbl_build_mantis(bin64, mantis);
 	fxd_dbl_build_exp(bin64.s_parts.bias_exp, exp);
+	info->prec = (info->prec > D_LEN * RANK_LEN) ? D_LEN * RANK_LEN : info->prec;
 	if (*info->fmt == 'a' || *info->fmt == 'A')
 	{
 		//TODO: print_hex
@@ -70,7 +72,10 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	fp = fxd_new(mantis->frc_len + exp->frc_len, 0);
 	fxd_dbl_mul(fp, mantis, exp);
 	if (*info->fmt == 'f' || *info->fmt == 'F')
-		print_fp_dec_form(info, fp, buff);
+		to_print = fxd_ftoa_dec_form(info, fp, buff);
+	if (*info->fmt == 'e' || *info->fmt == 'E')
+		to_print = fxd_ftoa_exp_form(info, fp, buff);
+	do_print(info, &buff[0], to_print);
 //	else if (*info->fmt == 'e' || *info->fmt == 'E')
 //		//TODO: print_exp
 //		return;
