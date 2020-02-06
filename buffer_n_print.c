@@ -26,7 +26,7 @@ void				do_print(t_printf_info *info, char *data, size_t size)
 		info->buff_index = 0;
 	}
 	if (size == 1)
-		info->buff[info->buff_index] = *(char*)data;
+		info->buff[info->buff_index] = ((char*)data)[data_index];
 	else
 		ft_memcpy(&(info->buff[info->buff_index]), &(data[data_index]), size);
 	info->buff_index += size;

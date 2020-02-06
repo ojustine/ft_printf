@@ -71,6 +71,7 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	}
 	fp = fxd_new(mantis->frc_len + exp->frc_len, 0);
 	fxd_dbl_mul(fp, mantis, exp);
+	fp->sign = bin64.s_parts.sign;
 	if (*info->fmt == 'f' || *info->fmt == 'F')
 		to_print = fxd_ftoa_dec_form(info, fp, buff);
 	if (*info->fmt == 'e' || *info->fmt == 'E')

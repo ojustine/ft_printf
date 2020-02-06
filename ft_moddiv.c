@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-intmax_t	ft_moddiv(intmax_t dividend, intmax_t divisor, intmax_t *quotient)
+int32_t	ft_moddiv(int32_t dividend, int32_t divisor, int32_t *quotient)
 {
 	*quotient = dividend / divisor;
 	return (dividend % divisor);

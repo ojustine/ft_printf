@@ -167,6 +167,7 @@ typedef struct				s_fxd
 	int_fast16_t			int_len;
 	int_fast16_t			frc_len;
 	int_fast16_t			p0;
+	int_fast8_t				sign;
 }							t_fxd;
 
 typedef struct				s_fxd_dbl_fast
@@ -191,12 +192,13 @@ double	ft_pow(double base, int_fast16_t power);
 long double	ft_long_pow(long double base, int_fast16_t power);
 void	*ft_memmove(void *dst, const void *src, size_t len);
 void	ft_assert(int_fast32_t to_check, const char *func, const char *message);
-intmax_t	ft_moddiv(intmax_t dividend, intmax_t divisor, intmax_t *quotient);
-intmax_t	ft_divmod(intmax_t dividend, intmax_t divisor, intmax_t *remainder);
+int32_t	ft_moddiv(int32_t dividend, int32_t divisor, int32_t *quotient);
+int32_t	ft_divmod(int32_t dividend, int32_t divisor, int32_t *remainder);
 size_t	ft_intlen(int32_t n);
 void	*ft_bzero(void *b, size_t n);
 void				ft_memswap(void *mem1, void *mem2, size_t size);
 uint32_t	ft_abs(int32_t n);
+size_t	ft_longlen(int64_t n);
 
 
 void				fxd_dbl_build_mantis(t_binary64 bin64,
