@@ -31,8 +31,8 @@ int main()
 	ft_printf("%012.2s\n", "-inf");
 	printf("%.1e\n", 0.3473452346256253623);
 
-	ft_printf("%e\n", 1412451234.0123);
-	printf("%.6g\n", 1.119133313431);
+	ft_printf("%f\n", 1412451234.0123);
+	printf("%f\n", 1412451234.0123);
 
 	//printf("%.2f\n", 9.999999999999);
 	//printf("%d\n", D_LEN * RANK_LEN);
