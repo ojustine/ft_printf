@@ -63,7 +63,7 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	mantis = fxd_new(8, 0);
 	fxd_dbl_build_mantis(bin64, mantis);
 	fxd_dbl_build_exp(bin64.s_parts.bias_exp, exp);
-	info->prec = (info->prec > D_LEN * RANK_LEN) ? D_LEN * RANK_LEN : info->prec;
+	info->prec = (info->prec > D_MAX_PREC) ? D_MAX_PREC : info->prec;
 	if (*info->fmt == 'a' || *info->fmt == 'A')
 	{
 		//TODO: print_hex

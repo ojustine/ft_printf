@@ -1,34 +1,32 @@
 #include "ft_printf.h"
 
-static inline void		padding(t_printf_info *info)
+static inline void		roundup(t_printf_info *info, t_fxd *fp)
 {
-	const char	zero_pad[] = "0000";
-	const char	blank_pad[] = "    ";
-	char		*curr_pad;
-
-	if (info->width > 0)
-	{
-		curr_pad = (char *)((info->flags & FLAG_ZERO_PAD
-							&& !(info->flags & FLAG_TRUNCATE)
-							&& !(info->flags & FLAG_LEFT_ALIGN))
-							? zero_pad : blank_pad);
-		while (info->width >= 4)
-		{
-			do_print(info, curr_pad, 4);
-			info->width -= 4;
-		}
-		while (info->width--)
-			do_print(info, curr_pad, 1);
-	}
-}
-
-static inline void		roundup(t_printf_info *info, char *fp)
-{
-	uint32_t 				it;
+	uint32_t 				j;
+	uint32_t 				trim;
+	uint64_t				pow;
 	register int_fast16_t	i;
 
-	i = (info->prec <= RANK_LEN * 115) ? info->prec / RANK_LEN + 1 : 116;
-	it = (int)(fp[D_F0 + i] / ft_pow(10, (RANK_LEN - (info->prec % RANK_LEN)))) % 10;
+	i = info->prec / RANK_LEN;
+	j = i;
+	pow = ft_pow(10, (RANK_LEN - (info->prec % RANK_LEN)));
+	trim = fp->val[D_F0 + i] % pow;
+	if (trim > pow / 10 * 5)
+		fp->val[D_F0 + i] += pow;
+	else if (trim == pow / 10 * 5)
+	{
+		while (++j < fp->frc_len && fp->val[D_F0 + i] == 0)
+			;
+		if (j == fp->frc_len)
+			fp->val[D_F0 + i] += ((fp->val[D_F0 + i] / pow % 10) & 1) ? pow : 0;
+		else
+			fp->val[D_F0 + i] += pow;
+	}
+	while ((pow = (uint64_t)fp->val[D_F0 + i] / RANK_LIMITER) > 0)
+	{
+		fp->val[D_F0 + i] %= RANK_LIMITER;
+		fp->val[D_F0 + --i] += pow;
+	}
 }
 
 static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info, t_fxd *fp, char *buff)
@@ -38,8 +36,8 @@ static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info, t_fxd *fp,
 	register int_fast32_t	prec;
 	const char				*ptr = buff;
 
-	if ((*info->fmt == 'g' || *info->fmt == 'G')
-	&& (info->prec == 0 || fp->frc_len == 0))
+	roundup(info, fp);
+	if (info->prec == 0)
 		return (0);
 	*buff++ = '.';
 	i = -1;
@@ -108,11 +106,16 @@ size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff)
 	buff += fxd_ftoa_dec_form(info, fp, buff);
 	*buff++ = "eE"[info->capitals];
 	*buff++ = "-+"[index < 0];
-	if ((offset = (index > 0) ? index : -(index + 1) * RANK_LEN + offset) < 10)
+	if ((offset = ((index > 0) ? index : -(index + 1)) * RANK_LEN + offset) < 10)
 		*buff++ = '0';
 	index = ft_intlen(offset = ((offset + (offset >> 15)) ^ offset >> 15));
 	while (index-- > 0)
 		*buff++ = (char)(ft_divmod(offset, ft_pow(10, index), &offset) + '0');
 	fxd_del(mul, 0, 0);
 	return (buff - ptr);
+}//TODO dblmin
+
+size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff)
+{
+
 }

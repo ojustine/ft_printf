@@ -71,12 +71,13 @@ enum						e_fxd_dbl_assets
 	D_I0 = D_POINT,
 	D_F0 = D_POINT + 1,
 	LD_LEN = ((LDBL_MAX_10_EXP / 9) * 4 + 14),
+	LD_MAX_PREC = 1035,
 	LD_POINT = (LDBL_MAX_10_EXP / 9),
 	LD_I0 = LD_POINT,
 	LD_F0 = LD_POINT + 1,
 };
 
-# define BUFF_SIZE			5
+# define BUFF_SIZE			512
 # define MAX_INT_BITS_NUM	((sizeof(long long)) * 8 + 2)
 # define FLT_MAX_LEN		FLT_MAX_10_EXP + 3
 # define FXD_POINT_LDBL_LEN	((LDBL_MAX_10_EXP / 9) + 1)
@@ -208,6 +209,7 @@ void				fxd_dbl_build_exp(int_fast16_t b_exp, t_fxd *exp);
 void	get_floating_point_arg(t_printf_info *info);
 size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp, char *buff);
 size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff);
+size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff);
 t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
 void	fxd_del(t_fxd *fp1, t_fxd *fp2, t_fxd *fp3);
 
