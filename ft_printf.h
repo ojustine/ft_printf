@@ -61,16 +61,17 @@ enum						e_printf_sizes
 
 enum						e_fxd_dbl_assets
 {
-	RANK_LIMITER = 1000000000,
-	RANK_TOP = 100000000,
-	RANK_LEN = 9,
-	RANK_SIZE = sizeof(uint32_t),
-	D_LEN = ((DBL_MAX_10_EXP / 9) * 4 + 14),
-	D_MAX_PREC = 1035,
-	D_POINT = (DBL_MAX_10_EXP / 9),
+	FP_R_LIMITER = 1000000000,
+	FP_R_TOP = FP_R_LIMITER / 10,
+	FP_R_LEN = 9,
+	FP_R_SIZE = sizeof(uint32_t),
+	D_POINT = (DBL_MAX_10_EXP / 9) + 2,
 	D_I0 = D_POINT,
 	D_F0 = D_POINT + 1,
-	LD_LEN = ((LDBL_MAX_10_EXP / 9) * 4 + 14),
+	D_LEN = (D_POINT * 4 + 16),
+	FP_MAX_PREC = 1035,
+	FP_CHAR_LEN = DBL_MAX_10_EXP + FP_MAX_PREC,
+	LD_LEN = ((LDBL_MAX_10_EXP / 9) * 4 + 14),//TODO known ldlen
 	LD_MAX_PREC = 1035,
 	LD_POINT = (LDBL_MAX_10_EXP / 9),
 	LD_I0 = LD_POINT,
