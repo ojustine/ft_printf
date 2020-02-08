@@ -54,18 +54,19 @@ void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b)
 	fxd_del(tmp, line, 0);
 }
 
-void				fxd_dbl_build_mantis(t_binary64 bin64, t_fxd *res)
+void				fxd_dbl_build_mantis(t_fxd *res, uint64_t mantis,
+					int_fast16_t is_normal, int_fast16_t is_long_dbl)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
 	int_fast32_t			carry;
 
-	i = 51;
-	while (bin64.s_parts.mantis != 0)
+	i = (is_long_dbl) ? 64 : 51;
+	while (mantis != 0 && i >= 0)
 	{
 		j = 7;
 		carry = 0;
-		if (bin64.s_parts.mantis & 1)
+		if (mantis & 1)
 			while (j >= 0)
 			{
 				res->val[D_F0 + j] += (g_pow_2_n[i][j] + carry);
@@ -73,91 +74,68 @@ void				fxd_dbl_build_mantis(t_binary64 bin64, t_fxd *res)
 				res->val[D_F0 + j] %= FP_R_LIMITER;
 				j--;
 			}
-		bin64.s_parts.mantis >>= 1;
+		mantis >>= 1;
 		i--;
 	}
 	res->frc_len = 8;
-	res->val[D_I0] = (bin64.s_parts.bias_exp != 0);
-	res->int_len = res->val[D_I0];
+	res->val[D_I0] = is_normal;
+	res->int_len = is_normal;
 }
 
-static inline void	fxd_dbl_build_frac_exp(int_fast16_t b_exp, t_fxd *exp,
-											 t_fxd *mul)
+t_fxd				*fxd_dbl_build_mantiss(uint64_t bin_mantis,
+					int_fast16_t is_normal, int_fast16_t is_long_dbl)
 {
-	if (b_exp < -64)
+	register int_fast16_t	i;
+	t_fxd					*mantis;
+	t_fxd					*term;
+
+	mantis = fxd_new(8, is_long_dbl);
+	term = fxd_new(8, is_long_dbl);
+	i = (is_long_dbl) ? 63 : 51;
+	while (bin_mantis != 0 && i >= 0)
 	{
-		ft_memcpy(&mul->val[D_F0], g_pow_2_n[63], FP_R_SIZE * 8);
-		mul->frc_len = 8;
-		while (b_exp < -64)
+		if (bin_mantis & 1)
+			{
+				ft_memcpy(&term->val[D_F0], g_pow_2_n[i], FP_R_SIZE * 8);
+				term->frc_len = g_pow_2_n[i][8];
+				fxd_dbl_add(mantis, term);
+			}
+		bin_mantis >>= 1;
+		i--;
+	}
+	if (is_normal)
+	{
+		mantis->val[D_I0] = 1;
+		mantis->int_len = 1;
+	}
+	fxd_del(term, 0, 0);
+	return (mantis);
+}
+
+t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl)
+{
+	t_fxd			*res;
+	t_fxd			*base;
+
+	res = fxd_new(0, is_long_dbl);
+	res->val[D_I0] = 1;
+	res->int_len = 1;
+	base = fxd_new(1, is_long_dbl);
+	base->val[D_I0] = (pow < 0) ? 0 : 2;
+	base->int_len = (pow < 0) ? 0 : 1;
+	base->val[D_F0] = (pow < 0) ? 500000000 : 0;
+	base->frc_len = (pow < 0) ? 1 : 0;
+	while (pow != 0)
+		if (pow & 1)
 		{
-			fxd_dbl_mul(exp, exp, mul);
-			b_exp += 64;
+			fxd_dbl_mul(res, res, base);
+			pow = (pow < 0) ? pow + 1 : pow - 1;
 		}
-	}
-	if (b_exp >= -64 && b_exp < 0)
-	{
-		ft_memcpy(&mul->val[D_F0], g_pow_2_n[-b_exp - 1], FP_R_SIZE * 8);
-		if (b_exp >= -18)
-			mul->frc_len = (b_exp >= -9) ? 1 : 2;
-		else if (b_exp >= -36)
-			mul->frc_len = (b_exp >= -27) ? 3 : 4;
-		else if (b_exp >= -54)
-			mul->frc_len = (b_exp >= -45) ? 5 : 6;
 		else
-			mul->frc_len = (b_exp >= -63) ? 7 : 8;
-		fxd_dbl_mul(exp, exp, mul);
-	}
-	fxd_del(mul, 0, 0);
-}
-
-void				fxd_dbl_build_exp(int_fast16_t b_exp, t_fxd *exp)
-{
-	t_fxd		*mul;
-
-	exp->val[D_I0] = 1;
-	exp->int_len = 1;
-	b_exp -= 1023;
-	if (b_exp == 0)
-		return ;
-	mul = fxd_new(8, 0);
-	if (b_exp > 64)
-	{
-		ft_memcpy(&mul->val[D_I0 - 2], g_pow_2[63], FP_R_SIZE * 3);
-		mul->int_len = 3;
-		while (b_exp > 64 && (b_exp -= 64))
-			fxd_dbl_mul(exp, exp, mul);
-	}
-	if (b_exp <= 64 && b_exp > 0)
-	{
-		ft_memcpy(&mul->val[D_I0 - 2], g_pow_2[b_exp - 1], FP_R_SIZE * 3);
-		mul->int_len = (b_exp < 30) ? 1 : 2;
-		mul->int_len += (b_exp < 60) ? 0 : 1;
-		fxd_dbl_mul(exp, exp, mul);
-	}
-
-	fxd_dbl_build_frac_exp(b_exp, exp, mul);
-}
-
-void				fxd_build_exp(int_fast16_t b_exp, t_fxd *exp)
-{
-	t_fxd			*mul;
-	uint32_t		**table;
-	int_fast16_t	less_zero;
-
-	exp->val[D_I0] = 1;
-	exp->int_len = 1;
-	b_exp = ft_abs(b_exp - 1023);
-	less_zero = (b_exp < 0);
-	table = (uint32_t**)((less_zero) ? g_pow_2_n : g_pow_2);
-	mul = fxd_new(8, 0);
-	if (b_exp == 0)
-		return ;
-	while (b_exp > 64)
-	{
-
-	}
-	if (b_exp <= 64 && b_exp != 0)
-	{
-		ft_memcpy(&mul->val[D_F0 - 3], table[b_exp], FP_R_SIZE * 8);
-	}
+		{
+			fxd_dbl_mul(base, base, base);
+			pow /= 2;
+		}
+	fxd_del(base, 0, 0);
+	return (res);
 }

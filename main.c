@@ -32,7 +32,7 @@ int main()
 	printf("%.0e\n", 0.3473452346256253623);
 
 	ft_printf("%.10e\n", DBL_MAX);
-	printf("%.10e\n", DBL_MAX);
+	printf("%.10a\n", 1.161);
 
 	//printf("%.2f\n", 9.999999999999);
 	//printf("%d\n", D_LEN * FP_R_LEN);

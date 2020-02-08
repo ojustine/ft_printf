@@ -202,11 +202,13 @@ void				ft_memswap(void *mem1, void *mem2, size_t size);
 uint32_t	ft_abs(int32_t n);
 size_t	ft_longlen(int64_t n);
 
+t_fxd			*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl);
 
-void				fxd_dbl_build_mantis(t_binary64 bin64,
-										 t_fxd *res);
+void				fxd_dbl_build_mantis(t_fxd *res, uint64_t mantis,
+					int_fast16_t is_normal, int_fast16_t is_long_dbl);
+t_fxd				*fxd_dbl_build_mantiss(uint64_t bin_mantis,
+					int_fast16_t is_normal, int_fast16_t is_long_dbl);
 void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b);
-void				fxd_dbl_build_exp(int_fast16_t b_exp, t_fxd *exp);
 void	get_floating_point_arg(t_printf_info *info);
 size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp, char *buff);
 size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff);

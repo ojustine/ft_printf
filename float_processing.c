@@ -59,10 +59,10 @@ void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
 	char		buff[FP_CHAR_LEN + 1];
 	size_t		to_print;
 
-	exp = fxd_new((bin64.s_parts.bias_exp - 1023) / 9 * FP_R_LEN + 1, 0);
-	mantis = fxd_new(8, 0);
-	fxd_dbl_build_mantis(bin64, mantis);
-	fxd_dbl_build_exp(bin64.s_parts.bias_exp, exp);
+	//mantis = fxd_new(8, 0);
+	//fxd_dbl_build_mantis(mantis, bin64.s_parts.mantis, bin64.s_parts.bias_exp != 0, 0);
+	mantis = fxd_dbl_build_mantiss(bin64.s_parts.mantis, bin64.s_parts.bias_exp != 0, 0);
+	exp = fxd_get_pow_2(bin64.s_parts.bias_exp - 1023, 0);
 	info->prec = (info->prec > FP_MAX_PREC) ? FP_MAX_PREC : info->prec;
 	if (*info->fmt == 'a' || *info->fmt == 'A')
 	{
