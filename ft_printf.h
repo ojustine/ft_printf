@@ -59,18 +59,20 @@ enum						e_printf_sizes
 	SIZE_LONG_DBL = (1 << 15)
 };
 
-enum						e_fxd_dbl_assets
+enum						e_fxd_assets
 {
 	FP_R_LIMITER = 1000000000,
 	FP_R_TOP = FP_R_LIMITER / 10,
 	FP_R_LEN = 9,
 	FP_R_SIZE = sizeof(uint32_t),
-	D_POINT = (DBL_MAX_10_EXP / 9) + 2,
-	D_I0 = D_POINT,
-	D_F0 = D_POINT + 1,
-	D_LEN = (D_POINT * 4 + 16),
-	FP_MAX_PREC = 1035,
-	FP_CHAR_LEN = DBL_MAX_10_EXP + FP_MAX_PREC,
+
+	FP_D_POINT = (DBL_MAX_10_EXP / 9) + 2,
+	D_I0 = FP_D_POINT,
+	D_F0 = FP_D_POINT + 1,
+	FP_D_LEN = (FP_D_POINT * 4 + 16),
+	FP_D_MAX_PREC = 1035,
+	FP_D_CHAR_LEN = DBL_MAX_10_EXP + FP_D_MAX_PREC,
+
 	LD_LEN = ((LDBL_MAX_10_EXP / 9) * 4 + 14),//TODO known ldlen
 	LD_MAX_PREC = 1035,
 	LD_POINT = (LDBL_MAX_10_EXP / 9),
@@ -168,23 +170,8 @@ typedef struct				s_fxd
 	uint32_t				*val;
 	int_fast16_t			int_len;
 	int_fast16_t			frc_len;
-	int_fast16_t			p0;
-	int_fast8_t				sign;
+	int_fast16_t			f0;
 }							t_fxd;
-
-typedef struct				s_fxd_dbl_fast
-{
-	uint32_t				val[D_LEN];
-	int_fast16_t			int_len;
-	int_fast16_t			frc_len;
-}							t_fxd_dbl_fast;
-
-typedef struct				s_fxd_pattern
-{
-	uint32_t				*val;
-	int_fast16_t			int_len;
-	int_fast16_t			frc_len;
-}							t_fxd_img;
 
 void	*ft_memset(void *b, int c, size_t n);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
@@ -203,12 +190,13 @@ uint32_t	ft_abs(int32_t n);
 size_t	ft_longlen(int64_t n);
 
 t_fxd			*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl);
-
 void				fxd_dbl_build_mantis(t_fxd *res, uint64_t mantis,
 					int_fast16_t is_normal, int_fast16_t is_long_dbl);
-t_fxd				*fxd_dbl_build_mantiss(uint64_t bin_mantis,
-					int_fast16_t is_normal, int_fast16_t is_long_dbl);
-void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b);
+t_fxd				*fxd_build_mantiss(uint64_t bin_mantis,
+										int_fast16_t is_normal, int_fast16_t is_long_dbl);
+void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
+								int_fast16_t is_long_dbl);
+void				fxd_roundup(t_printf_info *info, t_fxd *fp);
 void	get_floating_point_arg(t_printf_info *info);
 size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp, char *buff);
 size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff);

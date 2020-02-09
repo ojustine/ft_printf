@@ -31,9 +31,9 @@ int main()
 	ft_printf("%012.2s\n", "-inf");
 	printf("%.0e\n", 0.3473452346256253623);
 
-	ft_printf("%.10e\n", DBL_MAX);
-	printf("%.10a\n", 1.161);
+	ft_printf("%.3e\n", 0.0000012);
+	printf("%.3e\n", 0.0);
 
 	//printf("%.2f\n", 9.999999999999);
-	//printf("%d\n", D_LEN * FP_R_LEN);
+	//printf("%d\n", FP_D_LEN * FP_R_LEN);
 }

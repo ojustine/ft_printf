@@ -39,47 +39,44 @@ t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl)
 		fxd_new->val = malloc(FP_R_SIZE * (LD_POINT + frac_size + 1));
 		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
 		ft_bzero(fxd_new->val, FP_R_SIZE * (LD_POINT + frac_size + 1));
+		fxd_new->f0 = LD_POINT + 1;
 	}
 	else
 	{
-		if (frac_size > D_LEN - D_F0 - 1)
-			frac_size = D_LEN - D_F0 - 1;
+		if (frac_size > FP_D_LEN - D_F0 - 1)
+			frac_size = FP_D_LEN - D_F0 - 1;
 		fxd_new->val = malloc(FP_R_SIZE * (D_F0 + frac_size));
 		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
 		ft_bzero(fxd_new->val, FP_R_SIZE * (D_F0 + frac_size));
+		fxd_new->f0 = FP_D_POINT + 1;
 	}
 	return (fxd_new);
 }
 
-void	do_print_dbl(t_printf_info *info, t_binary64 bin64)
+void	do_print_dbl(t_printf_info *info, uint_fast64_t bin_mantis,
+		uint_fast16_t bias_exp, uint_fast16_t sign)
 {
 	t_fxd		*mantis;
 	t_fxd		*exp;
 	t_fxd		*fp;
-	char		buff[FP_CHAR_LEN + 1];
+	char		buff[FP_D_CHAR_LEN + 1];
 	size_t		to_print;
 
-	//mantis = fxd_new(8, 0);
-	//fxd_dbl_build_mantis(mantis, bin64.s_parts.mantis, bin64.s_parts.bias_exp != 0, 0);
-	mantis = fxd_dbl_build_mantiss(bin64.s_parts.mantis, bin64.s_parts.bias_exp != 0, 0);
-	exp = fxd_get_pow_2(bin64.s_parts.bias_exp - 1023, 0);
-	info->prec = (info->prec > FP_MAX_PREC) ? FP_MAX_PREC : info->prec;
+	info->prec = (info->prec > FP_D_MAX_PREC) ? FP_D_MAX_PREC : info->prec;
 	if (*info->fmt == 'a' || *info->fmt == 'A')
+		return;//TODO: print_hex
+	else
 	{
-		//TODO: print_hex
-		return ;
+		mantis = fxd_build_mantiss(bin_mantis, bias_exp != 0, 0);
+		exp = fxd_get_pow_2(bias_exp - 1023, 0);
+		fp = fxd_new(mantis->frc_len + exp->frc_len, 0);
+		fxd_dbl_mul(fp, mantis, exp, 0);
+		if (*info->fmt == 'f' || *info->fmt == 'F')
+			to_print = fxd_ftoa_dec_form(info, fp, buff);
+		if (*info->fmt == 'e' || *info->fmt == 'E')
+			to_print = fxd_ftoa_exp_form(info, fp, buff);
 	}
-	fp = fxd_new(mantis->frc_len + exp->frc_len, 0);
-	fxd_dbl_mul(fp, mantis, exp);
-	fp->sign = bin64.s_parts.sign;
-	if (*info->fmt == 'f' || *info->fmt == 'F')
-		to_print = fxd_ftoa_dec_form(info, fp, buff);
-	if (*info->fmt == 'e' || *info->fmt == 'E')
-		to_print = fxd_ftoa_exp_form(info, fp, buff);
-	do_print(info, &buff[0], to_print);
-//	else if (*info->fmt == 'e' || *info->fmt == 'E')
-//		//TODO: print_exp
-//		return;
+	do_print(info, buff, to_print);
 	fxd_del(fp, mantis, exp);
 }
 
@@ -100,6 +97,6 @@ void	get_floating_point_arg(t_printf_info *info)
 	else
 	{
 		bin64.val = va_arg(info->ap, double);
-		do_print_dbl(info, bin64);
+		do_print_dbl(info, bin64.s_parts.mantis, bin64.s_parts.bias_exp, bin64.s_parts.sign);
 	}
 }
