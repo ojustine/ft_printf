@@ -77,7 +77,7 @@ size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff)
 	mul->int_len = (index >= 0) ? index + 1 : 0;//>=
 //падает если число больше нуля и кол-во нулей кратно девяти
 	fxd_roundup(fp, full_offset + 1);
-	ft_bzero((char*)&fp->val[fp->f0 + index] + r_offset, fp->frc_len * FP_R_LEN - full_offset);
+	//ft_bzero((char*)&fp->val[fp->f0 + index] + r_offset, fp->frc_len * FP_R_LEN - full_offset);
 
 	r_offset = ft_intlen(fp->val[fp->f0 + index]) - 1;
 	mul->val[fp->f0 - 1 - index] = ft_pow(10, FP_R_LEN - r_offset);
