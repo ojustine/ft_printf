@@ -66,9 +66,7 @@ enum						e_fxd_assets
 	FP_R_LEN = 9,
 	FP_R_SIZE = sizeof(uint32_t),
 
-	FP_D_POINT = (DBL_MAX_10_EXP / 9) + 2,
-	D_I0 = FP_D_POINT,
-	D_F0 = FP_D_POINT + 1,
+	FP_D_POINT = (DBL_MAX_10_EXP / FP_R_LEN) + 2,
 	FP_D_LEN = (FP_D_POINT * 4 + 16),
 	FP_D_MAX_PREC = 1035,
 	FP_D_CHAR_LEN = DBL_MAX_10_EXP + FP_D_MAX_PREC,
@@ -76,14 +74,10 @@ enum						e_fxd_assets
 	LD_LEN = ((LDBL_MAX_10_EXP / 9) * 4 + 14),//TODO known ldlen
 	LD_MAX_PREC = 1035,
 	LD_POINT = (LDBL_MAX_10_EXP / 9),
-	LD_I0 = LD_POINT,
-	LD_F0 = LD_POINT + 1,
 };
 
 # define BUFF_SIZE			512
 # define MAX_INT_BITS_NUM	((sizeof(long long)) * 8 + 2)
-# define FLT_MAX_LEN		FLT_MAX_10_EXP + 3
-# define FXD_POINT_LDBL_LEN	((LDBL_MAX_10_EXP / 9) + 1)
 # define MAX(a,b)			(((a) > (b)) ? (a) : (b))
 # define MIN(a,b)			(((a) < (b)) ? (a) : (b))
 
@@ -196,7 +190,7 @@ t_fxd				*fxd_build_mantiss(uint64_t bin_mantis,
 										int_fast16_t is_normal, int_fast16_t is_long_dbl);
 void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
 								int_fast16_t is_long_dbl);
-void				fxd_roundup(t_printf_info *info, t_fxd *fp);
+void				fxd_roundup(t_fxd *fp, int_fast32_t prec);
 void	get_floating_point_arg(t_printf_info *info);
 size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp, char *buff);
 size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff);

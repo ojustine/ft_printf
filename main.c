@@ -31,8 +31,8 @@ int main()
 	ft_printf("%012.2s\n", "-inf");
 	printf("%.0e\n", 0.3473452346256253623);
 
-	ft_printf("%.3e\n", 0.0000012);
-	printf("%.3e\n", 0.0);
+	ft_printf("%.3e\n", 1000000000.0);
+	printf("%.3e\n", 10000.0);
 
 	//printf("%.2f\n", 9.999999999999);
 	//printf("%d\n", FP_D_LEN * FP_R_LEN);

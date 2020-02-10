@@ -43,11 +43,11 @@ t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl)
 	}
 	else
 	{
-		if (frac_size > FP_D_LEN - D_F0 - 1)
-			frac_size = FP_D_LEN - D_F0 - 1;
-		fxd_new->val = malloc(FP_R_SIZE * (D_F0 + frac_size));
+		if (frac_size > FP_D_LEN - FP_D_POINT)
+			frac_size = FP_D_LEN - FP_D_POINT;
+		fxd_new->val = malloc(FP_R_SIZE * (FP_D_POINT + frac_size + 1));
 		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
-		ft_bzero(fxd_new->val, FP_R_SIZE * (D_F0 + frac_size));
+		ft_bzero(fxd_new->val, FP_R_SIZE * (FP_D_POINT + frac_size + 1));
 		fxd_new->f0 = FP_D_POINT + 1;
 	}
 	return (fxd_new);

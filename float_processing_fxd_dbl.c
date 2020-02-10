@@ -113,16 +113,16 @@ t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl)
 	return (res);
 }
 
-void				fxd_roundup(t_printf_info *info, t_fxd *fp)
+void				fxd_roundup(t_fxd *fp, int_fast32_t prec)
 {
 	uint32_t 				j;
 	uint32_t 				trim;
 	uint64_t				pow;
 	register int_fast16_t	i;
 
-	i = info->prec / FP_R_LEN;
+	i = prec / FP_R_LEN;
 	j = i;
-	pow = ft_pow(10, (FP_R_LEN - (info->prec % FP_R_LEN)));
+	pow = ft_pow(10, (FP_R_LEN - (prec % FP_R_LEN)));
 	trim = fp->val[fp->f0 + i] % pow;
 	if (trim > pow / 10 * 5)
 		fp->val[fp->f0 + i] += pow;
