@@ -142,9 +142,9 @@ typedef union				u_double
 	struct
 	{
 		uint_fast64_t		mantis		: 52;
-		uint_fast64_t		bias_exp	: 11;
+		uint_fast64_t		b_exp	: 11;
 		uint_fast64_t		sign		: 1;
-	}						s_parts;
+	}						s_pts;
 	double					val;
 }							t_binary64;
 
@@ -153,7 +153,7 @@ typedef union				u_long_double
 	struct
 	{
 		uint_fast64_t		mantis		: 64;
-		uint_fast64_t		bias_exp	: 15;
+		uint_fast64_t		b_exp	: 15;
 		uint_fast64_t		sign		: 1;
 	}						s_parts;
 	long double				val;

@@ -115,23 +115,21 @@ t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl)
 
 void				fxd_roundup(t_fxd *fp, int_fast32_t prec)
 {
-	uint32_t 				j;
-	uint32_t 				trim;
 	uint64_t				pow;
 	register int_fast16_t	i;
+	register int_fast16_t	j;
 
 	i = prec / FP_R_LEN;
 	j = i;
 	pow = ft_pow(10, (FP_R_LEN - (prec % FP_R_LEN)));
-	trim = fp->val[fp->f0 + i] % pow;
-	if (trim > pow / 10 * 5)
+	if ((fp->val[fp->f0 + i] % pow) > (pow / 10 * 5))
 		fp->val[fp->f0 + i] += pow;
-	else if (trim == pow / 10 * 5)
+	else if ((fp->val[fp->f0 + i] % pow) == (pow / 10 * 5))
 	{
-		while (++j < fp->frc_len && fp->val[fp->f0 + i] == 0)
+		while (++j < fp->frc_len && fp->val[fp->f0 + j] == 0)
 			;
 		if (j == fp->frc_len)
-			fp->val[fp->f0 + i] += ((fp->val[fp->f0 + i] / pow % 10) & 1) ? pow : 0;
+			fp->val[fp->f0 + i] += fp->val[fp->f0 + i] / pow % 10 & 1 ? pow : 0;
 		else
 			fp->val[fp->f0 + i] += pow;
 	}
@@ -139,5 +137,6 @@ void				fxd_roundup(t_fxd *fp, int_fast32_t prec)
 	{
 		fp->val[fp->f0 + i] %= FP_R_LIMITER;
 		fp->val[fp->f0 + --i] += pow;
+		fp->int_len = (i < 0) ? -i : fp->int_len;
 	}
 }

@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-inline int_fast16_t	add_prefix(t_printf_info *info, const int_fast16_t base,
+int32_t	add_prefix(t_printf_info *info, const int_fast16_t base,
 					char* buff)
 {
 	int_fast16_t	ret;
@@ -11,6 +11,10 @@ inline int_fast16_t	add_prefix(t_printf_info *info, const int_fast16_t base,
 //		do_print(info, &sign, 1);
 //		ret++;
 //	}
+
+
+
+
 	if (base != 10 && info->flags & FLAG_ALT_FORM)
 	{
 		if (base == 8)

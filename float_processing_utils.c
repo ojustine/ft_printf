@@ -1,5 +1,10 @@
 #include "ft_printf.h"
 
+size_t					fxd_ftoa_inf_nan(t_printf_info *info, t_fxd *fp, char *buff)
+{
+
+}
+
 static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info, t_fxd *fp, char *buff)
 {
 	register int_fast16_t	i;
@@ -7,7 +12,6 @@ static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info, t_fxd *fp,
 	register int_fast32_t	prec;
 	const char				*ptr = buff;
 
-	fxd_roundup(fp, info->prec);
 	if (info->prec == 0 && !(info->flags & FLAG_ALT_FORM))
 		return (0);
 	*buff++ = '.';
@@ -36,6 +40,7 @@ size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp, char *buff)
 	const char				*ptr = buff;
 
 	i = -fp->int_len;
+	fxd_roundup(fp, info->prec);
 	if (i == 0)
 		*buff++ = '0';
 	else
@@ -57,51 +62,59 @@ size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp, char *buff)
 	return ((buff - ptr) + fxd_ftoa_dec_form_frac_part(info, fp, buff));
 }
 
-size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff)
+static inline int32_t	fxd_ftoa_normalize(t_printf_info *info, t_fxd *fp,
+						int_fast16_t inx, int_fast32_t offset)
 {
 	t_fxd			*mul;
-	int_fast32_t	r_offset;
-	int_fast32_t	full_offset;
-	int_fast16_t	index;
-	const char		*ptr = buff;
+	int_fast16_t	i;
+	uint64_t		pow;
 
-	index = -fp->int_len;
-	if (fp->int_len == 0 && fp->frc_len > 0)
-		while (fp->val[fp->f0 + index] == 0 && index < fp->frc_len)
-			index++;
-	r_offset = ft_intlen(fp->val[fp->f0 + index]) - 1;
-	full_offset = ft_abs(((index > 0) ? index : -(index + 1)) * FP_R_LEN + r_offset + 1);
-
-	mul = fxd_new((index < 0) ? -index : 0, 0);
-	mul->frc_len = (index < 0) ? -index : 0;
-	mul->int_len = (index >= 0) ? index + 1 : 0;//>=
-//падает если число больше нуля и кол-во нулей кратно девяти
-	fxd_roundup(fp, full_offset + 1);
-	//ft_bzero((char*)&fp->val[fp->f0 + index] + r_offset, fp->frc_len * FP_R_LEN - full_offset);
-
-	r_offset = ft_intlen(fp->val[fp->f0 + index]) - 1;
-	mul->val[fp->f0 - 1 - index] = ft_pow(10, FP_R_LEN - r_offset);
+	mul = fxd_new((inx < 0) ? -inx : 0, 0);
+	mul->frc_len = (inx < 0) ? -inx : 0;
+	mul->int_len = (inx >= 0) ? inx + 1 : 0;
+	mul->val[mul->f0 - 1 - inx] = ft_pow(10, FP_R_LEN - offset);
 	fxd_dbl_mul(fp, fp, mul, 0);
-	buff += fxd_ftoa_dec_form(info, fp, buff);
-	*buff++ = "eE"[info->capitals];
-	*buff++ = "-+"[index < 0];//<
-	if (index >= 1)
-		r_offset = FP_R_LEN - r_offset;
-	if ((r_offset = ((index > 0) ? index : -(index + 1)) * FP_R_LEN + r_offset) < 10)//>
-		*buff++ = '0';
-	index = ft_intlen(r_offset = ft_abs(r_offset));
-	while (index-- > 0)
-		*buff++ = (char)(ft_divmod(r_offset, ft_pow(10, index), &r_offset) + '0');
+	fxd_roundup(fp, info->prec);
+	if (fp->val[fp->f0 - 1] > FP_R_LEN)
+	{
+		mul->val[mul->f0] = FP_R_TOP;
+		mul->int_len = 0;
+		mul->frc_len = 1;
+		fxd_dbl_mul(fp, fp, mul, 0);
+		offset++;
+	}
+	i = info->prec / FP_R_LEN;
+	pow = ft_pow(10, (FP_R_LEN - (info->prec % FP_R_LEN)));
+	fp->val[fp->f0 + i] -= fp->val[fp->f0 + i] % pow;
 	fxd_del(mul, 0, 0);
-	return (buff - ptr);
+	return (offset);
 }
 
-////TODO too many lines ft_abs mb?
-
-
-
-
-size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff)
+size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff)
 {
+	int_fast32_t	offset;
+	int_fast16_t	inx;
+	const char		*ptr = buff;
 
+	inx = -fp->int_len;
+	if (fp->int_len == 0 && fp->frc_len > 0)
+		while (fp->val[fp->f0 + inx] == 0 && inx < fp->frc_len)
+			inx++;
+	offset = ft_intlen(fp->val[fp->f0 + inx]) - 1;
+	offset = fxd_ftoa_normalize(info, fp, inx, offset);
+	buff += fxd_ftoa_dec_form(info, fp, buff);
+	*buff++ = "eE"[info->capitals];
+	*buff++ = "-+"[inx < 0 || (fp->int_len == 0 && fp->frc_len == 0)];
+	if (inx >= 1)
+		offset = FP_R_LEN - offset;
+	if (fp->int_len == 0 && fp->frc_len == 0)
+		offset = 0;
+	else
+		offset = ft_abs(((inx > 0) ? inx : -(inx + 1)) * FP_R_LEN + offset);
+	if (offset < 10)
+		*buff++ = '0';
+	inx = ft_intlen(offset);
+	while (inx-- > 0)
+		*buff++ = (char)(ft_divmod(offset, ft_pow(10, inx), &offset) + '0');
+	return (buff - ptr);
 }

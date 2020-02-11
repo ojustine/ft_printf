@@ -114,7 +114,7 @@ void					get_signed_arg(t_printf_info *info, t_s16 base)
 		num = -num;
 	}
 	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
-		sign = (info->flags & FLAG_PLUS_SIGN) ? '+' : ' ';
+		sign = " +"[info->flags & FLAG_PLUS_SIGN];
 	else
 		sign = 0;
 	do_print_num(info, num, base, sign);

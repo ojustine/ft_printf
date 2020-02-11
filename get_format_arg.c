@@ -9,12 +9,12 @@ static inline void	get_width_n_precision(t_printf_info *info)
 {
 	if (*info->fmt >= '0' && *info->fmt <= '9')
 		while (*info->fmt >= '0' && *info->fmt <= '9')
-			info->width = 10 * info->width + (*info->fmt++ - '0');
+			info->width = 10 * info->width + (*info->fmt++ - '0');//TODO width < 0 is left-flag
 	else if (*info->fmt == '*')
 	{
 		info->width = va_arg(info->ap, int32_t);
 		++info->fmt;
-		if (info->width < 0 && (info->width = -info->width))
+		if (info->width < 0 && (info->width = -info->width))//TODO what happ if prec < 0?
 			SET_FLAG(FLAG_LEFT_ALIGN);
 	}
 	if (*info->fmt == '.')
@@ -60,7 +60,7 @@ static inline void	get_size_modifier(t_printf_info *info)
 static inline void	print_arg_by_type(t_printf_info *info)
 {
 	if (IS_FMT('B') || IS_FMT('X'))
-		info->capitals = 16;
+		info->capitals = 16;//TODO strany, cap == 1 || cap == 0
 	if (IS_FMT('d') || IS_FMT('i') || IS_FMT('D'))
 		get_signed_arg(info, 10);
 	else if (*info->fmt == 's')
