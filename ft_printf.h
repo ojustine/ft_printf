@@ -196,6 +196,7 @@ size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff);
 t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
 void	fxd_del(t_fxd *fp1, t_fxd *fp2, t_fxd *fp3);
 size_t					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign);
+void	add_prefix_fp(t_printf_info *info, char sign, int_fast32_t val_len);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);

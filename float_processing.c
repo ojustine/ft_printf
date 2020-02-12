@@ -60,18 +60,20 @@ void	do_print_dbl(t_printf_info *info, uint_fast64_t bin_mantis,
 
 	info->prec = (info->prec > FP_D_MAX_PREC) ? FP_D_MAX_PREC : info->prec;
 	if (*info->fmt == 'a' || *info->fmt == 'A')
-		return;//TODO: print_hex
+		return;//TODO: print_hex_form
 	else
 	{
 		mantis = fxd_build_mantis(bin_mantis, bias_exp != 0, 0);
 		fp = fxd_get_pow_2(bias_exp - 1023, 0);
 		fxd_dbl_mul(fp, fp, mantis, 0);
-		if (*info->fmt == 'e' || *info->fmt == 'E')
-			to_print = fxd_ftoa_exp_form(info, fp, buff);
 		if (*info->fmt == 'f' || *info->fmt == 'F')
 			to_print = fxd_ftoa_dec_form(info, fp, buff);
+		else if (*info->fmt == 'e' || *info->fmt == 'E')
+			to_print = fxd_ftoa_exp_form(info, fp, buff);
+		else
+			to_print = 0;//TODO: print_opt_form
 	}
-	//info->width -= add_prefix;
+	add_prefix_fp(info, sign, to_print);
 	do_print(info, buff, to_print);
 	//add_postfix
 	fxd_del(fp, mantis, 0);

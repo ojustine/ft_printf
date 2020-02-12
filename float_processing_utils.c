@@ -2,7 +2,7 @@
 
 size_t					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign)
 {
-//убрать флаг 0, prec не работает
+//TODO: убрать флаг 0, prec не работает
 	if (mantis != 0)
 		do_print(info, "nan", 3);
 	else
