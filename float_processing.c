@@ -51,32 +51,29 @@ t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl)
 }
 
 void	do_print_dbl(t_printf_info *info, uint_fast64_t bin_mantis,
-		uint_fast16_t bias_exp, uint_fast16_t sign)
+		uint_fast16_t bias_exp, char sign)
 {
 	t_fxd		*mantis;
 	t_fxd		*fp;
 	char		buff[FP_D_CHAR_LEN + 9];
 	size_t		to_print;
 
-	if (sign)
-		buff[0] = '-';
-	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
-		buff[0] = " +"[info->flags & FLAG_PLUS_SIGN];
 	info->prec = (info->prec > FP_D_MAX_PREC) ? FP_D_MAX_PREC : info->prec;
 	if (*info->fmt == 'a' || *info->fmt == 'A')
 		return;//TODO: print_hex
 	else
 	{
-		mantis = fxd_build_mantiss(bin_mantis, bias_exp != 0, 0);
+		mantis = fxd_build_mantis(bin_mantis, bias_exp != 0, 0);
 		fp = fxd_get_pow_2(bias_exp - 1023, 0);
 		fxd_dbl_mul(fp, fp, mantis, 0);
-		//padding + prefix
 		if (*info->fmt == 'e' || *info->fmt == 'E')
 			to_print = fxd_ftoa_exp_form(info, fp, buff);
 		if (*info->fmt == 'f' || *info->fmt == 'F')
 			to_print = fxd_ftoa_dec_form(info, fp, buff);
 	}
+	//info->width -= add_prefix;
 	do_print(info, buff, to_print);
+	//add_postfix
 	fxd_del(fp, mantis, 0);
 }
 
@@ -85,15 +82,12 @@ void	get_floating_point_arg(t_printf_info *info)
 	t_binary64	b64;
 	t_binary80	b80;
 
-	if (info->flags & SIZE_LONG_DBL && IS_LONG_DBL_DEFINED)
+	if (info->flags & SIZE_LDBL && IS_LONG_DBL_DEFINED)
 	{
 		b80.val = va_arg(info->ap, long double);
 //		if (b64.s_pts.b_exp == 0x7ff)
 //		{
-//			if (b64.s_pts.mantis != 0)
-//				do_print(info, "nan", 3);
-//			else
-//				do_print(info, "inf", 3);
+//			fxd_ftoa_inf_nan(info, b64.s_pts.mantis, b64.s_pts.sign, buff);
 //			return ;
 //		}
 	}
@@ -102,12 +96,14 @@ void	get_floating_point_arg(t_printf_info *info)
 		b64.val = va_arg(info->ap, double);
 		if (b64.s_pts.b_exp == 0x7ff)
 		{
-			if (b64.s_pts.mantis != 0)
-				do_print(info, "nan", 3);
-			else
-				do_print(info, "inf", 3);
+			fxd_ftoa_inf_nan(info, b64.s_pts.mantis, b64.s_pts.sign);
 			return ;
 		}
 		do_print_dbl(info, b64.s_pts.mantis, b64.s_pts.b_exp, b64.s_pts.sign);
 	}
+//	if (sign)
+//		buff[0] = '-';
+//	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
+//		buff[0] = " +"[info->flags & FLAG_PLUS_SIGN];
+
 }

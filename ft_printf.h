@@ -56,7 +56,7 @@ enum						e_printf_sizes
 	SIZE_CHAR = (1 << 12),
 	SIZE_SIZE_T = (1 << 13),
 	SIZE_PTR = (1 << 14),
-	SIZE_LONG_DBL = (1 << 15)
+	SIZE_LDBL = (1 << 15)
 };
 
 enum						e_fxd_assets
@@ -126,7 +126,7 @@ typedef struct				s_printf_info
 	uint16_t				flags;
 	int_fast32_t			width;
 	int_fast32_t			prec;
-	uint_fast8_t			capitals;
+	uint_fast8_t			cap;
 	int32_t					fd;
 	char					buff[BUFF_SIZE + 1];
 	size_t					buff_index;
@@ -142,7 +142,7 @@ typedef union				u_double
 	struct
 	{
 		uint_fast64_t		mantis		: 52;
-		uint_fast64_t		b_exp	: 11;
+		uint_fast64_t		b_exp		: 11;
 		uint_fast64_t		sign		: 1;
 	}						s_pts;
 	double					val;
@@ -153,7 +153,7 @@ typedef union				u_long_double
 	struct
 	{
 		uint_fast64_t		mantis		: 64;
-		uint_fast64_t		b_exp	: 15;
+		uint_fast64_t		b_exp		: 15;
 		uint_fast64_t		sign		: 1;
 	}						s_parts;
 	long double				val;
@@ -183,10 +183,8 @@ void				ft_memswap(void *mem1, void *mem2, size_t size);
 uint32_t	ft_abs(int32_t n);
 size_t	ft_longlen(int64_t n);
 
-t_fxd			*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl);
-void				fxd_dbl_build_mantis(t_fxd *res, uint64_t mantis,
-					int_fast16_t is_normal, int_fast16_t is_long_dbl);
-t_fxd				*fxd_build_mantiss(uint64_t bin_mantis,
+t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl);
+t_fxd				*fxd_build_mantis(uint64_t bin_mantis,
 										int_fast16_t is_normal, int_fast16_t is_long_dbl);
 void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
 								int_fast16_t is_long_dbl);
@@ -197,6 +195,7 @@ size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff);
 size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff);
 t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
 void	fxd_del(t_fxd *fp1, t_fxd *fp2, t_fxd *fp3);
+size_t					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);

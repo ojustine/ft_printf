@@ -1,8 +1,12 @@
 #include "ft_printf.h"
 
-size_t					fxd_ftoa_inf_nan(t_printf_info *info, t_fxd *fp, char *buff)
+size_t					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign)
 {
-
+//убрать флаг 0, prec не работает
+	if (mantis != 0)
+		do_print(info, "nan", 3);
+	else
+		do_print(info, "inf", 3);
 }
 
 static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info, t_fxd *fp, char *buff)
@@ -103,7 +107,7 @@ size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff)
 	offset = ft_intlen(fp->val[fp->f0 + inx]) - 1;
 	offset = fxd_ftoa_normalize(info, fp, inx, offset);
 	buff += fxd_ftoa_dec_form(info, fp, buff);
-	*buff++ = "eE"[info->capitals];
+	*buff++ = "eE"[info->cap];
 	*buff++ = "-+"[inx < 0 || (fp->int_len == 0 && fp->frc_len == 0)];
 	if (inx >= 1)
 		offset = FP_R_LEN - offset;

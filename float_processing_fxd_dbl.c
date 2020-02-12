@@ -55,7 +55,7 @@ void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
 	fxd_del(tmp, line, 0);
 }
 
-t_fxd				*fxd_build_mantiss(uint64_t bin_mantis,
+t_fxd				*fxd_build_mantis(uint64_t bin_mantis,
 					int_fast16_t is_normal, int_fast16_t is_long_dbl)
 {
 	register int_fast16_t	i;

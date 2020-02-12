@@ -53,9 +53,9 @@ static inline t_s16	add_prefix(t_printf_info *info, const t_s16 base,
 			return (ret + 1);
 		}
 		else if (base == 2)
-			do_print(info, info->capitals ? "0B" : "0b", 2);
+			do_print(info, info->cap ? "0B" : "0b", 2);
 		else if (base == 16)
-			do_print(info, info->capitals ? "0X" : "0x", 2);
+			do_print(info, info->cap ? "0X" : "0x", 2);
 		return (ret + 2);
 	}
 	return (ret);
@@ -73,7 +73,7 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 	ptr = &buff[MAX_INT_BITS_NUM - 1];
 	while (num_len-- == 1 || num != 0)
 	{
-		*ptr-- = digits[(num % base) + info->capitals];
+		*ptr-- = digits[(num % base) + info->cap];
 		num /= base;
 	}
 	num_len = (&buff[MAX_INT_BITS_NUM - 1] - ptr);

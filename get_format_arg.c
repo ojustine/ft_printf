@@ -48,7 +48,7 @@ static inline void	get_size_modifier(t_printf_info *info)
 		else if (*info->fmt == 'j')
 			SET_FLAG(SIZE_INTMAX);
 		else if (*info->fmt == 'L')
-			SET_FLAG(SIZE_LONG_DBL);
+			SET_FLAG(SIZE_LDBL);
 		else if (*info->fmt == 't')
 			SET_FLAG(SIZE_PTR);
 		else
@@ -60,7 +60,7 @@ static inline void	get_size_modifier(t_printf_info *info)
 static inline void	print_arg_by_type(t_printf_info *info)
 {
 	if (IS_FMT('B') || IS_FMT('X'))
-		info->capitals = 16;//TODO strany, cap == 1 || cap == 0
+		info->cap = 1;//TODO strany, cap == 1 || cap == 0
 	if (IS_FMT('d') || IS_FMT('i') || IS_FMT('D'))
 		get_signed_arg(info, 10);
 	else if (*info->fmt == 's')
@@ -97,7 +97,7 @@ void				get_formatted_arg(t_printf_info *info)
 	info->flags = 0;
 	info->width = 0;
 	info->prec = 6;
-	info->capitals = 0;
+	info->cap = 0;
 	while (*info->fmt)
 	{
 		if (*info->fmt == '#')
