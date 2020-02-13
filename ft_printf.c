@@ -1,5 +1,5 @@
 #include "ft_printf.h"
-//TODO: check norm if tab between func name and params
+
 static inline int	entry(register t_printf_info *info)
 {
 	register size_t		non_format_chars;

@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-static inline void		padding(t_printf_info *info)
+static inline void		padding_num(t_printf_info *info)
 {
 	const char	zero_pad[] = "0000";
 	const char	blank_pad[] = "    ";
@@ -82,13 +82,13 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 		info->width -= (base == 8) ? 1 : 2;
 	if (!(info->flags & FLAG_LEFT_ALIGN) && ((info->width -= MAX(info->prec,
 		num_len)) > 0))
-		padding(info);
+		padding_num(info);
 	info->width -= add_prefix(info, base, sign) + info->prec;
 	if (info->flags & FLAG_TRUNCATE && (info->prec -= num_len) > 0)
 		while (info->prec--)
 			do_print(info, "0", 1);
 	do_print(info, ++ptr, num_len);
-	padding(info);
+	padding_num(info);
 }
 
 void					get_signed_arg(t_printf_info *info, t_s16 base)

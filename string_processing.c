@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-static inline void			padding(t_printf_info *info)
+static inline void			padding_str(t_printf_info *info)
 {
 	const char	zero_pad[] = "0000";
 	const char	blank_pad[] = "    ";
@@ -31,11 +31,11 @@ static inline void			do_print_string(t_printf_info *info, char *data,
 		{
 			info->flags &= ~FLAG_ZERO_PAD;
 			do_print(info, data, to_print);
-			padding(info);
+			padding_str(info);
 		}
 		else
 		{
-			padding(info);
+			padding_str(info);
 			do_print(info, data, to_print);
 		}
 	}

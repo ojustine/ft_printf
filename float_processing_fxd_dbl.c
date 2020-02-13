@@ -47,7 +47,7 @@ void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
 			line->frc_len = (i + j + 1 >= 0) ? (i + j + 2) : 0;
 			line->int_len = 0;
 			if (i + j < 0)
-				line->int_len = (i + j == -1) ? 1 : -(i + j);// + 1);
+				line->int_len = (i + j == -1) ? 1 : -(i + j);
 			fxd_add(tmp, line);
 			ft_bzero(&(line->val[line->f0 + i + j]), FP_R_SIZE * 2);
 		}

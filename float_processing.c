@@ -73,10 +73,11 @@ void	do_print_dbl(t_printf_info *info, uint_fast64_t bin_mantis,
 		else
 			to_print = 0;//TODO: print_opt_form
 	}
-	add_prefix_fp(info, sign, to_print);
-	do_print(info, buff, to_print);
-	//add_postfix
 	fxd_del(fp, mantis, 0);
+	info->width -= set_prefix_fp(info, sign, to_print);
+	do_print(info, buff, to_print);
+	padding(info, info->width);
+	//
 }
 
 void	get_floating_point_arg(t_printf_info *info)

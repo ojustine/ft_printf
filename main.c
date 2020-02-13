@@ -31,9 +31,9 @@ int main()
 	ft_printf("%012.2s\n", "-inf");
 	printf("%.0e\n", 0.3473452346256253623);
 
-	ft_printf("%-10.1f\n", 1.0);//(000000000 000009999)
-	printf("%1.10f", -0.0/0.0);
+	ft_printf("%09.1e\n", DBL_MIN);//(000000000 000009999)
+	printf("%.10g\n", 0.111111111111111111);
 
 	//printf("%.2f\n", 9.999999999999);
 	//printf("%d\n", FP_D_LEN * FP_R_LEN);
-}
+}//log 10 2 * (log 2 mantissa + binary exp) - machine epsilon)

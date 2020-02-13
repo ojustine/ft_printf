@@ -1,34 +1,27 @@
 #include "ft_printf.h"
 
-int32_t	add_prefix(t_printf_info *info, const int_fast16_t base,
-					char* buff)
+int32_t	add_prefix(t_printf_info *info, char *buf, char sign, const int_fast16_t base)
 {
 	int_fast16_t	ret;
 
 	ret = 0;
-//	if (sign)
-//	{
-//		do_print(info, &sign, 1);
-//		ret++;
-//	}
-
-	if (base != 10 && info->flags & FLAG_ALT_FORM)
+	if (sign)
+		buf[ret++] = '-';
+	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
+		buf[++ret] = " +"[info->flags & FLAG_PLUS_SIGN];
+	if ((base != 10 && info->flags & FLAG_ALT_FORM) || *info->fmt == 'a'
+													|| *info->fmt == 'A')
 	{
-		if (base == 8)
-		{
-			do_print(info, "0", 1);
-			return (ret + 1);
-		}
-		else if (base == 2)
-			do_print(info, info->cap ? "0B" : "0b", 2);
+		buf[ret++] = '0';
+		if (base == 2)
+			buf[ret++] = "bB"[info->cap];
 		else if (base == 16)
-			do_print(info, info->cap ? "0X" : "0x", 2);
-		return (ret + 2);
+			buf[ret++] = "xX"[info->cap];
 	}
 	return (ret);
 }
 
-static inline void	padding(t_printf_info *info, int_fast32_t pad_len)
+void				padding(t_printf_info *info, int_fast32_t pad_len)
 {
 	const char	zero_pad[] = "0000";
 	const char	blank_pad[] = "    ";
@@ -36,7 +29,9 @@ static inline void	padding(t_printf_info *info, int_fast32_t pad_len)
 
 	if (pad_len > 0)
 	{
-		curr_pad = (char*)(info->flags & FLAG_ZERO_PAD ? zero_pad : blank_pad);
+		curr_pad = (char*)(info->flags & FLAG_ZERO_PAD
+							&& !(info->flags & FLAG_LEFT_ALIGN)
+							? zero_pad : blank_pad);
 		while (pad_len >= 4)
 		{
 			do_print(info, curr_pad, 4);
@@ -47,33 +42,29 @@ static inline void	padding(t_printf_info *info, int_fast32_t pad_len)
 	}
 }
 
-void				add_prefix_fp(t_printf_info *info, char sign,
+int32_t				set_prefix_fp(t_printf_info *info, char sign,
 					int_fast32_t val_len)
 {
-	int32_t	ret;
+	int32_t	len;
+	char 	prefix[3];
 
-	ret = 0;
-	if (sign)
-		do_print(info, "-", ++ret);
-	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
-		do_print(info, info->flags & FLAG_PLUS_SIGN ? "+" : " ", ++ret);
-	if (*info->fmt == 'a' || *info->fmt == 'A')
-		ret += 2;
-	if (info->width - (val_len + ret) > 0 && !(info->flags & FLAG_LEFT_ALIGN))
+	len = add_prefix(info, prefix, sign, 16);
+	if (info->width - (val_len + len) > 0 && !(info->flags & FLAG_LEFT_ALIGN))
+	{
 		if (info->flags & FLAG_ZERO_PAD)
 		{
-			if (*info->fmt == 'a' || *info->fmt == 'A')
-				do_print(info, info->cap ? "0X" : "0x", 2);
-			padding(info, info->width -= val_len + ret);
+			do_print(info, prefix, len);
+			padding(info, info->width - (val_len + len));
+			len += info->width - (val_len + len);
 		}
 		else
 		{
-			padding(info, info->width -= val_len + ret);
-			if (*info->fmt == 'a' || *info->fmt == 'A')
-				do_print(info, info->cap ? "0X" : "0x", 2);
+			padding(info, info->width - (val_len + len));
+			do_print(info, prefix, len);
+			len += info->width - (val_len + len);
 		}
-	else if (*info->fmt == 'a' || *info->fmt == 'A')
-		do_print(info, info->cap ? "0X" : "0x", 2);
+	}
+	else
+		do_print(info, prefix, len);
+	return (val_len + len);
 }
-
-
