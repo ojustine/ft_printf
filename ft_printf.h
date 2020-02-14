@@ -68,12 +68,14 @@ enum						e_fxd_assets
 
 	FP_D_POINT = (DBL_MAX_10_EXP / FP_R_LEN) + 2,
 	FP_D_LEN = (FP_D_POINT * 4 + 16),
-	FP_D_MAX_PREC = 1035,
+	FP_D_MAX_PREC = 1074,
 	FP_D_CHAR_LEN = DBL_MAX_10_EXP + FP_D_MAX_PREC,
 
-	LD_LEN = ((LDBL_MAX_10_EXP / 9) * 4 + 14),//TODO known ldlen
-	LD_MAX_PREC = 1035,
-	LD_POINT = (LDBL_MAX_10_EXP / 9),
+	FP_LD_POINT = (LDBL_MAX_10_EXP / FP_R_LEN) + 100,
+	FP_LD_LEN = (FP_LD_POINT * 4 + 14),//TODO known ldlen
+	FP_LD_MAX_PREC = 16445,
+	FP_LD_CHAR_LEN = DBL_MAX_10_EXP + FP_LD_MAX_PREC,
+	FP_LD_64BIT = 1 << 64
 };
 
 # define BUFF_SIZE			512
@@ -155,7 +157,7 @@ typedef union				u_long_double
 		uint_fast64_t		mantis		: 64;
 		uint_fast64_t		b_exp		: 15;
 		uint_fast64_t		sign		: 1;
-	}						s_parts;
+	}						s_pts;
 	long double				val;
 }							t_binary80;
 
@@ -194,9 +196,10 @@ size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp, char *buff);
 size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff);
 size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff);
 t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
-void	fxd_del(t_fxd *fp1, t_fxd *fp2, t_fxd *fp3);
+void	fxd_del(t_fxd *fp1, t_fxd *fp2);
 size_t					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign);
 int32_t				set_prefix_fp(t_printf_info *info, char sign, int_fast32_t val_len);
+size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff);
 
 void				padding(t_printf_info *info, int_fast32_t pad_len);
 

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   nuber_processing.c                                 :+:      :+:    :+:   */
+/*   number_processing.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ojustine <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -34,7 +34,7 @@ static inline void		padding_num(t_printf_info *info)
 	}
 }
 
-static inline t_s16	add_prefix(t_printf_info *info, const t_s16 base,
+static inline t_s16	add_prefix(t_printf_info *info, const int_fast16_t base,
 								  char sign)
 {
 	int_fast16_t	ret;
@@ -62,21 +62,24 @@ static inline t_s16	add_prefix(t_printf_info *info, const t_s16 base,
 }
 
 static inline void		do_print_num(t_printf_info *info, uintmax_t num,
-									   const t_s16 base, char sign)
+									   const int_fast16_t base, char sign)
 {
 	const char			digits[] = "0123456789abcdef0123456789ABCDEF";
 	register char		*ptr;
 	char				buff[MAX_INT_BITS_NUM];
 	int_fast16_t		num_len;
+	//prefix[3]
 
-	num_len = 1;
 	ptr = &buff[MAX_INT_BITS_NUM - 1];
-	while (num_len-- == 1 || num != 0)
+	*ptr-- = digits[(num % base) + info->cap * 16];
+	while (num != 0)
 	{
-		*ptr-- = digits[(num % base) + info->cap];
+		*ptr-- = digits[(num % base) + info->cap * 16];
 		num /= base;
 	}
 	num_len = (&buff[MAX_INT_BITS_NUM - 1] - ptr);
+	//num_len += add_p
+	//info->prec -= num_len;
 	info->width -= sign != 0;
 	if (base != 10 && (info->flags & FLAG_ALT_FORM))
 		info->width -= (base == 8) ? 1 : 2;
@@ -91,7 +94,7 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 	padding_num(info);
 }
 
-void					get_signed_arg(t_printf_info *info, t_s16 base)
+void					get_signed_arg(t_printf_info *info, int_fast16_t base)
 {
 	char		sign;
 	intmax_t	num;
@@ -120,7 +123,7 @@ void					get_signed_arg(t_printf_info *info, t_s16 base)
 	do_print_num(info, num, base, sign);
 }
 
-void					get_unsigned_arg(t_printf_info *info, t_s16 base)
+void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
 {
 	uintmax_t	num;
 	char		sign;

@@ -73,24 +73,24 @@ static inline int32_t	fxd_ftoa_normalize(t_printf_info *info, t_fxd *fp,
 	int_fast16_t	i;
 	uint64_t		pow;
 
-	mul = fxd_new((inx < 0) ? -inx : 0, 0);
+	mul = fxd_new((inx < 0) ? -inx : 0, fp->f0 == FP_LD_POINT);//!!!!!TODO ldbl
 	mul->frc_len = (inx < 0) ? -inx : 0;
 	mul->int_len = (inx >= 0) ? inx + 1 : 0;
 	mul->val[mul->f0 - 1 - inx] = ft_pow(10, FP_R_LEN - offset);
-	fxd_dbl_mul(fp, fp, mul, 0);
+	fxd_dbl_mul(fp, fp, mul, fp->f0 == FP_LD_POINT);//!!!!!!
 	fxd_roundup(fp, info->prec);
 	if (fp->val[fp->f0 - 1] > FP_R_LEN)
 	{
 		mul->val[mul->f0] = FP_R_TOP;
 		mul->int_len = 0;
 		mul->frc_len = 1;
-		fxd_dbl_mul(fp, fp, mul, 0);
+		fxd_dbl_mul(fp, fp, mul, fp->f0 == FP_LD_POINT);//!!!!!!!!!!!!
 		offset++;
 	}
 	i = info->prec / FP_R_LEN;
 	pow = ft_pow(10, (FP_R_LEN - (info->prec % FP_R_LEN)));
 	fp->val[fp->f0 + i] -= fp->val[fp->f0 + i] % pow;
-	fxd_del(mul, 0, 0);
+	fxd_del(mul, 0);
 	return (offset);
 }
 

@@ -1,6 +1,7 @@
 #include "ft_printf.h"
 
-int32_t	add_prefix(t_printf_info *info, char *buf, char sign, const int_fast16_t base)
+int32_t			add_prefix(t_printf_info *info, char *buf, char sign,
+				const int_fast16_t base)
 {
 	int_fast16_t	ret;
 

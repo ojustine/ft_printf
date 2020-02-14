@@ -52,7 +52,7 @@ void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
 			ft_bzero(&(line->val[line->f0 + i + j]), FP_R_SIZE * 2);
 		}
 	ft_memswap(res, tmp, sizeof(t_fxd));
-	fxd_del(tmp, line, 0);
+	fxd_del(tmp, line);
 }
 
 t_fxd				*fxd_build_mantis(uint64_t bin_mantis,
@@ -81,7 +81,7 @@ t_fxd				*fxd_build_mantis(uint64_t bin_mantis,
 		mantis->val[mantis->f0 - 1] = 1;
 		mantis->int_len = 1;
 	}
-	fxd_del(term, 0, 0);
+	fxd_del(term, 0);
 	return (mantis);
 }
 
@@ -109,7 +109,7 @@ t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl)
 			fxd_dbl_mul(base, base, base, is_long_dbl);
 			pow /= 2;
 		}
-	fxd_del(base, 0, 0);
+	fxd_del(base, 0);
 	return (res);
 }
 
