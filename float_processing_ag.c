@@ -27,7 +27,7 @@ static inline size_t	fxd_ftoa_opt_form_e(t_printf_info *info, t_fxd *fp, char *b
 	if (!(info->flags & FLAG_ALT_FORM))
 	{
 		buff += to_print;
-		e_len = 0;
+		e_len = 1;
 		to_remove = 0;
 		while (*(buff - e_len) != 'e' && *(buff - e_len) != 'E')
 			e_len++;

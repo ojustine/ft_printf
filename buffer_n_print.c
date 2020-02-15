@@ -7,8 +7,8 @@ static inline void	buffer_flush(t_printf_info *info)
 
 void				do_print(t_printf_info *info, char *data, size_t size)
 {
-	register t_s32		remaining_space;
-	register size_t			data_index;
+	register int32_t	remaining_space;
+	register size_t		data_index;
 
 	data_index = 0;
 	while ((remaining_space = BUFF_SIZE - info->buff_index) < (int)size)

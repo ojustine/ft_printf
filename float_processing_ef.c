@@ -1,12 +1,14 @@
 #include "ft_printf.h"
 
-size_t					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign)
+void					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign)
 {
-//TODO: убрать флаг 0, prec не работает
-	if (mantis != 0)
-		do_print(info, "nan", 3);
-	else
-		do_print(info, "inf", 3);
+	const char	*inf_nan = (mantis != 0) ? "nanNAN" : "infINF";
+	char		prefix[1];
+
+	info->flags &= ~FLAG_ZERO_PAD;
+	info->width -= set_prefix_fp(info, sign, 3);
+	do_print(info, (char*)inf_nan + info->cap * 3, 3);
+	padding(info, info->width, ' ');
 }
 
 static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info, t_fxd *fp, char *buff)
@@ -73,18 +75,18 @@ static inline int32_t	fxd_ftoa_normalize(t_printf_info *info, t_fxd *fp,
 	int_fast16_t	i;
 	uint64_t		pow;
 
-	mul = fxd_new((inx < 0) ? -inx : 0, fp->f0 == FP_LD_POINT);//!!!!!TODO ldbl
+	mul = fxd_new((inx < 0) ? -inx : 0, fp->f0 == FP_LD_POINT + 1);
 	mul->frc_len = (inx < 0) ? -inx : 0;
 	mul->int_len = (inx >= 0) ? inx + 1 : 0;
 	mul->val[mul->f0 - 1 - inx] = ft_pow(10, FP_R_LEN - offset);
-	fxd_dbl_mul(fp, fp, mul, fp->f0 == FP_LD_POINT);//!!!!!!
+	fxd_dbl_mul(fp, fp, mul, fp->f0 == FP_LD_POINT + 1);
 	fxd_roundup(fp, info->prec);
 	if (fp->val[fp->f0 - 1] > FP_R_LEN)
 	{
 		mul->val[mul->f0] = FP_R_TOP;
 		mul->int_len = 0;
 		mul->frc_len = 1;
-		fxd_dbl_mul(fp, fp, mul, fp->f0 == FP_LD_POINT);//!!!!!!!!!!!!
+		fxd_dbl_mul(fp, fp, mul, fp->f0 == FP_LD_POINT + 1);
 		offset++;
 	}
 	i = info->prec / FP_R_LEN;

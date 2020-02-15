@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-size_t	ft_wstrlen(wchar_t *s)
+size_t	ft_wstrlen(wint_t *s)
 {
 	size_t	len;
 

@@ -49,12 +49,12 @@ void	do_print_dbl(t_printf_info *info, uint_fast64_t bin_mantis,
 {
 	t_fxd		*mantis;
 	t_fxd		*fp;
-	char		buff[FP_D_CHAR_LEN + 9];
 	size_t		to_print;
+	char		buff[FP_D_CHAR_LEN + 9];
 
 	info->prec = (info->prec > FP_D_MAX_PREC) ? FP_D_MAX_PREC : info->prec;
 	mantis = fxd_build_mantis(bin_mantis, bias_exp != 0, 0);
-	bias_exp = (bias_exp != 0) ? bias_exp - 1023 : -1023;
+	bias_exp = (bias_exp != 0) ? bias_exp - 1023 : -1022;
 	fp = fxd_get_pow_2(bias_exp, 0);
 	fxd_dbl_mul(fp, fp, mantis, 0);
 	if (*info->fmt == 'f' || *info->fmt == 'F')
@@ -66,7 +66,7 @@ void	do_print_dbl(t_printf_info *info, uint_fast64_t bin_mantis,
 	fxd_del(fp, mantis);
 	info->width -= set_prefix_fp(info, sign, to_print);
 	do_print(info, buff, to_print);
-	padding(info, info->width);
+	padding(info, info->width, ' ');
 }
 
 void	do_print_ldbl(t_printf_info *info, uint_fast64_t bin_mantis,
@@ -74,12 +74,13 @@ void	do_print_ldbl(t_printf_info *info, uint_fast64_t bin_mantis,
 {
 	t_fxd		*mantis;
 	t_fxd		*fp;
-	char		buff[FP_LD_CHAR_LEN + 9];
 	size_t		to_print;
+	char		*buff;
 
+	buff = malloc(FP_LD_CHAR_LEN);
 	info->prec = (info->prec > FP_LD_MAX_PREC) ? FP_LD_MAX_PREC : info->prec;
 	mantis = fxd_build_mantis(bin_mantis, bin_mantis & FP_LD_64BIT, 1);
-	bias_exp = (bin_mantis & FP_LD_64BIT) ? bias_exp - 0x3FFE : -16382;
+	bias_exp = (bin_mantis & FP_LD_64BIT) ? bias_exp - 16382 : -16381;
 	fp = fxd_get_pow_2(bias_exp, 1);
 	fxd_dbl_mul(fp, fp, mantis, 1);
 	if (*info->fmt == 'f' || *info->fmt == 'F')
@@ -91,8 +92,9 @@ void	do_print_ldbl(t_printf_info *info, uint_fast64_t bin_mantis,
 	fxd_del(fp, mantis);
 	info->width -= set_prefix_fp(info, sign, to_print);
 	do_print(info, buff, to_print);
-	padding(info, info->width);
-}//TODO true_min - pow 1023 16382!!!
+	padding(info, info->width, ' ');
+	free(buff);
+}
 
 void	get_floating_point_arg(t_printf_info *info)
 {
@@ -119,9 +121,4 @@ void	get_floating_point_arg(t_printf_info *info)
 		}
 		do_print_dbl(info, b64.s_pts.mantis, b64.s_pts.b_exp, b64.s_pts.sign);
 	}
-//	if (sign)
-//		buff[0] = '-';
-//	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
-//		buff[0] = " +"[info->flags & FLAG_PLUS_SIGN];
-
 }

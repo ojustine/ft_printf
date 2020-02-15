@@ -1,9 +1,5 @@
 #include "ft_printf.h"
 
-#define IS_FMT(FMT) (*info->fmt == (FMT))
-#define SET_FLAG(FLAG) (info->flags |= FLAG)
-#define RM_FLAG(FLAG) (info->flags &= ~FLAG)
-#define IS_FLAG(FLAG) (info->flags & FLAG)
 
 static inline void	get_width_n_precision(t_printf_info *info)
 {
@@ -14,8 +10,8 @@ static inline void	get_width_n_precision(t_printf_info *info)
 	{
 		info->width = va_arg(info->ap, int32_t);
 		++info->fmt;
-		if (info->width < 0 && (info->width = -info->width))//TODO what happ if prec < 0?
-			SET_FLAG(FLAG_LEFT_ALIGN);
+		if (info->width < 0 && (info->width = -info->width))
+			info->flags |= FLAG_LEFT_ALIGN;
 	}
 	if (*info->fmt == '.')
 	{
@@ -29,7 +25,7 @@ static inline void	get_width_n_precision(t_printf_info *info)
 			info->prec = va_arg(info->ap, int32_t);
 			++info->fmt;
 		}
-		SET_FLAG(FLAG_TRUNCATE);
+		info->flags |= FLAG_TRUNCATE;
 	}
 }
 
@@ -37,20 +33,20 @@ static inline void	get_size_modifier(t_printf_info *info)
 {
 	while (*info->fmt)
 	{
-		if (IS_FMT('z'))
-			SET_FLAG(SIZE_SIZE_T);
+		if (*info->fmt == 'z')
+			info->flags |= SIZE_SIZE_T;
 		else if (*info->fmt == 'l')
-			SET_FLAG((*(info->fmt + 1) == 'l' && ++info->fmt)
-			? SIZE_LLONG : SIZE_LONG);
+			info->flags |= (*(info->fmt + 1) == 'l' && ++info->fmt)
+			? SIZE_LLONG : SIZE_LONG;
 		else if (*info->fmt == 'h')
-			SET_FLAG((*(info->fmt + 1) == 'h' && ++info->fmt)
-			? SIZE_CHAR : SIZE_SHORT);
+			info->flags |= (*(info->fmt + 1) == 'h' && ++info->fmt)
+			? SIZE_CHAR : SIZE_SHORT;
 		else if (*info->fmt == 'j')
-			SET_FLAG(SIZE_INTMAX);
+			info->flags |= SIZE_INTMAX;
 		else if (*info->fmt == 'L')
-			SET_FLAG(SIZE_LDBL);
+			info->flags |= SIZE_LDBL;
 		else if (*info->fmt == 't')
-			SET_FLAG(SIZE_PTR);
+			info->flags |= SIZE_PTR;
 		else
 			break ;
 		++info->fmt;
@@ -59,9 +55,8 @@ static inline void	get_size_modifier(t_printf_info *info)
 
 static inline void	print_arg_by_type(t_printf_info *info)
 {
-	if (IS_FMT('B') || IS_FMT('X'))
-		info->cap = 1;//TODO strany, cap == 1 || cap == 0
-	if (IS_FMT('d') || IS_FMT('i') || IS_FMT('D'))
+	info->cap = ft_strany("XFEG", *info->fmt);
+	if (*info->fmt == 'd' || *info->fmt == 'D' || *info->fmt == 'i')
 		get_signed_arg(info, 10);
 	else if (*info->fmt == 's')
 		get_string_arg(info, (info->flags & SIZE_LONG
@@ -82,8 +77,10 @@ static inline void	print_arg_by_type(t_printf_info *info)
 		get_string_arg(info, 1);
 //	else if (*info->fmt == 'p')
 //		print_pointer_address(p);
-//	else if (*info->fmt == 'n')
-//		*va_arg(p->ap, int *) = p->len;
+	else if (*info->fmt == 'n')
+		*va_arg(info->ap, int*) = info->printed;
+	else if (*info->fmt == '%')
+		do_print_string(info, "%", 1);
 //	else if (*info->fmt == 'm')
 //		ft_printf_putstr(strerror(errno), p);
 //	else if (*info->fmt == '{')

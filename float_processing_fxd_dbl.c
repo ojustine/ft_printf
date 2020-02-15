@@ -34,8 +34,8 @@ void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
 	t_fxd					*line;
 	t_fxd					*tmp;
 
-	line = fxd_new(a->frc_len + b->frc_len, is_long_dbl);
-	tmp = fxd_new(a->frc_len + b->frc_len, is_long_dbl);
+	line = fxd_new(a->frc_len + b->frc_len + 1, is_long_dbl);
+	tmp = fxd_new(a->frc_len + b->frc_len + 1, is_long_dbl);
 	i = b->frc_len;
 	while (--i >= -b->int_len && (j = a->frc_len) | 1)
 		while (--j >= -a->int_len)

@@ -12,6 +12,27 @@
 
 #include "ft_printf.h"
 
+int32_t			add_signn(t_printf_info *info, char *buf, char sign,
+							const int_fast16_t base)
+{
+	int_fast16_t	ret;
+
+	ret = 0;
+	if (sign)
+		buf[ret++] = '-';
+	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
+		buf[++ret] = " +"[info->flags & FLAG_PLUS_SIGN];
+	if (base != 10 && info->flags & FLAG_ALT_FORM)
+	{
+		buf[ret++] = '0';
+		if (base == 2)
+			buf[ret++] = "bB"[info->cap];
+		else if (base == 16)
+			buf[ret++] = "xX"[info->cap];
+	}
+	return (ret);
+}
+
 static inline void		padding_num(t_printf_info *info)
 {
 	const char	zero_pad[] = "0000";
@@ -34,7 +55,7 @@ static inline void		padding_num(t_printf_info *info)
 	}
 }
 
-static inline t_s16	add_prefix(t_printf_info *info, const int_fast16_t base,
+static inline t_s16	add_prefix_n(t_printf_info *info, const int_fast16_t base,
 								  char sign)
 {
 	int_fast16_t	ret;
@@ -68,30 +89,21 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 	register char		*ptr;
 	char				buff[MAX_INT_BITS_NUM];
 	int_fast16_t		num_len;
-	//prefix[3]
+	char				prefix[3];
 
 	ptr = &buff[MAX_INT_BITS_NUM - 1];
 	*ptr-- = digits[(num % base) + info->cap * 16];
+	num /= base;
 	while (num != 0)
 	{
 		*ptr-- = digits[(num % base) + info->cap * 16];
 		num /= base;
 	}
 	num_len = (&buff[MAX_INT_BITS_NUM - 1] - ptr);
-	//num_len += add_p
-	//info->prec -= num_len;
-	info->width -= sign != 0;
-	if (base != 10 && (info->flags & FLAG_ALT_FORM))
-		info->width -= (base == 8) ? 1 : 2;
-	if (!(info->flags & FLAG_LEFT_ALIGN) && ((info->width -= MAX(info->prec,
-		num_len)) > 0))
-		padding_num(info);
-	info->width -= add_prefix(info, base, sign) + info->prec;
-	if (info->flags & FLAG_TRUNCATE && (info->prec -= num_len) > 0)
-		while (info->prec--)
-			do_print(info, "0", 1);
+
+	info->width -= set_prefix_num(info, sign, base, num_len);
 	do_print(info, ++ptr, num_len);
-	padding_num(info);
+	padding(info, info->width, ' ');
 }
 
 void					get_signed_arg(t_printf_info *info, int_fast16_t base)

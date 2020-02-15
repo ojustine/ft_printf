@@ -67,13 +67,13 @@ enum						e_fxd_assets
 	FP_R_SIZE = sizeof(uint32_t),
 
 	FP_D_POINT = (DBL_MAX_10_EXP / FP_R_LEN) + 2,
-	FP_D_LEN = (FP_D_POINT * 4 + 16),
-	FP_D_MAX_PREC = 1074,
+	FP_D_MAX_PREC = 1080,
+	FP_D_LEN = (FP_D_POINT + FP_D_MAX_PREC / FP_R_LEN),
 	FP_D_CHAR_LEN = DBL_MAX_10_EXP + FP_D_MAX_PREC,
 
-	FP_LD_POINT = (LDBL_MAX_10_EXP / FP_R_LEN) + 100,
-	FP_LD_LEN = (FP_LD_POINT * 4 + 14),//TODO known ldlen
 	FP_LD_MAX_PREC = 16445,
+	FP_LD_POINT = (LDBL_MAX_10_EXP / FP_R_LEN) + 2,
+	FP_LD_LEN = (FP_LD_POINT + FP_LD_MAX_PREC / FP_R_LEN),
 	FP_LD_CHAR_LEN = DBL_MAX_10_EXP + FP_LD_MAX_PREC,
 	FP_LD_64BIT = 1 << 64
 };
@@ -184,6 +184,7 @@ void	*ft_bzero(void *b, size_t n);
 void				ft_memswap(void *mem1, void *mem2, size_t size);
 uint32_t	ft_abs(int32_t n);
 size_t	ft_longlen(int64_t n);
+int	ft_strany(char const *str, int32_t c);
 
 t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl);
 t_fxd				*fxd_build_mantis(uint64_t bin_mantis,
@@ -197,11 +198,13 @@ size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff);
 size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff);
 t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
 void	fxd_del(t_fxd *fp1, t_fxd *fp2);
-size_t					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign);
-int32_t				set_prefix_fp(t_printf_info *info, char sign, int_fast32_t val_len);
+void					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign);
+int32_t				set_prefix_fp(t_printf_info *info, const char sign, const int_fast32_t val_len);
 size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff);
 
-void				padding(t_printf_info *info, int_fast32_t pad_len);
+int32_t	set_prefix_num(t_printf_info *info, const char sign,
+						  const int_fast16_t base, const int_fast32_t val_len);
+void				padding(t_printf_info *info, int_fast32_t pad_len, const char pad);
 
 void						do_print(t_printf_info *info, char *data,
 									 size_t size);
@@ -214,5 +217,7 @@ void					get_signed_arg(t_printf_info *info,
 									   t_s16 base);
 void					get_unsigned_arg(t_printf_info *info,
 										 t_s16 base);
+void					do_print_string(t_printf_info *info, char *str,
+										size_t size);
 
 #endif
