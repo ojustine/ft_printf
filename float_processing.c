@@ -105,20 +105,16 @@ void	get_floating_point_arg(t_printf_info *info)
 	{
 		b80.val = va_arg(info->ap, long double);
 		if (b80.s_pts.b_exp == 0x7FFF)
-		{
 			fxd_ftoa_inf_nan(info, b64.s_pts.mantis, b64.s_pts.sign);
-			return ;
-		}
-		do_print_ldbl(info, b80.s_pts.mantis, b80.s_pts.b_exp, b80.s_pts.sign);
+		else
+			do_print_ldbl(info, b80.s_pts.mantis, b80.s_pts.b_exp, b80.s_pts.sign);
 	}
 	else
 	{
 		b64.val = va_arg(info->ap, double);
 		if (b64.s_pts.b_exp == 0x7FF)
-		{
 			fxd_ftoa_inf_nan(info, b64.s_pts.mantis, b64.s_pts.sign);
-			return ;
-		}
-		do_print_dbl(info, b64.s_pts.mantis, b64.s_pts.b_exp, b64.s_pts.sign);
+		else
+			do_print_dbl(info, b64.s_pts.mantis, b64.s_pts.b_exp, b64.s_pts.sign);
 	}
 }

@@ -1,14 +1,13 @@
 #include "ft_printf.h"
 
-
 static inline void	get_width_n_precision(t_printf_info *info)
 {
 	if (*info->fmt >= '0' && *info->fmt <= '9')
 		while (*info->fmt >= '0' && *info->fmt <= '9')
-			info->width = 10 * info->width + (*info->fmt++ - '0');//TODO width < 0 is left-flag
+			info->width = 10 * info->width + (*info->fmt++ - '0');
 	else if (*info->fmt == '*')
 	{
-		info->width = va_arg(info->ap, int32_t);
+		info->width = va_arg(info->ap, int);
 		++info->fmt;
 		if (info->width < 0 && (info->width = -info->width))
 			info->flags |= FLAG_LEFT_ALIGN;
@@ -22,7 +21,8 @@ static inline void	get_width_n_precision(t_printf_info *info)
 				info->prec = 10 * info->prec + (*info->fmt++ - '0');
 		else if (*info->fmt == '*')
 		{
-			info->prec = va_arg(info->ap, int32_t);
+			info->prec = va_arg(info->ap, int);
+			info->prec = (info->prec < 0) ? 6 : info->prec;
 			++info->fmt;
 		}
 		info->flags |= FLAG_TRUNCATE;
@@ -53,9 +53,9 @@ static inline void	get_size_modifier(t_printf_info *info)
 	}
 }
 
-static inline void	print_arg_by_type(t_printf_info *info)
+static inline void	get_type(t_printf_info *info)
 {
-	info->cap = ft_strany("XFEG", *info->fmt);
+	info->cap = ft_strany("XBFEGP", *info->fmt);
 	if (*info->fmt == 'd' || *info->fmt == 'D' || *info->fmt == 'i')
 		get_signed_arg(info, 10);
 	else if (*info->fmt == 's')
@@ -69,14 +69,14 @@ static inline void	print_arg_by_type(t_printf_info *info)
 		get_unsigned_arg(info, 16);
 	else if (*info->fmt == 'b' || *info->fmt == 'B')
 		get_unsigned_arg(info, 2);
-	else if (*info->fmt == 'f' || *info->fmt == 'F' || *info->fmt == 'e' || *info->fmt == 'E' || *info->fmt == 'g' || *info->fmt == 'G')
+	else if (ft_strany("fegFEG", *info->fmt))
 		get_floating_point_arg(info);
 	else if (*info->fmt == 'c' || *info->fmt == 'C')
 		get_char_arg(info, (*info->fmt == 'C'));
 	else if (*info->fmt == 'S')
 		get_string_arg(info, 1);
-//	else if (*info->fmt == 'p')
-//		print_pointer_address(p);
+	else if (*info->fmt == 'p' && (info->flags |= FLAG_ALT_FORM))
+		get_unsigned_arg(info, 16);
 	else if (*info->fmt == 'n')
 		*va_arg(info->ap, int*) = info->printed;
 	else if (*info->fmt == '%')
@@ -101,9 +101,10 @@ void				get_formatted_arg(t_printf_info *info)
 			info->flags |= FLAG_ALT_FORM;
 		else if (*info->fmt == '-')
 			info->flags |= FLAG_LEFT_ALIGN;
-		else if (*info->fmt == '+' || *info->fmt == ' ')
-			(*info->fmt == '+') ? (info->flags |= FLAG_PLUS_SIGN)
-								: (info->flags |= FLAG_BLANK_SIGN);
+		else if (*info->fmt == '+')
+			info->flags |= FLAG_PLUS_SIGN;
+		else if (*info->fmt == ' ' && !(info->flags & FLAG_PLUS_SIGN))
+			info->flags |= FLAG_BLANK_SIGN;
 		else if (*info->fmt == '\'')
 			info->flags |= FLAG_GROUP;
 		else if (*info->fmt == '0')
@@ -114,5 +115,5 @@ void				get_formatted_arg(t_printf_info *info)
 	}
 	get_width_n_precision(info);
 	get_size_modifier(info);
-	print_arg_by_type(info);
+	get_type(info);
 }

@@ -20,7 +20,8 @@ static inline int	entry(register t_printf_info *info)
 		get_formatted_arg(info);
 		info->fmt++;
 	}
-	write(info->fd, info->buff, info->buff_index);
+	//write(info->fd, info->buff, info->buff_index);
+	info->flush(info->fd, info->buff, info->buff_index);
 	va_end(info->ap);
 	return (info->printed);
 }
@@ -45,7 +46,8 @@ int 				ft_sprintf(char *str, const char *format, ...)
 	ft_bzero(&info, sizeof(t_printf_info));
 	info.fd = 1;
 	info.fmt = format;
-	info.write_to_str = 1;
+	if (str == NULL)
+		return (-1);
 	info.str_to_write = str;
 	va_start(info.ap, format);
 	return (entry(&info));
@@ -59,5 +61,6 @@ int 				ft_printf(const char *format, ...)
 	info.fd = 1;
 	info.fmt = format;
 	va_start(info.ap, format);
+	info.flush = &write;
 	return (entry(&info));
 }

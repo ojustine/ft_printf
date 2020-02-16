@@ -3,7 +3,6 @@
 void					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign)
 {
 	const char	*inf_nan = (mantis != 0) ? "nanNAN" : "infINF";
-	char		prefix[1];
 
 	info->flags &= ~FLAG_ZERO_PAD;
 	info->width -= set_prefix_fp(info, sign, 3);

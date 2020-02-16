@@ -29,7 +29,7 @@ void					do_print_string(t_printf_info *info, char *str,
 		do_print(info, str, to_print);
 }
 
-static inline t_s32		print_wchar(t_printf_info *info, uint32_t wc,
+static inline int32_t		print_wchar(t_printf_info *info, uint32_t wc,
 						int16_t is_single)
 {
 	char	utf_8[4];

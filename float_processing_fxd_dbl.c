@@ -129,14 +129,15 @@ void				fxd_roundup(t_fxd *fp, int_fast32_t prec)
 		while (++j < fp->frc_len && fp->val[fp->f0 + j] == 0)
 			;
 		if (j == fp->frc_len)
-			fp->val[fp->f0 + i] += fp->val[fp->f0 + i] / pow % 10 & 1 ? pow : 0;
+			fp->val[fp->f0 + i] += fp->val[fp->f0 + i] / pow % 10 & 1 ? pow : 0;//TODO check rounding on mac/ 0.5 0.25
 		else
 			fp->val[fp->f0 + i] += pow;
 	}
 	while ((pow = (uint64_t)fp->val[fp->f0 + i] / FP_R_LIMITER) > 0)
 	{
 		fp->val[fp->f0 + i] %= FP_R_LIMITER;
-		fp->val[fp->f0 + --i] += pow;
+		fp->val[fp->f0 + i] += pow;
+		i--;
 		fp->int_len = (i < 0) ? -i : fp->int_len;
 	}
 }

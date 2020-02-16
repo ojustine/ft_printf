@@ -28,7 +28,7 @@
 # include <wctype.h>
 # include "ft_printf_const_data.h"
 
-# if defined(_POSIX_VERSION) || defined(__unix__) || defined(__MACH__)
+# if defined(_POSIX_VERSION) || defined(__unix__) || defined(linux)
 #  include <sys/select.h>
 # endif
 
@@ -73,15 +73,13 @@ enum						e_fxd_assets
 
 	FP_LD_MAX_PREC = 16445,
 	FP_LD_POINT = (LDBL_MAX_10_EXP / FP_R_LEN) + 2,
-	FP_LD_LEN = (FP_LD_POINT + FP_LD_MAX_PREC / FP_R_LEN),
+	FP_LD_LEN = (FP_LD_POINT + FP_LD_MAX_PREC / FP_R_LEN) + 3,
 	FP_LD_CHAR_LEN = DBL_MAX_10_EXP + FP_LD_MAX_PREC,
-	FP_LD_64BIT = 1 << 64
+	FP_LD_64BIT = 1ULL << 63
 };
 
 # define BUFF_SIZE			512
 # define MAX_INT_BITS_NUM	((sizeof(long long)) * 8 + 2)
-# define MAX(a,b)			(((a) > (b)) ? (a) : (b))
-# define MIN(a,b)			(((a) < (b)) ? (a) : (b))
 
 # ifdef __GNUC__
 #  if !defined(__GNUC_STDC_INLINE__) && !defined(__GNUC_GNU_INLINE__)
@@ -96,17 +94,6 @@ enum						e_fxd_assets
 /*
 ** =========================== Types definition ================================
 */
-
-typedef uint8_t				t_u8;
-typedef int8_t				t_s8;
-typedef uint16_t			t_u16;
-typedef int16_t				t_s16;
-typedef uint32_t			t_u32;
-typedef int32_t				t_s32;
-typedef uint64_t			t_u64;
-typedef int64_t				t_s64;
-typedef double				t_double;
-typedef long double			t_ldouble;
 
 # if LLONG_MAX == 9223372036854775807
 #  define IS_LONG_LONG 1
@@ -133,10 +120,10 @@ typedef struct				s_printf_info
 	char					buff[BUFF_SIZE + 1];
 	size_t					buff_index;
 	size_t					printed;
-	char					write_to_str : 1;
 	char					*str_to_write;
 	va_list					ap;
 	const char				*fmt;
+	int						(*flush)(int, const void*, unsigned int);
 }							t_printf_info;
 
 typedef union				u_double
@@ -210,13 +197,13 @@ void						do_print(t_printf_info *info, char *data,
 									 size_t size);
 void						get_formatted_arg(t_printf_info *info);
 void						get_char_arg(t_printf_info *info,
-										 t_s16 is_wide_char);
+										 int16_t is_wide_char);
 void					get_string_arg(t_printf_info *info,
-									   t_s16 is_wide_string);
+									   int16_t is_wide_string);
 void					get_signed_arg(t_printf_info *info,
-									   t_s16 base);
+									   int16_t base);
 void					get_unsigned_arg(t_printf_info *info,
-										 t_s16 base);
+										 int16_t base);
 void					do_print_string(t_printf_info *info, char *str,
 										size_t size);
 

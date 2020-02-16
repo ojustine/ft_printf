@@ -1,7 +1,7 @@
 #include "ft_printf.h"
 
-int32_t	add_prefix(t_printf_info *info, char *buf, const char sign,
-		const int_fast16_t base)
+static inline int32_t	add_prefix(t_printf_info *info, char *buf,
+						const char sign, const int_fast16_t base)
 {
 	int_fast16_t	ret;
 
@@ -21,15 +21,16 @@ int32_t	add_prefix(t_printf_info *info, char *buf, const char sign,
 	return (ret);
 }
 
-void	padding(t_printf_info *info, int_fast32_t pad_len, const char pad)
+void					padding(t_printf_info *info, int_fast32_t pad_len,
+						const char pad)
 {
-	const char	zero_pad[] = "00000000";
-	const char	blank_pad[] = "        ";
+	const char	zeroes_pad[] = "00000000";
+	const char	spaces_pad[] = "        ";
 	char		*curr_pad;
 
 	if (pad_len > 0)
 	{
-		curr_pad = (char*)((pad == '0') ? zero_pad : blank_pad);
+		curr_pad = (char*)((pad == '0') ? zeroes_pad : spaces_pad);
 		while (pad_len >= 8)
 		{
 			do_print(info, curr_pad, 8);
@@ -45,40 +46,35 @@ void	padding(t_printf_info *info, int_fast32_t pad_len, const char pad)
 	}
 }
 
-int32_t	set_prefix_num(t_printf_info *info, const char sign,
-		const int_fast16_t base, const int_fast32_t val_len)
+int32_t					set_prefix_num(t_printf_info *info, const char sign,
+						const int_fast16_t base, const int_fast32_t val_len)
 {
-	int32_t		len;
+	int32_t		prefix_len;
 	int32_t		zeroes_len;
 	int32_t		padding_len;
 	char 		prefix[3];
-	const char	pad = (info->flags & FLAG_ZERO_PAD
-				&& !(info->flags & FLAG_LEFT_ALIGN)
-				&& !(info->flags & FLAG_TRUNCATE)) ? '0' : ' ';
 
-	len = add_prefix(info, prefix, sign, base);
+	prefix_len = add_prefix(info, prefix, sign, base);
 	zeroes_len = (info->flags & FLAG_TRUNCATE && info->prec > val_len)
 											? info->prec - val_len : 0;
 	padding_len = 0;
 	if (!(info->flags & FLAG_LEFT_ALIGN))
 	{
-		padding_len = info->width - zeroes_len - val_len - len;
-		if (pad == '0')
-			do_print(info, prefix, len);
-		do_print(info, prefix, len);
-			padding(info, padding_len, pad);
-
-			padding(info, padding_len, pad);
-			padding(info, zeroes_len, '0');
-
+		padding_len = info->width - zeroes_len - val_len - prefix_len;
+		padding(info, padding_len, ' ');
+		do_print(info, prefix, prefix_len);
+		padding(info, zeroes_len, '0');
 	}
 	else
-		do_print(info, prefix, len);
-	return (val_len + len + zeroes_len + padding_len);
+	{
+		do_print(info, prefix, prefix_len);
+		padding(info, zeroes_len, '0');
+	}
+	return (val_len + prefix_len + zeroes_len + padding_len);
 }
 
-int32_t	set_prefix_fp(t_printf_info *info, const char sign,
-		const int_fast32_t val_len)
+int32_t					set_prefix_fp(t_printf_info *info, const char sign,
+						const int_fast32_t val_len)
 {
 	int32_t		len;
 	char 		prefix[1];

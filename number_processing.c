@@ -12,84 +12,13 @@
 
 #include "ft_printf.h"
 
-int32_t			add_signn(t_printf_info *info, char *buf, char sign,
-							const int_fast16_t base)
-{
-	int_fast16_t	ret;
-
-	ret = 0;
-	if (sign)
-		buf[ret++] = '-';
-	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
-		buf[++ret] = " +"[info->flags & FLAG_PLUS_SIGN];
-	if (base != 10 && info->flags & FLAG_ALT_FORM)
-	{
-		buf[ret++] = '0';
-		if (base == 2)
-			buf[ret++] = "bB"[info->cap];
-		else if (base == 16)
-			buf[ret++] = "xX"[info->cap];
-	}
-	return (ret);
-}
-
-static inline void		padding_num(t_printf_info *info)
-{
-	const char	zero_pad[] = "0000";
-	const char	blank_pad[] = "    ";
-	char		*curr_pad;
-
-	if (info->width > 0)
-	{
-		curr_pad = (char *)((info->flags & FLAG_ZERO_PAD
-							&& !(info->flags & FLAG_TRUNCATE)
-							&& !(info->flags & FLAG_LEFT_ALIGN))
-							? zero_pad : blank_pad);
-		while (info->width >= 4)
-		{
-			do_print(info, curr_pad, 4);
-			info->width -= 4;
-		}
-		while (info->width--)
-			do_print(info, curr_pad, 1);
-	}
-}
-
-static inline t_s16	add_prefix_n(t_printf_info *info, const int_fast16_t base,
-								  char sign)
-{
-	int_fast16_t	ret;
-
-	ret = 0;
-	if (sign)
-	{
-		do_print(info, &sign, 1);
-		ret++;
-	}
-	if (base != 10 && info->flags & FLAG_ALT_FORM)
-	{
-		if (base == 8)
-		{
-			do_print(info, "0", 1);
-			return (ret + 1);
-		}
-		else if (base == 2)
-			do_print(info, info->cap ? "0B" : "0b", 2);
-		else if (base == 16)
-			do_print(info, info->cap ? "0X" : "0x", 2);
-		return (ret + 2);
-	}
-	return (ret);
-}
-
 static inline void		do_print_num(t_printf_info *info, uintmax_t num,
-									   const int_fast16_t base, char sign)
+						const int_fast16_t base, char sign)
 {
 	const char			digits[] = "0123456789abcdef0123456789ABCDEF";
 	register char		*ptr;
 	char				buff[MAX_INT_BITS_NUM];
 	int_fast16_t		num_len;
-	char				prefix[3];
 
 	ptr = &buff[MAX_INT_BITS_NUM - 1];
 	*ptr-- = digits[(num % base) + info->cap * 16];
@@ -100,7 +29,8 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 		num /= base;
 	}
 	num_len = (&buff[MAX_INT_BITS_NUM - 1] - ptr);
-
+	if (info->flags & FLAG_TRUNCATE)
+		info->flags &= ~FLAG_ZERO_PAD;
 	info->width -= set_prefix_num(info, sign, base, num_len);
 	do_print(info, ++ptr, num_len);
 	padding(info, info->width, ' ');
@@ -110,29 +40,25 @@ void					get_signed_arg(t_printf_info *info, int_fast16_t base)
 {
 	char		sign;
 	intmax_t	num;
+	uintmax_t	u_num;
 
-	if (info->flags & SIZE_LONG || info->flags & SIZE_LLONG)
-		num = (info->flags & SIZE_LLONG) ? va_arg(info->ap, long long)
-										: va_arg(info->ap, long);
-	else if (info->flags & SIZE_SHORT || info->flags & SIZE_CHAR)
-		num = (info->flags & SIZE_CHAR) ? (char)va_arg(info->ap, int)
-										: (short)va_arg(info->ap, int);
+	if (info->flags & SIZE_LLONG)
+		num = va_arg(info->ap, long long);
+	else if (info->flags & SIZE_LONG)
+		num = va_arg(info->ap, long);
+	else if (info->flags & SIZE_SHORT)
+		num = (short)va_arg(info->ap, int);
+	else if (info->flags & SIZE_CHAR)
+		num = (char)va_arg(info->ap, int);
 	else if (info->flags & SIZE_INTMAX)
 		num = (va_arg(info->ap, intmax_t));
 	else if (info->flags & SIZE_SIZE_T)
 		num = va_arg(info->ap, ssize_t);
 	else
 		num = va_arg(info->ap, int);
-	if (num < 0)
-	{
-		sign = '-';
-		num = -num;
-	}
-	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
-		sign = " +"[info->flags & FLAG_PLUS_SIGN];
-	else
-		sign = 0;
-	do_print_num(info, num, base, sign);
+	sign = (char)(num < 0);
+	u_num = (num < 0) ? -num : num;
+	do_print_num(info, u_num, base, sign);
 }
 
 void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
@@ -140,24 +66,20 @@ void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
 	uintmax_t	num;
 	char		sign;
 
-	if (info->flags & SIZE_LONG || info->flags & SIZE_LLONG)
-		num = (info->flags & SIZE_LLONG)
-		? va_arg(info->ap, unsigned long long)
-		: va_arg(info->ap, unsigned long);
-	else if (info->flags & SIZE_SHORT || info->flags & SIZE_CHAR)
-		num = (info->flags & SIZE_CHAR)
-		? (unsigned char)va_arg(info->ap, unsigned int)
-		: (unsigned short)va_arg(info->ap, unsigned int);
+	if (info->flags & SIZE_LLONG)
+		num = va_arg(info->ap, unsigned long long);
+	else if (info->flags & SIZE_LONG)
+		num = va_arg(info->ap, unsigned long);
+	else if (info->flags & SIZE_SHORT)
+		num = (unsigned short)va_arg(info->ap, unsigned int);
+	else if (info->flags & SIZE_CHAR)
+		num = (unsigned char)va_arg(info->ap, unsigned int);
 	else if (info->flags & SIZE_INTMAX)
 		num = (va_arg(info->ap, uintmax_t));
 	else if (info->flags & SIZE_SIZE_T)
 		num = va_arg(info->ap, size_t);
 	else
 		num = va_arg(info->ap, unsigned int);
-	if ((info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
-	&& base == 10)
-		sign = (info->flags & FLAG_PLUS_SIGN) ? '+' : ' ';
-	else
-		sign = 0;
+	sign = 0;
 	do_print_num(info, num, base, sign);
 }
