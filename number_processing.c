@@ -15,7 +15,7 @@
 static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 						const int_fast16_t base, char sign)
 {
-	const char			digits[] = "0123456789abcdef0123456789ABCDEF";
+	static const char	digits[] = "0123456789abcdef0123456789ABCDEF";
 	register char		*ptr;
 	char				buff[MAX_INT_BITS_NUM];
 	int_fast16_t		num_len;
@@ -64,7 +64,6 @@ void					get_signed_arg(t_printf_info *info, int_fast16_t base)
 void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
 {
 	uintmax_t	num;
-	char		sign;
 
 	if (info->flags & SIZE_LLONG)
 		num = va_arg(info->ap, unsigned long long);
@@ -80,6 +79,5 @@ void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
 		num = va_arg(info->ap, size_t);
 	else
 		num = va_arg(info->ap, unsigned int);
-	sign = 0;
-	do_print_num(info, num, base, sign);
+	do_print_num(info, num, base, 0);
 }

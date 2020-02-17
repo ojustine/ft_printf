@@ -120,7 +120,7 @@ typedef struct				s_printf_info
 	char					buff[BUFF_SIZE + 1];
 	size_t					buff_index;
 	size_t					printed;
-	char					*str_to_write;
+	char					*output;
 	va_list					ap;
 	const char				*fmt;
 	int						(*flush)(int, const void*, unsigned int);
@@ -130,8 +130,8 @@ typedef union				u_double
 {
 	struct
 	{
-		uint_fast64_t		mantis		: 52;
-		uint_fast64_t		b_exp		: 11;
+		uint_fast64_t		mant		: 52;
+		uint_fast64_t		exp			: 11;
 		uint_fast64_t		sign		: 1;
 	}						s_pts;
 	double					val;
@@ -141,8 +141,8 @@ typedef union				u_long_double
 {
 	struct
 	{
-		uint_fast64_t		mantis		: 64;
-		uint_fast64_t		b_exp		: 15;
+		uint_fast64_t		mant		: 64;
+		uint_fast64_t		exp			: 15;
 		uint_fast64_t		sign		: 1;
 	}						s_pts;
 	long double				val;
@@ -172,6 +172,7 @@ void				ft_memswap(void *mem1, void *mem2, size_t size);
 uint32_t	ft_abs(int32_t n);
 size_t	ft_longlen(int64_t n);
 int	ft_strany(char const *str, int32_t c);
+void	ft_strrev(char *begin, char *end);
 
 t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl);
 t_fxd				*fxd_build_mantis(uint64_t bin_mantis,
@@ -188,6 +189,7 @@ void	fxd_del(t_fxd *fp1, t_fxd *fp2);
 void					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign);
 int32_t				set_prefix_fp(t_printf_info *info, const char sign, const int_fast32_t val_len);
 size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff);
+void					fast_dtoa(t_printf_info *info, double val);
 
 int32_t	set_prefix_num(t_printf_info *info, const char sign,
 						  const int_fast16_t base, const int_fast32_t val_len);

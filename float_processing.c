@@ -98,23 +98,28 @@ void	do_print_ldbl(t_printf_info *info, uint_fast64_t bin_mantis,
 
 void	get_floating_point_arg(t_printf_info *info)
 {
-	t_binary64	b64;
-	t_binary80	b80;
+	t_binary64			b64;
+	t_binary80			b80;
+	const int_fast16_t	fast = (info->prec < 10
+						&& (*info->fmt == 'f' || *info->fmt == 'F')
+						&& (info->prec > 0 || !(info->flags & FLAG_ALT_FORM)));
 
 	if (info->flags & SIZE_LDBL && IS_LONG_DBL_DEFINED)
 	{
 		b80.val = va_arg(info->ap, long double);
-		if (b80.s_pts.b_exp == 0x7FFF)
-			fxd_ftoa_inf_nan(info, b64.s_pts.mantis, b64.s_pts.sign);
+		if (b80.s_pts.exp == 0x7FFF)
+			fxd_ftoa_inf_nan(info, b64.s_pts.mant, b64.s_pts.sign);
+		else if (fast && (info->prec + ft_longlen(b80.val) <= LDBL_DIG))
+			fast_dtoa(info, (double)b80.val);
 		else
-			do_print_ldbl(info, b80.s_pts.mantis, b80.s_pts.b_exp, b80.s_pts.sign);
+			do_print_ldbl(info, b80.s_pts.mant, b80.s_pts.exp, b80.s_pts.sign);
+		return ;
 	}
+	b64.val = va_arg(info->ap, double);
+	if (b64.s_pts.exp == 0x7FF)
+		fxd_ftoa_inf_nan(info, b64.s_pts.mant, b64.s_pts.sign);
+	else if (fast && (info->prec + ft_longlen(b64.val) <= DBL_DIG))
+		fast_dtoa(info, b64.val);
 	else
-	{
-		b64.val = va_arg(info->ap, double);
-		if (b64.s_pts.b_exp == 0x7FF)
-			fxd_ftoa_inf_nan(info, b64.s_pts.mantis, b64.s_pts.sign);
-		else
-			do_print_dbl(info, b64.s_pts.mantis, b64.s_pts.b_exp, b64.s_pts.sign);
-	}
+		do_print_dbl(info, b64.s_pts.mant, b64.s_pts.exp, b64.s_pts.sign);
 }

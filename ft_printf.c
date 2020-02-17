@@ -43,12 +43,12 @@ int 				ft_sprintf(char *str, const char *format, ...)
 {
 	t_printf_info	info;
 
+	if (str == NULL)
+		return (-1);
 	ft_bzero(&info, sizeof(t_printf_info));
 	info.fd = 1;
 	info.fmt = format;
-	if (str == NULL)
-		return (-1);
-	info.str_to_write = str;
+	info.output = str;
 	va_start(info.ap, format);
 	return (entry(&info));
 }

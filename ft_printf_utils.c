@@ -24,9 +24,9 @@ static inline int32_t	add_prefix(t_printf_info *info, char *buf,
 void					padding(t_printf_info *info, int_fast32_t pad_len,
 						const char pad)
 {
-	const char	zeroes_pad[] = "00000000";
-	const char	spaces_pad[] = "        ";
-	char		*curr_pad;
+	static const char	zeroes_pad[] = "00000000";
+	static const char	spaces_pad[] = "        ";
+	char				*curr_pad;
 
 	if (pad_len > 0)
 	{

@@ -2,65 +2,6 @@
 #include "ft_printf.h"
 
 int 				ft_printf(const char *format, ...);
-static const double powers_of_10[] = { 1, 10, 100, 1000, 10000, 100000, 1000000,
-									   10000000, 100000000, 1000000000 };
-static void ft_strrev(char* begin, char* end)
-{
-	char aux;
-	while (end > begin)
-		aux = *end, *end-- = *begin, *begin++ = aux;
-}
-size_t modp_dtoa(double value, char* str, int prec)
-{
-	double diff;
-	char* wstr = str;
-
-	if (value < 0)
-		value = -value;
-
-	int whole = (int)value;
-	double tmp = (value - whole) * powers_of_10[prec];
-	uint32_t frac = (uint32_t)(tmp);
-	diff = tmp - frac;
-
-	if (diff > 0.5) {
-		++frac;
-		if (frac >= powers_of_10[prec]) {
-			frac = 0;
-			++whole;
-		}
-	} else if (diff == 0.5 && prec > 0 && (frac & 1)) {
-		++frac;
-		if (frac >= powers_of_10[prec]) {
-			frac = 0;
-			++whole;
-		}
-	} else if (diff == 0.5 && prec == 0 && (whole & 1)) {
-		++frac;
-		if (frac >= powers_of_10[prec]) {
-			frac = 0;
-			++whole;
-		}
-	}
-	int count = prec;
-	while (count > 0) {
-		--count;
-		*wstr++ = (char)(48 + (frac % 10));
-		frac /= 10;
-	}
-	if (frac > 0) {
-		++whole;
-	}
-	if (prec > 0) {
-		*wstr++ = '.';
-	}
-	do
-		*wstr++ = (char)(48 + (whole % 10));
-	while (whole /= 10);
-	*wstr = '\0';
-	ft_strrev(str, wstr - 1);
-	return (size_t)(wstr - str);
-}
 
 int main()
 {
@@ -75,12 +16,10 @@ int main()
 	d = printf("%S\n", n);
 	printf("%i\n", d);
 
-	printf("%#.*f\n", 0, 0.5);
-	ft_printf("%#.*f\n", 0, 0.5);
+	printf("%010.*f\n", 6, 0.125);
+	ft_printf("%010.*f\n", 6, 0.125);
 	printf("%llx\n", UINT64_MAX);
 	ft_printf("%llx\n", UINT64_MAX);
-	size_t i = modp_dtoa(0.125, str, 2);
-	printf("%s %u\n", str, i);
 	//ft_printf("%13Lg\n", -LDBL_TRUE_MIN);
 	//printf("%13Lg\n", -LDBL_TRUE_MIN);
 	//printf("%Lf\n", LDBL_MAX);
