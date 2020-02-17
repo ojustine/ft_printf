@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   buffer_n_print.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/17 11:15:36 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/17 12:06:53 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-static inline void	buffer_flush(t_printf_info *info)
+static inline void		buffer_flush(t_printf_info *info)
 {
 	return ;
 }
 
-void				do_print(t_printf_info *info, char *data, size_t size)
+void					do_print(t_printf_info *info, char *data, size_t size)
 {
 	register int32_t	remaining_space;
 	register size_t		data_index;

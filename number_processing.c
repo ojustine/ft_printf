@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   number_processing.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ojustine <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 11:23:05 by ojustine          #+#    #+#             */
-/*   Updated: 2019/12/10 11:23:09 by ojustine         ###   ########.fr       */
+/*   Updated: 2020/02/17 11:58:54 by slynell          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,9 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 
 void					get_signed_arg(t_printf_info *info, int_fast16_t base)
 {
-	char		sign;
-	intmax_t	num;
-	uintmax_t	u_num;
+	char				sign;
+	intmax_t			num;
+	uintmax_t			u_num;
 
 	if (info->flags & SIZE_LLONG)
 		num = va_arg(info->ap, long long);
@@ -63,7 +63,7 @@ void					get_signed_arg(t_printf_info *info, int_fast16_t base)
 
 void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
 {
-	uintmax_t	num;
+	uintmax_t			num;
 
 	if (info->flags & SIZE_LLONG)
 		num = va_arg(info->ap, unsigned long long);
