@@ -13,7 +13,7 @@
 #include "ft_printf.h"
 
 void					do_print_string(t_printf_info *info, char *str,
-							size_t size)
+						size_t size)
 {
 	size_t				to_print;
 	const char			pad = (info->flags & FLAG_ZERO_PAD

@@ -14,10 +14,10 @@
 
 void					*ft_bzero(void *b, size_t n)
 {
-	unsigned char		*mem;
-	const uint64_t		zero = 0;
-	uint64_t			*ptr_64;
-	uint32_t			*ptr_32;
+	register unsigned char		*mem;
+	register uint64_t			*ptr_64;
+	register uint32_t			*ptr_32;
+	const uint64_t				zero = 0;
 
 	mem = (unsigned char*)b;
 	ptr_64 = (uint64_t*)mem;

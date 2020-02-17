@@ -76,15 +76,15 @@ static inline void	get_type(t_printf_info *info)
 	else if (*info->fmt == 'S')
 		get_string_arg(info, 1);
 	else if (*info->fmt == 'p' && (info->flags |= FLAG_ALT_FORM))
-		get_unsigned_arg(info, 16);
+		get_unsigned_arg(info, 16);//TODO test it
 	else if (*info->fmt == 'n')
 		*va_arg(info->ap, int*) = info->printed;
 	else if (*info->fmt == '%')
-		do_print_string(info, "%", 1);
+		do_print_string(info, "%", 1);//TODO test
 //	else if (*info->fmt == 'm')
-//		ft_printf_putstr(strerror(errno), p);
+//		ft_printf_putstr(strerror(errno), p);//TODO known how it must working
 //	else if (*info->fmt == '{')
-//		color(p);
+//		color(p);TODO add colors
 //	else
 //		cs_not_found(p);
 }

@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-size_t	ft_uitoa_dec(uint32_t val, char *buff)
+size_t	ft_uitoa_dec(const uint32_t val, char *buff)
 {
 	register uint32_t		lo;
 	register uint32_t		hi;

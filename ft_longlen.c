@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-size_t	ft_longlen(int64_t n)
+size_t	ft_longlen(register int64_t n)
 {
 	register int64_t	rank;
 	register size_t		i;

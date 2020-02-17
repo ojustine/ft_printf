@@ -12,23 +12,24 @@
 
 #include "ft_printf.h"
 
-static inline int32_t	add_prefix(t_printf_info *info, char *buf,
+static inline int32_t	add_prefix(t_printf_info *info, char *buff,
 						const char sign, const int_fast16_t base)
 {
-	int_fast16_t		ret;
+	register int_fast16_t	ret;
 
 	ret = 0;
+	buff[0] = 0;
 	if (sign)
-		buf[ret++] = '-';
+		buff[ret++] = '-';
 	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
-		buf[++ret] = " +"[info->flags & FLAG_PLUS_SIGN];
+		buff[++ret] = " +"[info->flags & FLAG_PLUS_SIGN];
 	if (base != 10 && info->flags & FLAG_ALT_FORM)
 	{
-		buf[ret++] = '0';
+		buff[ret++] = '0';
 		if (base == 2)
-			buf[ret++] = "bB"[info->cap];
+			buff[ret++] = "bB"[info->cap];
 		else if (base == 16)
-			buf[ret++] = "xX"[info->cap];
+			buff[ret++] = "xX"[info->cap];
 	}
 	return (ret);
 }
@@ -61,40 +62,42 @@ void					padding(t_printf_info *info, int_fast32_t pad_len,
 int32_t					set_prefix_num(t_printf_info *info, const char sign,
 						const int_fast16_t base, const int_fast32_t val_len)
 {
-	int32_t				prefix_len;
-	int32_t				zeroes_len;
-	int32_t				padding_len;
 	char				prefix[3];
+	const int32_t		prefix_len = add_prefix(info, prefix, sign, base);
+	register int32_t	zero_len;
+	int32_t				padding_len;
 
-	prefix_len = add_prefix(info, prefix, sign, base);
-	zeroes_len = (info->flags & FLAG_TRUNCATE && info->prec > val_len)
-											? info->prec - val_len : 0;
+	if (info->flags & FLAG_ZERO_PAD)
+		zero_len = info->width - prefix_len - val_len;
+	else
+		zero_len = info->prec - val_len - (base == 8 && prefix[0] == '0');
+	zero_len = (zero_len < 0) ? 0 : zero_len;
 	padding_len = 0;
 	if (!(info->flags & FLAG_LEFT_ALIGN))
 	{
-		padding_len = info->width - zeroes_len - val_len - prefix_len;
+		padding_len = info->width - zero_len - val_len - prefix_len;
 		padding(info, padding_len, ' ');
 		do_print(info, prefix, prefix_len);
-		padding(info, zeroes_len, '0');
+		padding(info, zero_len, '0');
 	}
 	else
 	{
 		do_print(info, prefix, prefix_len);
-		padding(info, zeroes_len, '0');
+		padding(info, zero_len, '0');
 	}
-	return (val_len + prefix_len + zeroes_len + padding_len);
+	return (val_len + prefix_len + zero_len + padding_len);
 }
 
 int32_t					set_prefix_fp(t_printf_info *info, const char sign,
 						const int_fast32_t val_len)
 {
-	int32_t				len;
+	register int32_t	len;
 	char				prefix[1];
 	const char			pad = (info->flags & FLAG_ZERO_PAD
 						&& !(info->flags & FLAG_LEFT_ALIGN)) ? '0' : ' ';
+
 	len = add_prefix(info, prefix, sign, 10);
 	if (info->width - (val_len + len) > 0 && !(info->flags & FLAG_LEFT_ALIGN))
-	{
 		if (info->flags & FLAG_ZERO_PAD)
 		{
 			do_print(info, prefix, len);
@@ -107,7 +110,6 @@ int32_t					set_prefix_fp(t_printf_info *info, const char sign,
 			do_print(info, prefix, len);
 			len += info->width - (val_len + len);
 		}
-	}
 	else
 		do_print(info, prefix, len);
 	return (val_len + len);

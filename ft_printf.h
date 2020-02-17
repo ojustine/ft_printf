@@ -110,110 +110,127 @@ enum						e_fxd_assets
 ** ======================== Structures definition ==============================
 */
 
-typedef struct				s_printf_info
+typedef struct			s_printf_info
 {
-	uint16_t				flags;
-	int_fast32_t			width;
-	int_fast32_t			prec;
-	uint_fast8_t			cap;
-	int32_t					fd;
-	char					buff[BUFF_SIZE + 1];
-	size_t					buff_index;
-	size_t					printed;
-	char					*output;
-	va_list					ap;
-	const char				*fmt;
-	int						(*flush)(int, const void*, unsigned int);
-}							t_printf_info;
+	uint16_t			flags;
+	int_fast32_t		width;
+	int_fast32_t		prec;
+	uint_fast8_t		cap;
+	int32_t				fd;
+	char				buff[BUFF_SIZE + 1];
+	size_t				buff_index;
+	size_t				printed;
+	char				*output;
+	va_list				ap;
+	const char			*fmt;
+# if defined(_POSIX_VERSION) || defined(__unix__) || defined(linux)
+	ssize_t				(*flush)(int, const void*, size_t);
+# elif defined(WIN32)
+	int32_t				(*flush)(int, const void*, unsigned int);
+# endif
+}						t_printf_info;
 
-typedef union				u_double
+typedef union			u_double
 {
 	struct
 	{
-		uint_fast64_t		mant		: 52;
-		uint_fast64_t		exp			: 11;
-		uint_fast64_t		sign		: 1;
-	}						s_pts;
-	double					val;
-}							t_binary64;
+		uint_fast64_t	mant		: 52;
+		uint_fast64_t	exp			: 11;
+		uint_fast64_t	sign		: 1;
+	}					s_pts;
+	double				val;
+}						t_binary64;
 
-typedef union				u_long_double
+typedef union			u_long_double
 {
 	struct
 	{
-		uint_fast64_t		mant		: 64;
-		uint_fast64_t		exp			: 15;
-		uint_fast64_t		sign		: 1;
-	}						s_pts;
-	long double				val;
-}							t_binary80;
+		uint_fast64_t	mant		: 64;
+		uint_fast64_t	exp			: 15;
+		uint_fast64_t	sign		: 1;
+	}					s_pts;
+	long double			val;
+}						t_binary80;
 
-typedef struct				s_fxd
+typedef struct			s_fxd
 {
-	uint32_t				*val;
-	int_fast16_t			int_len;
-	int_fast16_t			frc_len;
-	int_fast16_t			f0;
-}							t_fxd;
+	uint32_t			*val;
+	int_fast16_t		int_len;
+	int_fast16_t		frc_len;
+	int_fast16_t		f0;
+}						t_fxd;
 
 void	*ft_memset(void *b, int c, size_t n);
-void	*ft_memcpy(void *dst, const void *src, size_t n);
-size_t	ft_strlen(const char *s);
-size_t	ft_wstrlen(wchar_t *s);
-double	ft_pow(double base, int_fast16_t power);
-long double	ft_long_pow(long double base, int_fast16_t power);
 void	*ft_memmove(void *dst, const void *src, size_t len);
-void	ft_assert(int_fast32_t to_check, const char *func, const char *message);
-int32_t	ft_moddiv(int32_t dividend, int32_t divisor, int32_t *quotient);
-int32_t	ft_divmod(int32_t dividend, int32_t divisor, int32_t *remainder);
-size_t	ft_intlen(int32_t n);
-void	*ft_bzero(void *b, size_t n);
-void				ft_memswap(void *mem1, void *mem2, size_t size);
-uint32_t	ft_abs(int32_t n);
-size_t	ft_longlen(int64_t n);
-int	ft_strany(char const *str, int32_t c);
-void	ft_strrev(char *begin, char *end);
-size_t	ft_uitoa_hex(uint32_t value, char* buff, const int_fast16_t is_upper);
-size_t	ft_ultoa_hex(uint64_t value, char* buff, const int_fast16_t is_upper);
-size_t	ft_uitoa_dec(uint32_t val, char *buff);
-size_t	ft_uitoa_base(uint32_t value, char *buff, const int_fast16_t base,
-						const int_fast16_t is_upper);
-size_t	ft_ultoa_base(uint64_t value, char *buff, const int_fast16_t base,
-						const int_fast16_t is_upper);
+int32_t	ft_moddiv(const int32_t dividend, const int32_t divisor, int32_t *quotient);
+void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 
-t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl);
-t_fxd				*fxd_build_mantis(uint64_t bin_mantis,
-										int_fast16_t is_normal, int_fast16_t is_long_dbl);
-void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
-								int_fast16_t is_long_dbl);
-void				fxd_roundup(t_fxd *fp, int_fast32_t prec);
-void	get_floating_point_arg(t_printf_info *info);
-size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp, char *buff);
-size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff);
-size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff);
-t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
-void	fxd_del(t_fxd *fp1, t_fxd *fp2);
-void					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign);
-int32_t				set_prefix_fp(t_printf_info *info, const char sign, const int_fast32_t val_len);
-size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff);
+void					*ft_memcpy(void *dst, const void *src, size_t n);
+size_t					ft_strlen(const char *s);
+size_t					ft_wstrlen(const wchar_t *s);
+double					ft_pow(const double base, register int_fast16_t power);
+long double				ft_long_pow(const long double base,
+						register int_fast16_t power);
+void					ft_assert(int_fast32_t to_check, const char *func,
+						const char *message);
+int32_t					ft_divmod(const int32_t dividend, const int32_t divisor,
+					 	int32_t *remainder);
+size_t					ft_intlen(register int32_t n);
+void					*ft_bzero(void *b, size_t n);
+void					ft_memswap(void *mem1, void *mem2, size_t size);
+uint32_t				ft_abs(int32_t n);
+size_t					ft_longlen(register int64_t n);
+int						ft_strany(char const *str, const int32_t c);
+void					ft_strrev(register char *begin, register char *end);
+size_t					ft_uitoa_hex(const uint32_t value, char* buff,
+						const int_fast16_t is_upper);
+size_t					ft_ultoa_hex(const uint64_t value, char* buff,
+						const int_fast16_t is_upper);
+size_t					ft_uitoa_dec(const uint32_t val, char *buff);
+size_t					ft_uitoa_base(uint32_t value, char *buff,
+						const int_fast16_t base, const int_fast16_t is_upper);
+size_t					ft_ultoa_base(uint64_t value, char *buff,
+						const int_fast16_t base, const int_fast16_t is_upper);
+
+t_fxd					*fxd_get_pow_2(register int_fast16_t pow,
+						int_fast16_t is_long_dbl);
+t_fxd					*fxd_build_mantis(uint64_t bin_mantis,
+						int_fast16_t is_normal, int_fast16_t is_long_dbl);
+void					fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
+						int_fast16_t is_long_dbl);
+void					fxd_roundup(t_fxd *fp, const int_fast32_t prec);
+void					get_floating_point_arg(t_printf_info *info);
+size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp,
+						char *buff);
+size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp,
+						char *buff);
+size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp,
+						char *buff);
+t_fxd					*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
+void					fxd_del(t_fxd *fp1, t_fxd *fp2);
+void					fxd_ftoa_inf_nan(t_printf_info *info,
+						const uint64_t mantis, const char sign);
+size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp,
+						char *buff);
 void					fast_dtoa(t_printf_info *info, double val);
+size_t					ldtoa_hex_form(t_printf_info *info, uint64_t mantis,
+						uint64_t exp, char *buff);
 
-int32_t	set_prefix_num(t_printf_info *info, const char sign,
-						  const int_fast16_t base, const int_fast32_t val_len);
-void				padding(t_printf_info *info, int_fast32_t pad_len, const char pad);
+int32_t					set_prefix_fp(t_printf_info *info, const char sign,
+						const int_fast32_t val_len);
+int32_t					set_prefix_num(t_printf_info *info, const char sign,
+						 const int_fast16_t base, const int_fast32_t val_len);
+void					padding(t_printf_info *info, int_fast32_t pad_len,
+						const char pad);
 
-void						do_print(t_printf_info *info, char *data,
-									 size_t size);
-void						get_formatted_arg(t_printf_info *info);
-void						get_char_arg(t_printf_info *info,
-										 int16_t is_wide_char);
+void					do_print(t_printf_info *info, char *data, size_t size);
+void					get_formatted_arg(t_printf_info *info);
+void					get_char_arg(t_printf_info *info, int16_t is_wide_char);
 void					get_string_arg(t_printf_info *info,
-									   int16_t is_wide_string);
-void					get_signed_arg(t_printf_info *info,
-									   int16_t base);
-void					get_unsigned_arg(t_printf_info *info,
-										 int16_t base);
+						int16_t is_wide_string);
+void					get_signed_arg(t_printf_info *info, int16_t base);
+void					get_unsigned_arg(t_printf_info *info, int16_t base);
 void					do_print_string(t_printf_info *info, char *str,
-										size_t size);
+						size_t size);
 
 #endif

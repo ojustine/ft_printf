@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-int	ft_strany(char const *str, int32_t c)
+int	ft_strany(char const *str, const int32_t c)
 {
 	if (str == NULL)
 		return (0);

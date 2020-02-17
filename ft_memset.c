@@ -14,9 +14,9 @@
 
 void	*ft_memset(void *b, int c, size_t n)
 {
-	unsigned char		*mem;
-	uint64_t			stamp_64;
-	uint64_t			*ptr_64;
+	register unsigned char	*mem;
+	register uint64_t		stamp_64;
+	register uint64_t		*ptr_64;
 
 	mem = (unsigned char*)b;
 	if (n >= 8)

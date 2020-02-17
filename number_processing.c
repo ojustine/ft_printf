@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-static inline void		do_print_num(t_printf_info *info, uintmax_t num,
+static inline void		do_print_num(t_printf_info *info, uintmax_t value,
 						const int_fast16_t base, char sign)
 {
 	char	buff[MAX_INT_BITS_NUM];
@@ -22,20 +22,20 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 	|| info->flags & SIZE_INTMAX || info->flags & SIZE_SIZE_T)
 	{
 		if (base == 16)
-			to_print = ft_ultoa_hex(num, buff, info->cap);
+			to_print = ft_ultoa_hex(value, buff, info->cap);
 		else
-			to_print = ft_ultoa_base(num, buff, base, info->cap);
+			to_print = ft_ultoa_base(value, buff, base, info->cap);
 	}
 	else
 	{
 		if (base == 10)
-			to_print = ft_uitoa_dec(num, buff);
+			to_print = ft_uitoa_dec(value, buff);
 		else if (base == 16)
-			to_print = ft_ultoa_hex(num, buff, info->cap);
+			to_print = ft_uitoa_hex(value, buff, info->cap);
 		else
-			to_print = ft_ultoa_base(num, buff, base, info->cap);
+			to_print = ft_uitoa_base(value, buff, base, info->cap);
 	}
-	if (info->flags & FLAG_TRUNCATE)
+	if (info->flags & FLAG_TRUNCATE || info->flags & FLAG_LEFT_ALIGN)
 		info->flags &= ~FLAG_ZERO_PAD;
 	info->width -= set_prefix_num(info, sign, base, to_print);
 	do_print(info, buff, to_print);
@@ -45,45 +45,45 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 void					get_signed_arg(t_printf_info *info, int_fast16_t base)
 {
 	char				sign;
-	intmax_t			num;
-	uintmax_t			u_num;
+	intmax_t			value;
+	uintmax_t			u_value;
 
 	if (info->flags & SIZE_LLONG)
-		num = va_arg(info->ap, long long);
+		value = va_arg(info->ap, long long);
 	else if (info->flags & SIZE_LONG)
-		num = va_arg(info->ap, long);
+		value = va_arg(info->ap, long);
 	else if (info->flags & SIZE_SHORT)
-		num = (short)va_arg(info->ap, int);
+		value = (short)va_arg(info->ap, int);
 	else if (info->flags & SIZE_CHAR)
-		num = (char)va_arg(info->ap, int);
+		value = (char)va_arg(info->ap, int);
 	else if (info->flags & SIZE_INTMAX)
-		num = (va_arg(info->ap, intmax_t));
+		value = (va_arg(info->ap, intmax_t));
 	else if (info->flags & SIZE_SIZE_T)
-		num = va_arg(info->ap, ssize_t);
+		value = va_arg(info->ap, ssize_t);
 	else
-		num = va_arg(info->ap, int);
-	sign = (char)(num < 0);
-	u_num = (num < 0) ? -num : num;
-	do_print_num(info, u_num, base, sign);
+		value = va_arg(info->ap, int);
+	sign = (char)(value < 0);
+	u_value = (value < 0) ? -value : value;
+	do_print_num(info, u_value, base, sign);
 }
 
 void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
 {
-	uintmax_t			num;
+	uintmax_t			value;
 
 	if (info->flags & SIZE_LLONG)
-		num = va_arg(info->ap, unsigned long long);
+		value = va_arg(info->ap, unsigned long long);
 	else if (info->flags & SIZE_LONG)
-		num = va_arg(info->ap, unsigned long);
+		value = va_arg(info->ap, unsigned long);
 	else if (info->flags & SIZE_SHORT)
-		num = (unsigned short)va_arg(info->ap, unsigned int);
+		value = (unsigned short)va_arg(info->ap, unsigned int);
 	else if (info->flags & SIZE_CHAR)
-		num = (unsigned char)va_arg(info->ap, unsigned int);
+		value = (unsigned char)va_arg(info->ap, unsigned int);
 	else if (info->flags & SIZE_INTMAX)
-		num = (va_arg(info->ap, uintmax_t));
+		value = (va_arg(info->ap, uintmax_t));
 	else if (info->flags & SIZE_SIZE_T)
-		num = va_arg(info->ap, size_t);
+		value = va_arg(info->ap, size_t);
 	else
-		num = va_arg(info->ap, unsigned int);
-	do_print_num(info, num, base, 0);
+		value = va_arg(info->ap, unsigned int);
+	do_print_num(info, value, base, 0);
 }

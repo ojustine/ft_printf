@@ -12,9 +12,9 @@
 
 #include "ft_printf.h"
 
-void		ft_strrev(char *begin, char *end)
+void	ft_strrev(register char *begin, register char *end)
 {
-	char	tmp;
+	register char	tmp;
 
 	while (end > begin)
 	{

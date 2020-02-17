@@ -13,7 +13,7 @@
 #include "ft_printf.h"
 
 static inline void		fast_dtoa_roundup(double diff, const int_fast16_t prec,
-							uint32_t *whole, uint32_t *frac)
+						uint32_t *whole, uint32_t *frac)
 {
 	static const double	powers_of_10[] = {1, 10, 100, 1000, 10000, 100000,
 	1000000, 10000000, 100000000, 1000000000};
@@ -32,10 +32,10 @@ static inline void		fast_dtoa_roundup(double diff, const int_fast16_t prec,
 }
 
 static inline char		*fast_dtoa_print(uint32_t whole, uint32_t frac,
-							char *buff, const int_fast16_t prec)
+						char *buff, const int_fast16_t prec)
 {
-	int_fast16_t		count;
-	register char		*ptr;
+	register int_fast16_t	count;
+	register char			*ptr;
 
 	count = prec;
 	ptr = buff;
@@ -60,7 +60,7 @@ static inline size_t	ft_fast_dtoa(double val, char *buff,
 {
 	static const double	powers_of_10[] = {1, 10, 100, 1000, 10000, 100000,
 	1000000, 10000000, 100000000, 1000000000};
-	char				*ptr;
+	register char		*ptr;
 	uint32_t			whole;
 	uint32_t			frac;
 

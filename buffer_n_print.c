@@ -12,12 +12,23 @@
 
 #include "ft_printf.h"
 
-static inline void		buffer_flush(t_printf_info *info)
+#if defined(_POSIX_VERSION) || defined(__unix__) || defined(linux)
+ssize_t	flush_in_string(int fd, const void *buf, size_t nbytes)
 {
-	return ;
+	return (0);
 }
+#elif defined(WIN32)
+int	flush_in_string(int _file_handl, const void *_buf, unsigned int _char_count)
+{
+	static size_t	counter;
+	unsigned char	*ptr;
 
-void					do_print(t_printf_info *info, char *data, size_t size)
+	ptr = ((unsigned char*)_buf) + counter;
+	return (0);
+}
+#endif
+
+void	do_print(t_printf_info *info, char *data, size_t size)
 {
 	register int32_t	remaining_space;
 	register size_t		data_index;

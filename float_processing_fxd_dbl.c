@@ -26,7 +26,7 @@ static inline void			fxd_add(t_fxd *res, t_fxd *a)
 }
 
 void						fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
-								int_fast16_t is_long_dbl)
+							int_fast16_t is_long_dbl)
 {
 	register uint64_t		rank;
 	register int_fast16_t	i;
@@ -56,7 +56,7 @@ void						fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
 }
 
 t_fxd						*fxd_build_mantis(uint64_t bin_mantis,
-					int_fast16_t is_normal, int_fast16_t is_long_dbl)
+							int_fast16_t is_normal, int_fast16_t is_long_dbl)
 {
 	register int_fast16_t	i;
 	t_fxd					*mantis;
@@ -71,7 +71,7 @@ t_fxd						*fxd_build_mantis(uint64_t bin_mantis,
 			{
 				ft_memcpy(&term->val[term->f0], g_pow_2_n[i], FP_R_SIZE * 8);
 				term->frc_len = g_pow_2_n[i][8];
-//				fxd_add(mantis, term);
+				fxd_add(mantis, term);
 			}
 		bin_mantis >>= 1;
 		i--;
@@ -85,7 +85,8 @@ t_fxd						*fxd_build_mantis(uint64_t bin_mantis,
 	return (mantis);
 }
 
-t_fxd						*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl)
+t_fxd						*fxd_get_pow_2(register int_fast16_t pow,
+							int_fast16_t is_long_dbl)
 {
 	t_fxd					*res;
 	t_fxd					*base;
@@ -113,15 +114,15 @@ t_fxd						*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl)
 	return (res);
 }
 
-void						fxd_roundup(t_fxd *fp, int_fast32_t prec)
+void						fxd_roundup(t_fxd *fp, const int_fast32_t prec)
 {
-	uint64_t				pow;
+	register const uint64_t	pow = ft_pow(10, (FP_R_LEN - (prec % FP_R_LEN)));
+	register uint_fast32_t	carry;
 	register int_fast16_t	i;
 	register int_fast16_t	j;
 
 	i = prec / FP_R_LEN;
 	j = i;
-	pow = ft_pow(10, (FP_R_LEN - (prec % FP_R_LEN)));
 	if ((fp->val[fp->f0 + i] % pow) > (pow / 10 * 5))
 		fp->val[fp->f0 + i] += pow;
 	else if ((fp->val[fp->f0 + i] % pow) == (pow / 10 * 5))
@@ -133,10 +134,10 @@ void						fxd_roundup(t_fxd *fp, int_fast32_t prec)
 		else
 			fp->val[fp->f0 + i] += pow;
 	}
-	while ((pow = (uint64_t)fp->val[fp->f0 + i] / FP_R_LIMITER) > 0)
+	while ((carry = fp->val[fp->f0 + i] / FP_R_LIMITER) > 0)
 	{
 		fp->val[fp->f0 + i] %= FP_R_LIMITER;
-		fp->val[fp->f0 + i] += pow;
+		fp->val[fp->f0 + i] += carry;
 		i--;
 		fp->int_len = (i < 0) ? -i : fp->int_len;
 	}

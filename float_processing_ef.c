@@ -13,7 +13,7 @@
 #include "ft_printf.h"
 
 void					fxd_ftoa_inf_nan(t_printf_info *info,
-							uint64_t mantis, char sign)
+						const uint64_t mantis, const char sign)
 {
 	const char	*inf_nan = (mantis != 0) ? "nanNAN" : "infINF";
 
@@ -24,7 +24,7 @@ void					fxd_ftoa_inf_nan(t_printf_info *info,
 }
 
 static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info,
-							t_fxd *fp, char *buff)
+						t_fxd *fp, char *buff)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
@@ -52,8 +52,8 @@ static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info,
 	return (buff - ptr);
 }
 
-size_t					fxd_ftoa_dec_form(t_printf_info *info,
-							t_fxd *fp, char *buff)
+size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp,
+						char *buff)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
@@ -83,11 +83,11 @@ size_t					fxd_ftoa_dec_form(t_printf_info *info,
 }
 
 static inline int32_t	fxd_ftoa_normalize(t_printf_info *info, t_fxd *fp,
-						int_fast16_t inx, int_fast32_t offset)
+						const int_fast16_t inx, register int_fast32_t offset)
 {
 	t_fxd			*mul;
 	int_fast16_t	i;
-	uint64_t		pow;
+	const uint64_t	pow = ft_pow(10, (FP_R_LEN - (info->prec % FP_R_LEN)));
 
 	mul = fxd_new((inx < 0) ? -inx : 0, fp->f0 == FP_LD_POINT + 1);
 	mul->frc_len = (inx < 0) ? -inx : 0;
@@ -104,14 +104,13 @@ static inline int32_t	fxd_ftoa_normalize(t_printf_info *info, t_fxd *fp,
 		offset++;
 	}
 	i = info->prec / FP_R_LEN;
-	pow = ft_pow(10, (FP_R_LEN - (info->prec % FP_R_LEN)));
 	fp->val[fp->f0 + i] -= fp->val[fp->f0 + i] % pow;
 	fxd_del(mul, 0);
 	return (offset);
 }
 
-size_t					fxd_ftoa_exp_form(t_printf_info *info,
-							t_fxd *fp, char *buff)
+size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp,
+						char *buff)
 {
 	int_fast32_t	offset;
 	int_fast16_t	inx;

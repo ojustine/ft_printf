@@ -12,9 +12,9 @@
 
 #include "ft_printf.h"
 
-size_t	ft_wstrlen(wint_t *s)
+size_t	ft_wstrlen(const wint_t *s)
 {
-	size_t	len;
+	register size_t	len;
 
 	len = 0;
 	while (*s != L'\0')

@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-double	ft_pow(double base, int_fast16_t power)
+double	ft_pow(const double base, register int_fast16_t power)
 {
 	if (power == 0)
 		return (1);

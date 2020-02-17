@@ -1,9 +1,10 @@
 #include "ft_printf.h"
 
-size_t	ft_uitoa_hex(uint32_t value, char* buff, const int_fast16_t is_upper)
+size_t	ft_uitoa_hex(const uint32_t value, char* buff,
+		const int_fast16_t is_upper)
 {
 	static const char	digits[] = "0123456789abcdef0123456789ABCDEF";
-	size_t				ret;
+	register size_t		ret;
 
 	ret = 1;
 	buff[7] = digits[((value >> 28) & 0x0000000F) + (is_upper != 0) * 16];
