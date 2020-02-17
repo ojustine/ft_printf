@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memset.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/17 11:20:56 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/17 11:21:22 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-void	*ft_memset(void *b, int c, size_t n)
+void					*ft_memset(void *b, int c, size_t n)
 {
 	unsigned char		*mem;
 	uint64_t			stamp_64;
-	uint64_t 			*ptr_64;
+	uint64_t			*ptr_64;
 
 	mem = (unsigned char*)b;
 	if (n >= 8)

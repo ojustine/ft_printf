@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/17 11:52:46 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/17 12:11:26 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 static inline int32_t	add_prefix(t_printf_info *info, char *buf,
 						const char sign, const int_fast16_t base)
 {
-	int_fast16_t	ret;
+	int_fast16_t		ret;
 
 	ret = 0;
 	if (sign)
@@ -49,10 +61,10 @@ void					padding(t_printf_info *info, int_fast32_t pad_len,
 int32_t					set_prefix_num(t_printf_info *info, const char sign,
 						const int_fast16_t base, const int_fast32_t val_len)
 {
-	int32_t		prefix_len;
-	int32_t		zeroes_len;
-	int32_t		padding_len;
-	char 		prefix[3];
+	int32_t				prefix_len;
+	int32_t				zeroes_len;
+	int32_t				padding_len;
+	char				prefix[3];
 
 	prefix_len = add_prefix(info, prefix, sign, base);
 	zeroes_len = (info->flags & FLAG_TRUNCATE && info->prec > val_len)
@@ -76,11 +88,10 @@ int32_t					set_prefix_num(t_printf_info *info, const char sign,
 int32_t					set_prefix_fp(t_printf_info *info, const char sign,
 						const int_fast32_t val_len)
 {
-	int32_t		len;
-	char 		prefix[1];
-	const char	pad = (info->flags & FLAG_ZERO_PAD
-				&& !(info->flags & FLAG_LEFT_ALIGN)) ? '0' : ' ';
-
+	int32_t				len;
+	char				prefix[1];
+	const char			pad = (info->flags & FLAG_ZERO_PAD
+						&& !(info->flags & FLAG_LEFT_ALIGN)) ? '0' : ' ';
 	len = add_prefix(info, prefix, sign, 10);
 	if (info->width - (val_len + len) > 0 && !(info->flags & FLAG_LEFT_ALIGN))
 	{

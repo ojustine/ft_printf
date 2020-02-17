@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   string_processing.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/17 12:01:33 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/17 12:11:55 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 void					do_print_string(t_printf_info *info, char *str,
 							size_t size)
 {
-	size_t	to_print;
-	const char	pad = (info->flags & FLAG_ZERO_PAD
-				&& !(info->flags & FLAG_LEFT_ALIGN)) ? '0' : ' ';
+	size_t				to_print;
+	const char			pad = (info->flags & FLAG_ZERO_PAD
+						&& !(info->flags & FLAG_LEFT_ALIGN)) ? '0' : ' ';;
 
 	if (info->flags & FLAG_TRUNCATE)
 		to_print = (info->prec < size) ? info->prec : size;
@@ -29,11 +41,11 @@ void					do_print_string(t_printf_info *info, char *str,
 		do_print(info, str, to_print);
 }
 
-static inline int32_t		print_wchar(t_printf_info *info, uint32_t wc,
-						int16_t is_single)
+static inline int32_t	print_wchar(t_printf_info *info, uint32_t wc,
+							int16_t is_single)
 {
-	char	utf_8[4];
-	size_t	bytes;
+	char				utf_8[4];
+	size_t				bytes;
 
 	bytes = 0;
 	if (wc <= 0x7F)
@@ -58,10 +70,10 @@ static inline int32_t		print_wchar(t_printf_info *info, uint32_t wc,
 	return (bytes);
 }
 
-void						get_char_arg(t_printf_info *info, int16_t is_wide_char)
+void					get_char_arg(t_printf_info *info, int16_t is_wide_char)
 {
-	char	c;
-	wint_t wc;
+	char				c;
+	wint_t				wc;
 
 	if (is_wide_char)
 	{
@@ -75,11 +87,12 @@ void						get_char_arg(t_printf_info *info, int16_t is_wide_char)
 	}
 }
 
-void						get_string_arg(t_printf_info *info, int16_t is_wide_string)
+void					get_string_arg(t_printf_info *info,
+							int16_t is_wide_string)
 {
-	char		*str;
-	wint_t		*wstr;
-	int			wstr_len;
+	char				*str;
+	wint_t				*wstr;
+	int					wstr_len;
 
 	if (is_wide_string)
 		if (!(wstr = va_arg(info->ap, wint_t*)))
@@ -92,8 +105,10 @@ void						get_string_arg(t_printf_info *info, int16_t is_wide_string)
 					wstr_len -= print_wchar(info, *wstr++, 0);
 		}
 	else
+	{
 		if (!(str = va_arg(info->ap, char*)))
 			do_print_string(info, "(null)", 6);
 		else
 			do_print_string(info, str, ft_strlen(str));
+	}
 }

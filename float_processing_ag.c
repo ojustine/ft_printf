@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   float_processing_ag.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/17 12:02:17 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/17 12:02:40 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-static inline size_t	fxd_ftoa_opt_form_f(t_printf_info *info, t_fxd *fp, char *buff)
+static inline size_t	fxd_ftoa_opt_form_f(t_printf_info *info,
+							t_fxd *fp, char *buff)
 {
 	size_t		to_print;
 
@@ -16,7 +29,8 @@ static inline size_t	fxd_ftoa_opt_form_f(t_printf_info *info, t_fxd *fp, char *b
 	return (to_print);
 }
 
-static inline size_t	fxd_ftoa_opt_form_e(t_printf_info *info, t_fxd *fp, char *buff)
+static inline size_t	fxd_ftoa_opt_form_e(t_printf_info *info,
+							t_fxd *fp, char *buff)
 {
 	size_t			to_print;
 	int_fast16_t	e_len;
@@ -43,7 +57,8 @@ static inline size_t	fxd_ftoa_opt_form_e(t_printf_info *info, t_fxd *fp, char *b
 	return (to_print);
 }
 
-size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp, char *buff)
+size_t					fxd_ftoa_opt_form(t_printf_info *info,
+							t_fxd *fp, char *buff)
 {
 	int_fast32_t	offset;
 	int_fast32_t	prec;

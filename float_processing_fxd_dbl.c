@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-static inline void	fxd_add(t_fxd *res, t_fxd *a)
+static inline void			fxd_add(t_fxd *res, t_fxd *a)
 {
 	register int_fast16_t	i;
 	register int_fast32_t	carry;
@@ -25,8 +25,8 @@ static inline void	fxd_add(t_fxd *res, t_fxd *a)
 	res->int_len = -i;
 }
 
-void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
-					int_fast16_t is_long_dbl)
+void						fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
+								int_fast16_t is_long_dbl)
 {
 	register uint64_t		rank;
 	register int_fast16_t	i;
@@ -55,7 +55,7 @@ void				fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
 	fxd_del(tmp, line);
 }
 
-t_fxd				*fxd_build_mantis(uint64_t bin_mantis,
+t_fxd						*fxd_build_mantis(uint64_t bin_mantis,
 					int_fast16_t is_normal, int_fast16_t is_long_dbl)
 {
 	register int_fast16_t	i;
@@ -85,10 +85,10 @@ t_fxd				*fxd_build_mantis(uint64_t bin_mantis,
 	return (mantis);
 }
 
-t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl)
+t_fxd						*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl)
 {
-	t_fxd			*res;
-	t_fxd			*base;
+	t_fxd					*res;
+	t_fxd					*base;
 
 	res = fxd_new(0, is_long_dbl);
 	res->val[res->f0 - 1] = 1;
@@ -113,7 +113,7 @@ t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl)
 	return (res);
 }
 
-void				fxd_roundup(t_fxd *fp, int_fast32_t prec)
+void						fxd_roundup(t_fxd *fp, int_fast32_t prec)
 {
 	uint64_t				pow;
 	register int_fast16_t	i;

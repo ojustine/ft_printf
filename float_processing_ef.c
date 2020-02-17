@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   float_processing_ef.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/17 12:03:01 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/17 12:03:24 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-void					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign)
+void					fxd_ftoa_inf_nan(t_printf_info *info,
+							uint64_t mantis, char sign)
 {
 	const char	*inf_nan = (mantis != 0) ? "nanNAN" : "infINF";
 
@@ -10,7 +23,8 @@ void					fxd_ftoa_inf_nan(t_printf_info *info, uint64_t mantis, char sign)
 	padding(info, info->width, ' ');
 }
 
-static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info, t_fxd *fp, char *buff)
+static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info,
+							t_fxd *fp, char *buff)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
@@ -38,7 +52,8 @@ static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info, t_fxd *fp,
 	return (buff - ptr);
 }
 
-size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp, char *buff)
+size_t					fxd_ftoa_dec_form(t_printf_info *info,
+							t_fxd *fp, char *buff)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
@@ -95,7 +110,8 @@ static inline int32_t	fxd_ftoa_normalize(t_printf_info *info, t_fxd *fp,
 	return (offset);
 }
 
-size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp, char *buff)
+size_t					fxd_ftoa_exp_form(t_printf_info *info,
+							t_fxd *fp, char *buff)
 {
 	int_fast32_t	offset;
 	int_fast16_t	inx;

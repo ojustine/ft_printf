@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/17 11:20:02 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/17 11:20:08 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void				*ft_memcpy(void *dst, const void *src, size_t n)
 {
 	void			*ret;
 	unsigned char	*dest;

@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/17 11:54:49 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/17 11:55:48 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 static inline int	entry(register t_printf_info *info)
 {
-	register size_t		non_format_chars;
-	char	 			*non_format_str_beg;
+	register size_t	non_format_chars;
+	char			*non_format_str_beg;
 
 	while (*info->fmt)
 	{
@@ -20,13 +32,12 @@ static inline int	entry(register t_printf_info *info)
 		get_formatted_arg(info);
 		info->fmt++;
 	}
-	//write(info->fd, info->buff, info->buff_index);
 	info->flush(info->fd, info->buff, info->buff_index);
 	va_end(info->ap);
 	return (info->printed);
 }
 
-int 				ft_dprintf(int fd, const char *format, ...)
+int					ft_dprintf(int fd, const char *format, ...)
 {
 	t_printf_info	info;
 
@@ -39,7 +50,7 @@ int 				ft_dprintf(int fd, const char *format, ...)
 	return (entry(&info));
 }
 
-int 				ft_sprintf(char *str, const char *format, ...)
+int					ft_sprintf(char *str, const char *format, ...)
 {
 	t_printf_info	info;
 
@@ -53,7 +64,7 @@ int 				ft_sprintf(char *str, const char *format, ...)
 	return (entry(&info));
 }
 
-int 				ft_printf(const char *format, ...)
+int					ft_printf(const char *format, ...)
 {
 	t_printf_info	info;
 
