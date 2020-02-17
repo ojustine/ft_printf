@@ -11,15 +11,17 @@ int main()
 	wchar_t *nn = L"ǑabcǑ\0";
 	wint_t *n = L"ǑabcǑ\0";
 
-	c = ft_printf("%S\n", n);
-	printf("%i\n", c);
-	d = printf("%S\n", n);
-	printf("%i\n", d);
+	//c = ft_printf("%S\n", n);
+	//printf("%i\n", c);
+	//d = printf("%S\n", n);
+	//printf("%i\n", d);
 
-	printf("%010.*f\n", 6, 0.125);
-	ft_printf("%010.*f\n", 6, 0.125);
-	printf("%llx\n", UINT64_MAX);
-	ft_printf("%llx\n", UINT64_MAX);
+	//printf("%010.*f\n", 6, 0.125);
+	//ft_printf("%010.*f\n", 6, 0.125);
+	printf("%x\n", 111);
+	//ft_printf("%llx\n", UINT64_MAX);
+	size_t i = ft_uitoa_hex(111, str, 0);
+	printf("%s %zu", str, i);
 	//ft_printf("%13Lg\n", -LDBL_TRUE_MIN);
 	//printf("%13Lg\n", -LDBL_TRUE_MIN);
 	//printf("%Lf\n", LDBL_MAX);

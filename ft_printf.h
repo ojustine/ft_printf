@@ -173,6 +173,8 @@ uint32_t	ft_abs(int32_t n);
 size_t	ft_longlen(int64_t n);
 int	ft_strany(char const *str, int32_t c);
 void	ft_strrev(char *begin, char *end);
+size_t	ft_uitoa_hex(uint32_t value, char* buff, int_fast16_t is_upper);
+size_t	ft_ultoa_hex(uint64_t value, char* buff, int_fast16_t is_upper);
 
 t_fxd				*fxd_get_pow_2(int_fast16_t pow, int_fast16_t is_long_dbl);
 t_fxd				*fxd_build_mantis(uint64_t bin_mantis,
