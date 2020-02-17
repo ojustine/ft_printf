@@ -71,7 +71,7 @@ t_fxd						*fxd_build_mantis(uint64_t bin_mantis,
 			{
 				ft_memcpy(&term->val[term->f0], g_pow_2_n[i], FP_R_SIZE * 8);
 				term->frc_len = g_pow_2_n[i][8];
-				fxd_add(mantis, term);
+//				fxd_add(mantis, term);
 			}
 		bin_mantis >>= 1;
 		i--;

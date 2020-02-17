@@ -15,24 +15,30 @@
 static inline void		do_print_num(t_printf_info *info, uintmax_t num,
 						const int_fast16_t base, char sign)
 {
-	static const char	digits[] = "0123456789abcdef0123456789ABCDEF";
-	register char		*ptr;
-	char				buff[MAX_INT_BITS_NUM];
-	int_fast16_t		num_len;
+	char	buff[MAX_INT_BITS_NUM];
+	size_t	to_print;
 
-	ptr = &buff[MAX_INT_BITS_NUM - 1];
-	*ptr-- = digits[(num % base) + info->cap * 16];
-	num /= base;
-	while (num != 0)
+	if (info->flags & SIZE_LLONG || info->flags & SIZE_LONG
+	|| info->flags & SIZE_INTMAX || info->flags & SIZE_SIZE_T)
 	{
-		*ptr-- = digits[(num % base) + info->cap * 16];
-		num /= base;
+		if (base == 16)
+			to_print = ft_ultoa_hex(num, buff, info->cap);
+		else
+			to_print = ft_ultoa_base(num, buff, base, info->cap);
 	}
-	num_len = (&buff[MAX_INT_BITS_NUM - 1] - ptr);
+	else
+	{
+		if (base == 10)
+			to_print = ft_uitoa_dec(num, buff);
+		else if (base == 16)
+			to_print = ft_ultoa_hex(num, buff, info->cap);
+		else
+			to_print = ft_ultoa_base(num, buff, base, info->cap);
+	}
 	if (info->flags & FLAG_TRUNCATE)
 		info->flags &= ~FLAG_ZERO_PAD;
-	info->width -= set_prefix_num(info, sign, base, num_len);
-	do_print(info, ++ptr, num_len);
+	info->width -= set_prefix_num(info, sign, base, to_print);
+	do_print(info, buff, to_print);
 	padding(info, info->width, ' ');
 }
 
