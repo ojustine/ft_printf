@@ -1,6 +1,16 @@
 #include "libptf.h"
 
-size_t	ft_uitoa_dec(const uint32_t val, char *buff)
+static inline size_t	ft_uitoa_dec_trim(char *buff)
+{
+	register int_fast16_t	i;
+
+	while (i < 10)
+	{
+
+	}
+}
+
+size_t					ft_uitoa_dec(const uint32_t val, char *buff)
 {
 	register uint32_t		lo;
 	register uint32_t		hi;
@@ -21,10 +31,10 @@ size_t	ft_uitoa_dec(const uint32_t val, char *buff)
 		lo = (lo & mask) * 5;
 		mask >>= 1;
 	}
-	i = 1;
-	while (buff[i] != '0' && i < 10)
-		i++;
-	ft_strrev(buff, buff + i - 1);
-	buff[i] = 0;
-	return (i);
+	i = 9;
+	while (buff[i] == '0' && i > 1)
+		i--;
+	ft_strrev(buff, buff + i);
+	buff[i + 1] = 0;
+	return (i + 1);
 }
