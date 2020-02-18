@@ -59,8 +59,7 @@ static inline void	get_type(t_printf_info *info)
 	if (*info->fmt == 'd' || *info->fmt == 'D' || *info->fmt == 'i')
 		get_signed_arg(info, 10);
 	else if (*info->fmt == 's')
-		get_string_arg(info, (info->flags & SIZE_LONG
-							  || info->flags & SIZE_LLONG));
+		get_string_arg(info, info->flags & (SIZE_LONG | SIZE_LLONG));
 	else if (*info->fmt == 'u' || *info->fmt == 'U')
 		get_unsigned_arg(info, 10);
 	else if (*info->fmt == 'o' || *info->fmt == 'O')
@@ -75,12 +74,16 @@ static inline void	get_type(t_printf_info *info)
 		get_char_arg(info, (*info->fmt == 'C'));
 	else if (*info->fmt == 'S')
 		get_string_arg(info, 1);
-	else if (*info->fmt == 'p' && (info->flags |= FLAG_ALT_FORM))
-		get_unsigned_arg(info, 16);//TODO test it
+	else if (*info->fmt == 'p' && (info->flags |= FLAG_PTR))
+		get_unsigned_arg(info, 16);
 	else if (*info->fmt == 'n')
 		*va_arg(info->ap, int*) = info->printed;
 	else if (*info->fmt == '%')
-		do_print_string(info, "%", 1);//TODO test
+	{
+		if (info->flags & FLAG_TRUNCATE && info->prec == 0)
+			info->prec = 1;
+		do_print_string(info, "%", 1);
+	}
 //	else if (*info->fmt == 'm')
 //		ft_printf_putstr(strerror(errno), p);//TODO known how it must working
 //	else if (*info->fmt == '{')

@@ -81,6 +81,8 @@ void					fast_dtoa(t_printf_info *info, double val)
 	const char	sign = (char)(val < 0.0);
 	size_t		to_print;
 
+	if (val < 0.0)
+		val = -val;
 	to_print = ft_fast_dtoa(val, buff, info->prec);
 	info->width -= set_prefix_fp(info, sign, to_print);
 	do_print(info, buff, to_print);

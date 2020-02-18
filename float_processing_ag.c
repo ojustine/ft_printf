@@ -112,8 +112,8 @@ static inline void	ldtoa_hex_form_roundup(t_printf_info *info, char *buff)
 	}
 }
 
-size_t					ldtoa_hex_form(t_printf_info *info, uint64_t mantis,
-						int64_t exp, char *buff)
+size_t				ldtoa_hex_form(t_printf_info *info, uint64_t mantis,
+					int64_t exp, char *buff)
 {
 	const char	*ptr = buff;
 	size_t		ret;

@@ -30,6 +30,18 @@
 /*
 ** ====================== Consts and masks definition ==========================
 */
+enum					e_printf_sizes
+{
+	SIZE_SHORT = (1 << 8),
+	SIZE_LONG = (1 << 9),
+	SIZE_LLONG = (1 << 10),
+	SIZE_INTMAX = (1 << 11),
+	SIZE_CHAR = (1 << 12),
+	SIZE_SIZE_T = (1 << 13),
+	SIZE_LDBL = (1 << 15),
+	SIZE_PTR = SIZE_INTMAX
+};
+
 enum					e_printf_flags
 {
 	FLAG_LEFT_ALIGN = (1 << 0),
@@ -39,19 +51,7 @@ enum					e_printf_flags
 	FLAG_GROUP = (1 << 4),
 	FLAG_TRUNCATE = (1 << 5),
 	FLAG_ZERO_PAD = (1 << 6),
-	PRINT_ARG_BY_NUM = (sizeof(long long))
-};
-
-enum					e_printf_sizes
-{
-	SIZE_SHORT = (1 << 8),
-	SIZE_LONG = (1 << 9),
-	SIZE_LLONG = (1 << 10),
-	SIZE_INTMAX = (1 << 11),
-	SIZE_CHAR = (1 << 12),
-	SIZE_SIZE_T = (1 << 13),
-	SIZE_PTR = (1 << 14),
-	SIZE_LDBL = (1 << 15)
+	FLAG_PTR = SIZE_PTR | FLAG_ALT_FORM
 };
 
 enum					e_fxd_assets

@@ -18,25 +18,24 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t value,
 	char	buff[MAX_INT_BITS_NUM];
 	size_t	to_print;
 
-	if (info->flags & SIZE_LLONG || info->flags & SIZE_LONG
-	|| info->flags & SIZE_INTMAX || info->flags & SIZE_SIZE_T)
-	{
+	if (info->flags & (SIZE_LLONG | SIZE_LONG | SIZE_INTMAX | SIZE_SIZE_T))
 		if (base == 16)
 			to_print = ft_ultoa_hex(value, buff, info->cap);
 		else
 			to_print = ft_ultoa_base(value, buff, base, info->cap);
-	}
 	else
-	{
 		if (base == 10)
 			to_print = ft_uitoa_dec(value, buff);
 		else if (base == 16)
 			to_print = ft_uitoa_hex(value, buff, info->cap);
 		else
 			to_print = ft_uitoa_base(value, buff, base, info->cap);
-	}
-	if (info->flags & FLAG_TRUNCATE || info->flags & FLAG_LEFT_ALIGN)
+	if (info->flags & (FLAG_TRUNCATE | FLAG_LEFT_ALIGN))
 		info->flags &= ~FLAG_ZERO_PAD;
+	if (value == 0)
+		info->flags &= ~FLAG_ALT_FORM;
+//	if (value == 0 && info->flags & FLAG_TRUNCATE && info->prec == 0)
+//		to_print = 0;
 	info->width -= set_prefix_num(info, sign, base, to_print);
 	do_print(info, buff, to_print);
 	padding(info, info->width, ' ');
@@ -87,8 +86,7 @@ void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
 		value = va_arg(info->ap, size_t);
 	else
 		value = va_arg(info->ap, unsigned int);
-	info->flags &= ~FLAG_PLUS_SIGN;
-	info->flags &= ~FLAG_BLANK_SIGN;
+	info->flags &= (~FLAG_PLUS_SIGN & ~FLAG_BLANK_SIGN);
 	if (!(info->flags & FLAG_TRUNCATE))
 		info->prec = 0;
 	do_print_num(info, value, base, 0);

@@ -6,7 +6,7 @@ size_t	ft_ultoa_hex(const uint64_t value, char* buff,
 	static const char	digits[] = "0123456789abcdef0123456789ABCDEF";
 	register size_t		ret;
 
-	ret = 1;
+	ret = 15;
 	buff[15] = digits[((value >> 60) & 0x0000000F) + (is_upper != 0) * 16];
 	buff[14] = digits[((value >> 56) & 0x0000000F) + (is_upper != 0) * 16];
 	buff[13] = digits[((value >> 52) & 0x0000000F) + (is_upper != 0) * 16];
@@ -23,9 +23,9 @@ size_t	ft_ultoa_hex(const uint64_t value, char* buff,
 	buff[2] = digits[((value >> 8) & 0x0000000F) + (is_upper != 0) * 16];
 	buff[1] = digits[((value >> 4) & 0x0000000F) + (is_upper != 0) * 16];
 	buff[0] = digits[((value) & 0x0000000F) + (is_upper != 0) * 16];
-	while (buff[ret] != '0' && ret < 16)
-		ret++;
-	ft_strrev(buff, buff + ret - 1);
-	buff[ret] = 0;
-	return (ret);
+	while (buff[ret] == '0' && ret > 0)
+		ret--;
+	ft_strrev(buff, buff + ret);
+	buff[ret + 1] = 0;
+	return (ret + 1);
 }

@@ -58,7 +58,7 @@ void	do_print_dbl(t_printf_info *info, uint_fast64_t bin_mantis,
 		to_print = ldtoa_hex_form(info, bin_mantis, bias_exp, buff);
 	else
 	{
-		mantis = fxd_build_mantis(bin_mantis, bias_exp != 0, 0);
+		mantis = fxd_build_mantis(bin_mantis, bias_exp != -1022, 0);
 		fp = fxd_get_pow_2(bias_exp, 0);
 		fxd_dbl_mul(fp, fp, mantis, 0);
 		if (*info->fmt == 'f' || *info->fmt == 'F')

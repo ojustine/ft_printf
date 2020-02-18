@@ -21,7 +21,7 @@ static inline int32_t	add_prefix(t_printf_info *info, char *buff,
 	buff[0] = 0;
 	if (sign)
 		buff[ret++] = '-';
-	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
+	else if (info->flags & (FLAG_PLUS_SIGN | FLAG_BLANK_SIGN))
 		buff[ret++] = " +"[(info->flags & FLAG_PLUS_SIGN) != 0];
 	if ((base != 10 && info->flags & FLAG_ALT_FORM)
 	|| *info->fmt == 'a' || *info->fmt == 'A')
