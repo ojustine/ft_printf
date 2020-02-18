@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libptf.h"
 
 void					*ft_bzero(void *b, size_t n)
 {

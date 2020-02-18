@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libptf.h"
 
 void	ft_strrev(register char *begin, register char *end)
 {

@@ -85,12 +85,46 @@ size_t					fxd_ftoa_opt_form(t_printf_info *info,
 	}
 }
 
+static inline size_t	ldtoa_hex_form_roundup(char *buff, int_fast16_t prec)
+{
+	int_fast16_t	i;
+
+	if (prec < 16)
+	{
+		buff += prec;
+		if (*buff >= '8')
+			*(buff - 1) += (*(buff - 1) < 9) ? 1 : ;
+		i = 1;
+		while (*(buff - i) > 'f')
+		{
+			*(buff - i) -= 1;
+			i++;
+			if (*(buff - i) == '.')
+			{
+				*(buff - i - 1) += 1;
+				break ;
+			}
+			*(buff - i) += 1;
+		}
+	}
+	i = prec;
+	while (i-- > 0)
+		*buff++ = '0';
+	return (prec);
+}
+
 size_t					ldtoa_hex_form(t_printf_info *info, uint64_t mantis,
 						uint64_t exp, char *buff)
 {
 	const char	*ptr = buff;
 	size_t		to_print;
 
+	if (exp == -1022 || exp == -16381)
+		*buff++ = '0';
+	else
+		*buff++ = '1';
+	*buff++ = '.';
 	to_print = ft_ultoa_hex(mantis, buff, info->cap);
-	buff += to_print;
+	buff += ldtoa_hex_form_roundup(buff, info->prec);
+	return (buff - ptr);
 }

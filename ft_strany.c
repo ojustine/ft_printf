@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libptf.h"
 
 int	ft_strany(char const *str, const int32_t c)
 {

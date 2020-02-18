@@ -13,6 +13,7 @@
 #ifndef FT_PRINTF_FT_PRINTF_CONST_DATA_H
 # define FT_PRINTF_FT_PRINTF_CONST_DATA_H
 
+# include <stdint.h>
 # include "ft_printf.h"
 
 static const uint32_t	g_pow_2_n[64][9] =

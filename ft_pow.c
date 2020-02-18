@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libptf.h"
 
 double	ft_pow(const double base, register int_fast16_t power)
 {

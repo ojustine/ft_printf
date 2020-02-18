@@ -53,12 +53,12 @@ void	do_print_dbl(t_printf_info *info, uint_fast64_t bin_mantis,
 	char		buff[FP_D_CHAR_LEN + 9];
 
 	info->prec = (info->prec > FP_D_MAX_PREC) ? FP_D_MAX_PREC : info->prec;
+	bias_exp = (bias_exp != 0) ? bias_exp - 1023 : -1022;
 	if (*info->fmt == 'a' || *info->fmt == 'A')
 		to_print = ldtoa_hex_form(info, bin_mantis, bias_exp, buff);
 	else
 	{
 		mantis = fxd_build_mantis(bin_mantis, bias_exp != 0, 0);
-		bias_exp = (bias_exp != 0) ? bias_exp - 1023 : -1022;
 		fp = fxd_get_pow_2(bias_exp, 0);
 		fxd_dbl_mul(fp, fp, mantis, 0);
 		if (*info->fmt == 'f' || *info->fmt == 'F')
@@ -83,12 +83,12 @@ void	do_print_ldbl(t_printf_info *info, uint_fast64_t bin_mantis,
 	char		buff[FP_LD_CHAR_LEN];
 
 	info->prec = (info->prec > FP_LD_MAX_PREC) ? FP_LD_MAX_PREC : info->prec;
+	bias_exp = (bin_mantis & FP_LD_64BIT) ? bias_exp - 16382 : -16381;
 	if (*info->fmt == 'a' || *info->fmt == 'A')
 		to_print = ldtoa_hex_form(info, bin_mantis, bias_exp, buff);
 	else
 	{
 		mantis = fxd_build_mantis(bin_mantis, bin_mantis & FP_LD_64BIT, 1);
-		bias_exp = (bin_mantis & FP_LD_64BIT) ? bias_exp - 16382 : -16381;
 		fp = fxd_get_pow_2(bias_exp, 1);
 		fxd_dbl_mul(fp, fp, mantis, 1);
 		if (*info->fmt == 'f' || *info->fmt == 'F')

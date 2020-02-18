@@ -69,7 +69,7 @@ static inline void	get_type(t_printf_info *info)
 		get_unsigned_arg(info, 16);
 	else if (*info->fmt == 'b' || *info->fmt == 'B')
 		get_unsigned_arg(info, 2);
-	else if (ft_strany("fegFEG", *info->fmt))
+	else if (ft_strany("afegAFEG", *info->fmt))
 		get_floating_point_arg(info);
 	else if (*info->fmt == 'c' || *info->fmt == 'C')
 		get_char_arg(info, (*info->fmt == 'C'));
