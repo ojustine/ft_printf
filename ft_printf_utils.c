@@ -99,7 +99,7 @@ int32_t					set_prefix_fp(t_printf_info *info, const char sign,
 	pad = (info->flags & FLAG_ZERO_PAD && !(info->flags & FLAG_LEFT_ALIGN))
 			? '0' : ' ';
 	len = add_prefix(info, prefix, sign,
-	(*info->fmt == 'a' || *info->fmt == 'A') * 16);
+	(*info->fmt == 'a' || *info->fmt == 'A') ? 16 : 10);
 	if (info->width - (val_len + len) > 0 && !(info->flags & FLAG_LEFT_ALIGN))
 		if (info->flags & FLAG_ZERO_PAD)
 		{
