@@ -22,7 +22,7 @@ size_t					ft_uitoa_dec(const uint32_t val, char *buff)
 		mask >>= 1;
 	}
 	i = 9;
-	while (buff[i] == '0' && i > 1)
+	while (buff[i] == '0' && i > 0)
 		i--;
 	ft_strrev(buff, buff + i);
 	buff[i + 1] = 0;
