@@ -118,7 +118,7 @@ void	get_floating_point_arg(t_printf_info *info)
 		if (b80.s_pts.exp == 0x7FFF)
 			fxd_ftoa_inf_nan(info, b64.s_pts.mant, b64.s_pts.sign);
 		else if (fast && (info->prec + ft_longlen(b80.val) <= LDBL_DIG))
-			fast_dtoa(info, (double)b80.val);
+			fast_ldtoa(info, b80.val);
 		else
 			do_print_ldbl(info, b80.s_pts.mant, b80.s_pts.exp, b80.s_pts.sign);
 		return ;

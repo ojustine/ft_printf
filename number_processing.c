@@ -32,10 +32,10 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t value,
 			to_print = ft_uitoa_base(value, buff, base, info->cap);
 	if (info->flags & (FLAG_TRUNCATE | FLAG_LEFT_ALIGN))
 		info->flags &= ~FLAG_ZERO_PAD;
-	if (value == 0)
+	if (value == 0 && base != 8)
 		info->flags &= ~FLAG_ALT_FORM;
-//	if (value == 0 && info->flags & FLAG_TRUNCATE && info->prec == 0)
-//		to_print = 0;
+	if (value == 0 && info->flags & FLAG_TRUNCATE && info->prec == 0)
+		to_print = 0;
 	info->width -= set_prefix_num(info, sign, base, to_print);
 	do_print(info, buff, to_print);
 	padding(info, info->width, ' ');
@@ -51,14 +51,14 @@ void					get_signed_arg(t_printf_info *info, int_fast16_t base)
 		value = va_arg(info->ap, long long);
 	else if (info->flags & SIZE_LONG)
 		value = va_arg(info->ap, long);
+	else if (info->flags & SIZE_SIZE_T)
+		value = va_arg(info->ap, ssize_t);
+	else if (info->flags & SIZE_INTMAX)
+		value = (va_arg(info->ap, intmax_t));
 	else if (info->flags & SIZE_SHORT)
 		value = (short)va_arg(info->ap, int);
 	else if (info->flags & SIZE_CHAR)
 		value = (char)va_arg(info->ap, int);
-	else if (info->flags & SIZE_INTMAX)
-		value = (va_arg(info->ap, intmax_t));
-	else if (info->flags & SIZE_SIZE_T)
-		value = va_arg(info->ap, ssize_t);
 	else
 		value = va_arg(info->ap, int);
 	sign = (char)(value < 0);
@@ -76,14 +76,14 @@ void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
 		value = va_arg(info->ap, unsigned long long);
 	else if (info->flags & SIZE_LONG)
 		value = va_arg(info->ap, unsigned long);
+	else if (info->flags & SIZE_SIZE_T)
+		value = va_arg(info->ap, size_t);
+	else if (info->flags & SIZE_INTMAX)
+		value = (va_arg(info->ap, uintmax_t));
 	else if (info->flags & SIZE_SHORT)
 		value = (unsigned short)va_arg(info->ap, unsigned int);
 	else if (info->flags & SIZE_CHAR)
 		value = (unsigned char)va_arg(info->ap, unsigned int);
-	else if (info->flags & SIZE_INTMAX)
-		value = (va_arg(info->ap, uintmax_t));
-	else if (info->flags & SIZE_SIZE_T)
-		value = va_arg(info->ap, size_t);
 	else
 		value = va_arg(info->ap, unsigned int);
 	info->flags &= (~FLAG_PLUS_SIGN & ~FLAG_BLANK_SIGN);

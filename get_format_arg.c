@@ -21,7 +21,7 @@ static inline void	get_width_n_precision(t_printf_info *info)
 				info->prec = 10 * info->prec + (*info->fmt++ - '0');
 		else if (*info->fmt == '*')
 		{
-			info->prec = va_arg(info->ap, int);
+			info->prec = va_arg(info->ap, int);//TODO prec < 0
 			info->prec = (info->prec < 0) ? 6 : info->prec;
 			++info->fmt;
 		}
@@ -55,6 +55,8 @@ static inline void	get_size_modifier(t_printf_info *info)
 
 static inline void	get_type(t_printf_info *info)
 {
+	if (*info->fmt == 0)
+		return ;
 	info->cap = ft_strany("AXBFEGP", *info->fmt);
 	if (*info->fmt == 'd' || *info->fmt == 'D' || *info->fmt == 'i')
 		get_signed_arg(info, 10);
@@ -88,8 +90,8 @@ static inline void	get_type(t_printf_info *info)
 //		ft_printf_putstr(strerror(errno), p);//TODO known how it must working
 //	else if (*info->fmt == '{')
 //		color(p);TODO add colors
-//	else
-//		cs_not_found(p);
+	else
+		do_print(info, (char*)info->fmt, 1);
 }
 
 void				get_formatted_arg(t_printf_info *info)
@@ -108,8 +110,6 @@ void				get_formatted_arg(t_printf_info *info)
 			info->flags |= FLAG_PLUS_SIGN;
 		else if (*info->fmt == ' ')
 			info->flags |= FLAG_BLANK_SIGN;
-		else if (*info->fmt == '\'')
-			info->flags |= FLAG_GROUP;
 		else if (*info->fmt == '0')
 			info->flags |= FLAG_ZERO_PAD;
 		else

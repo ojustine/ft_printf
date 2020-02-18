@@ -33,6 +33,6 @@ add_executable(ft_printf
         ft_printf_utils.c
         ft_abs.c
         float_processing_ag.c ft_strany.c ft_strrev.c
-        float_processing_fast_dtoa.c ft_uitoa_hex.c ft_ultoa_hex.c ft_uitoa_dec.c ft_uitoa_base.c ft_ultoa_base.c ft_realloc.c libptf.h)
+        float_processing_fast_dtoa.c ft_uitoa_hex.c ft_ultoa_hex.c ft_uitoa_dec.c ft_uitoa_base.c ft_ultoa_base.c ft_realloc.c libptf.h float_processing_fast_ldtoa.c)
 
 #target_compile_options (ft_printf PRIVATE -Werror)

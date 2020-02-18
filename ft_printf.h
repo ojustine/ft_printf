@@ -179,6 +179,7 @@ void					fxd_ftoa_inf_nan(t_printf_info *info,
 size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp,
 						char *buff);
 void					fast_dtoa(t_printf_info *info, double val);
+void					fast_ldtoa(t_printf_info *info, long double val);
 size_t					ldtoa_hex_form(t_printf_info *info, uint64_t mantis,
 						int64_t exp, char *buff);
 

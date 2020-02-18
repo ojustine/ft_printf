@@ -30,6 +30,8 @@ static inline int	entry(register t_printf_info *info)
 		if (!*info->fmt || !*(++info->fmt))
 			break ;
 		get_formatted_arg(info);
+		if (*info->fmt == 0)
+			break ;
 		info->fmt++;
 	}
 	info->flush(info->fd, info->buff, info->buff_index);
