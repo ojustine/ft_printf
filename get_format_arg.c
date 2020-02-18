@@ -103,7 +103,7 @@ void				get_formatted_arg(t_printf_info *info)
 			info->flags |= FLAG_LEFT_ALIGN;
 		else if (*info->fmt == '+')
 			info->flags |= FLAG_PLUS_SIGN;
-		else if (*info->fmt == ' ' && !(info->flags & FLAG_PLUS_SIGN))
+		else if (*info->fmt == ' ')
 			info->flags |= FLAG_BLANK_SIGN;
 		else if (*info->fmt == '\'')
 			info->flags |= FLAG_GROUP;
