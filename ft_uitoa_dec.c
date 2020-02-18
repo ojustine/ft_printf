@@ -1,15 +1,5 @@
 #include "libptf.h"
 
-static inline size_t	ft_uitoa_dec_trim(char *buff)
-{
-	register int_fast16_t	i;
-
-	while (i < 10)
-	{
-
-	}
-}
-
 size_t					ft_uitoa_dec(const uint32_t val, char *buff)
 {
 	register uint32_t		lo;
