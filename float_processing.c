@@ -123,7 +123,7 @@ void	get_floating_point_arg(t_printf_info *info)
 			do_print_ldbl(info, b80.s_pts.mant, b80.s_pts.exp, b80.s_pts.sign);
 		return ;
 	}
-	b64.val = va_arg(info->ap, double);//TODO test with dbl_min and L-flag
+	b64.val = va_arg(info->ap, double);
 	if (b64.s_pts.exp == 0x7FF)
 		fxd_ftoa_inf_nan(info, b64.s_pts.mant, b64.s_pts.sign);
 	else if (fast && (info->prec + ft_longlen(b64.val) <= DBL_DIG))
