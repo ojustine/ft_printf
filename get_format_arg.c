@@ -69,7 +69,7 @@ static inline void	get_type(t_printf_info *info)
 		get_unsigned_arg(info, 16);
 	else if (*info->fmt == 'b' || *info->fmt == 'B')
 		get_unsigned_arg(info, 2);
-	else if (ft_strany("afegAFEG", *info->fmt) && (info->prec = 6))
+	else if (ft_strany("afegAFEG", *info->fmt))
 		get_floating_point_arg(info);
 	else if (*info->fmt == 'c' || *info->fmt == 'C')
 		get_char_arg(info, (*info->fmt == 'C'));
@@ -93,7 +93,7 @@ void				get_formatted_arg(t_printf_info *info)
 {
 	info->flags = 0;
 	info->width = 0;
-	info->prec = 0;
+	info->prec = 6;
 	info->cap = 0;
 	while (*info->fmt)
 	{

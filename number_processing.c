@@ -64,6 +64,8 @@ void					get_signed_arg(t_printf_info *info, int_fast16_t base)
 		value = va_arg(info->ap, int);
 	sign = (char)(value < 0);
 	u_value = (value < 0) ? -value : value;
+	if (!(info->flags & FLAG_TRUNCATE))
+		info->prec = 0;
 	do_print_num(info, u_value, base, sign);
 }
 
@@ -85,5 +87,9 @@ void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
 		value = va_arg(info->ap, size_t);
 	else
 		value = va_arg(info->ap, unsigned int);
+	info->flags &= ~FLAG_PLUS_SIGN;
+	info->flags &= ~FLAG_BLANK_SIGN;
+	if (!(info->flags & FLAG_TRUNCATE))
+		info->prec = 0;
 	do_print_num(info, value, base, 0);
 }
