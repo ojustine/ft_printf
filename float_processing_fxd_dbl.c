@@ -137,8 +137,7 @@ void						fxd_roundup(t_fxd *fp, const int_fast32_t prec)
 	while ((carry = fp->val[fp->f0 + i] / FP_R_LIMITER) > 0)
 	{
 		fp->val[fp->f0 + i] %= FP_R_LIMITER;
-		fp->val[fp->f0 + i] += carry;
-		i--;
+		fp->val[fp->f0 + --i] += carry;
 		fp->int_len = (i < 0) ? -i : fp->int_len;
 	}
 }
