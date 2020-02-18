@@ -16,9 +16,10 @@ void					do_print_string(t_printf_info *info, char *str,
 						size_t size)
 {
 	size_t				to_print;
-	const char			pad = (info->flags & FLAG_ZERO_PAD
-						&& !(info->flags & FLAG_LEFT_ALIGN)) ? '0' : ' ';;
+	char				pad;
 
+	pad  = (info->flags & FLAG_ZERO_PAD	&& !(info->flags & FLAG_LEFT_ALIGN))
+			? '0' : ' ';
 	if (info->flags & FLAG_TRUNCATE)
 		to_print = (info->prec < size) ? info->prec : size;
 	else

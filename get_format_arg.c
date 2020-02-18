@@ -55,7 +55,7 @@ static inline void	get_size_modifier(t_printf_info *info)
 
 static inline void	get_type(t_printf_info *info)
 {
-	info->cap = ft_strany("XBFEGP", *info->fmt);
+	info->cap = ft_strany("AXBFEGP", *info->fmt);
 	if (*info->fmt == 'd' || *info->fmt == 'D' || *info->fmt == 'i')
 		get_signed_arg(info, 10);
 	else if (*info->fmt == 's')

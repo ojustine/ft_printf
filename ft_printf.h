@@ -180,7 +180,7 @@ size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp,
 						char *buff);
 void					fast_dtoa(t_printf_info *info, double val);
 size_t					ldtoa_hex_form(t_printf_info *info, uint64_t mantis,
-						uint64_t exp, char *buff);
+						int64_t exp, char *buff);
 
 int32_t					set_prefix_fp(t_printf_info *info, const char sign,
 						const int_fast32_t val_len);

@@ -85,15 +85,18 @@ size_t					fxd_ftoa_opt_form(t_printf_info *info,
 	}
 }
 
-static inline size_t	ldtoa_hex_form_roundup(char *buff, int_fast16_t prec)
+static inline void	ldtoa_hex_form_roundup(t_printf_info *info, char *buff)
 {
 	int_fast16_t	i;
 
-	if (prec < 16)
+	if (info->prec < 16)
 	{
-		buff += prec;
-		if (*buff >= '8')
-			*(buff - 1) += (*(buff - 1) < 9) ? 1 : ;
+		buff += info->prec;
+		if (*buff == '7' || *buff == '8'
+		|| *(buff - 1) >= 'a' || *(buff - 1) >= 'A')
+			*(buff - 1) += 1;
+		else if (*buff == '9')
+			*(buff - 1) = (info->cap) ? 'A' : 'a';
 		i = 1;
 		while (*(buff - i) > 'f')
 		{
@@ -107,24 +110,30 @@ static inline size_t	ldtoa_hex_form_roundup(char *buff, int_fast16_t prec)
 			*(buff - i) += 1;
 		}
 	}
-	i = prec;
-	while (i-- > 0)
-		*buff++ = '0';
-	return (prec);
 }
 
 size_t					ldtoa_hex_form(t_printf_info *info, uint64_t mantis,
-						uint64_t exp, char *buff)
+						int64_t exp, char *buff)
 {
 	const char	*ptr = buff;
-	size_t		to_print;
+	size_t		ret;
 
 	if (exp == -1022 || exp == -16381)
 		*buff++ = '0';
 	else
 		*buff++ = '1';
 	*buff++ = '.';
-	to_print = ft_ultoa_hex(mantis, buff, info->cap);
-	buff += ldtoa_hex_form_roundup(buff, info->prec);
+	ret = ft_ultoa_hex(mantis, buff, info->cap);
+	ldtoa_hex_form_roundup(info, buff);
+	buff += (info->prec < ret) ? info->prec : ret;
+	if ((info->prec -= ret) > 0)
+		while (info->prec--)
+			*buff++ = '0';
+	*buff++ = (info->cap) ? 'P' : 'p';
+	if (exp < 0)
+		*buff++ = '-';
+	else
+		*buff++ = '+';
+	buff += ft_uitoa_dec((exp < 0) ? -exp : exp, buff);
 	return (buff - ptr);
 }

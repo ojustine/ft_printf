@@ -23,8 +23,8 @@ int main()
 	printf("%#020.25lli\n", INT64_MIN);
 	ft_printf("%#020.25lli\n", INT64_MIN);
 	printf("%13g\n", -DBL_TRUE_MIN);
-	printf("%.3a\n", 0.1);
-	ft_printf("%.3a\n", 0.1);
+	printf("%12.3A\n", 0.1);
+	ft_printf("%12.3A\n", 0.1);
 	//printf("%Lf\n", LDBL_MAX);
 	//printf("%d\n", LDBL_MAX_10_EXP / 9);
 uint64_t e = 0b1000000000001111111111111111111111111111111111111111111111111111;

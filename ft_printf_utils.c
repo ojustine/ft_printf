@@ -23,7 +23,8 @@ static inline int32_t	add_prefix(t_printf_info *info, char *buff,
 		buff[ret++] = '-';
 	else if (info->flags & FLAG_PLUS_SIGN || info->flags & FLAG_BLANK_SIGN)
 		buff[++ret] = " +"[info->flags & FLAG_PLUS_SIGN];
-	if (base != 10 && info->flags & FLAG_ALT_FORM)
+	if ((base != 10 && info->flags & FLAG_ALT_FORM)
+	|| *info->fmt == 'a' || *info->fmt == 'A')
 	{
 		buff[ret++] = '0';
 		if (base == 2)
@@ -92,11 +93,12 @@ int32_t					set_prefix_fp(t_printf_info *info, const char sign,
 						const int_fast32_t val_len)
 {
 	register int32_t	len;
-	char				prefix[1];
-	const char			pad = (info->flags & FLAG_ZERO_PAD
-						&& !(info->flags & FLAG_LEFT_ALIGN)) ? '0' : ' ';
+	char				prefix[3];
+	char				pad;
 
-	len = add_prefix(info, prefix, sign, 10);
+	pad = (info->flags & FLAG_ZERO_PAD && !(info->flags & FLAG_LEFT_ALIGN))
+			? '0' : ' ';
+	len = add_prefix(info, prefix, sign, 16);
 	if (info->width - (val_len + len) > 0 && !(info->flags & FLAG_LEFT_ALIGN))
 		if (info->flags & FLAG_ZERO_PAD)
 		{
