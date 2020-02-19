@@ -18,9 +18,9 @@ static inline void			fxd_add(t_fxd *res, t_fxd *a)
 	register int_fast32_t	carry;
 
 	res->frc_len = (res->frc_len > a->frc_len) ? res->frc_len
-											   : a->frc_len;
+												: a->frc_len;
 	res->int_len = (res->int_len > a->int_len) ? res->int_len
-											   : a->int_len;
+												: a->int_len;
 	i = res->frc_len;
 	carry = 0;
 	while (--i >= -res->int_len)
@@ -61,7 +61,7 @@ void						fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
 			if (i + j < 0)
 				line->int_len = (i + j == -1) ? 1 : -(i + j);
 			fxd_add(tmp, line);
-			ft_bzero(&(line->val[line->f0 + i + j]), FP_R_SIZE * 2);
+			ft_bzero(&(line->val[line->f0 + i + j]), (FP_R_SIZE) * 2);
 		}
 	ft_memswap(res, tmp, sizeof(t_fxd));
 	fxd_del(tmp, line);
@@ -80,11 +80,11 @@ t_fxd						*fxd_build_mantis(uint64_t bin_mantis,
 	while (bin_mantis != 0 && i >= 0)
 	{
 		if (bin_mantis & 1)
-			{
-				ft_memcpy(&term->val[term->f0], g_pow_2_n[i], FP_R_SIZE * 8);
-				term->frc_len = g_pow_2_n[i][8];
-				fxd_add(mantis, term);
-			}
+		{
+			ft_memcpy(&term->val[term->f0], g_pow_2_n[i], (FP_R_SIZE) * 8);
+			term->frc_len = g_pow_2_n[i][8];
+			fxd_add(mantis, term);
+		}
 		bin_mantis >>= 1;
 		i--;
 	}

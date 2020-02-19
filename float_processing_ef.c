@@ -87,7 +87,7 @@ static inline int32_t	fxd_ftoa_normalize(t_ptf_info *info, t_fxd *fp,
 {
 	t_fxd					*mul;
 	int_fast16_t			i;
-	const uint64_t			pow = ft_pow(10, (FP_R_LEN - (info->prec % FP_R_LEN)));
+	const uint64_t			pw = ft_pow(10, FP_R_LEN - (info->prec % FP_R_LEN));
 
 	mul = fxd_new((inx < 0) ? -inx : 0, fp->f0 == FP_LD_POINT + 1);
 	mul->frc_len = (inx < 0) ? -inx : 0;
@@ -104,7 +104,7 @@ static inline int32_t	fxd_ftoa_normalize(t_ptf_info *info, t_fxd *fp,
 		offset++;
 	}
 	i = info->prec / FP_R_LEN;
-	fp->val[fp->f0 + i] -= fp->val[fp->f0 + i] % pow;
+	fp->val[fp->f0 + i] -= fp->val[fp->f0 + i] % pw;
 	fxd_del(mul, 0);
 	return (offset);
 }

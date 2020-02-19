@@ -74,8 +74,11 @@ enum					e_fxd_assets
 	FP_LD_64BIT = 1ULL << 63
 };
 
-# define BUFF_SIZE			512
-# define MAX_INT_BITS_NUM	((sizeof(long long)) * 8 + 2)
+enum					e_ptf_assets
+{
+	BUFF_SIZE = 512,
+	MAX_INT_BITS_NUM = ((sizeof(long long)) * 8 + 2)
+};
 
 # if defined(_POSIX_VERSION) || defined(__unix__) || defined(linux)
 #  define ANSI_ECS_CODES	1

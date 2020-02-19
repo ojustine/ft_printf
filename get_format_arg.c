@@ -65,6 +65,32 @@ static inline void	get_size_modifier(t_ptf_info *info)
 	}
 }
 
+static inline void	more_types(t_ptf_info *info)
+{
+	if (*info->fmt == 'n')
+		*va_arg(info->ap, int*) = info->printed;
+	else if (*info->fmt == '%')
+	{
+		if (info->flags & FLAG_TRUNCATE && info->prec == 0)
+			info->prec = 1;
+		do_print_string(info, "%", 1);
+	}
+	else if (*info->fmt == 'm')
+	{
+		if (errno >= 0 && errno < 107)
+			do_print_string(info, (char *)g_errors[errno],
+							ft_strlen(g_errors[errno]));
+		else
+			do_print_string(info, (char *)g_errors[107],
+							ft_strlen(g_errors[107]));
+	}
+	else if (*info->fmt == '~' && ft_strnequ(++info->fmt, "{ANSI-", 6)
+	&& ANSI_ECS_CODES && info->fd <= 2 && info->fd >= 0 && (info->fmt += 6))
+		set_esc_code(info);
+	else
+		do_print(info, (char*)info->fmt, 1);
+}
+
 static inline void	get_type(t_ptf_info *info)
 {
 	if (*info->fmt == 0)
@@ -90,26 +116,8 @@ static inline void	get_type(t_ptf_info *info)
 		get_string_arg(info, 1);
 	else if (*info->fmt == 'p' && (info->flags |= FLAG_PTR))
 		get_unsigned_arg(info, 16);
-	else if (*info->fmt == 'n')
-		*va_arg(info->ap, int*) = info->printed;
-	else if (*info->fmt == '%')
-	{
-		if (info->flags & FLAG_TRUNCATE && info->prec == 0)
-			info->prec = 1;
-		do_print_string(info, "%", 1);
-	}
-	else if (*info->fmt == 'm')
-		if (errno >= 0 && errno < 107)
-			do_print_string(info, (char*)g_errors[errno],
-			ft_strlen(g_errors[errno]));
-		else
-			do_print_string(info, (char*)g_errors[107],
-			ft_strlen(g_errors[107]));
-	else if (*info->fmt == '~' && ft_strnequ(++info->fmt, "{ANSI-", 6)
-	&& ANSI_ECS_CODES && info->fd <= 2 && info->fd >= 0 && (info->fmt += 6))
-		set_esc_code(info);
 	else
-		do_print(info, (char*)info->fmt, 1);
+		more_types(info);
 }
 
 void				get_formatted_arg(t_ptf_info *info)

@@ -27,18 +27,18 @@ t_fxd			*fxd_new(size_t frac_size, int_fast16_t is_long_dbl)
 	{
 		if (frac_size > FP_LD_LEN - FP_LD_POINT)
 			frac_size = FP_LD_LEN - FP_LD_POINT;
-		fxd_new->val = malloc(FP_R_SIZE * (FP_LD_POINT + frac_size + 1));
+		fxd_new->val = malloc((FP_R_SIZE) * (FP_LD_POINT + frac_size + 1));
 		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
-		ft_bzero(fxd_new->val, FP_R_SIZE * (FP_LD_POINT + frac_size + 1));
+		ft_bzero(fxd_new->val, (FP_R_SIZE) * (FP_LD_POINT + frac_size + 1));
 		fxd_new->f0 = FP_LD_POINT + 1;
 	}
 	else
 	{
 		if (frac_size > FP_D_LEN - FP_D_POINT)
 			frac_size = FP_D_LEN - FP_D_POINT;
-		fxd_new->val = malloc(FP_R_SIZE * (FP_D_POINT + frac_size + 1));
+		fxd_new->val = malloc((FP_R_SIZE) * (FP_D_POINT + frac_size + 1));
 		ft_assert(fxd_new->val != NULL, __FUNCTION__, "malloc error");
-		ft_bzero(fxd_new->val, FP_R_SIZE * (FP_D_POINT + frac_size + 1));
+		ft_bzero(fxd_new->val, (FP_R_SIZE) * (FP_D_POINT + frac_size + 1));
 		fxd_new->f0 = FP_D_POINT + 1;
 	}
 	return (fxd_new);
@@ -50,7 +50,7 @@ void			do_print_dbl(t_ptf_info *info, uint_fast64_t bin_mantis,
 	t_fxd		*mantis;
 	t_fxd		*fp;
 	size_t		to_print;
-	char		buff[FP_D_CHAR_LEN + 9];
+	char		buff[(FP_D_CHAR_LEN) + 9];
 
 	info->prec = (info->prec > FP_D_MAX_PREC) ? FP_D_MAX_PREC : info->prec;
 	bias_exp = (bias_exp != 0) ? bias_exp - 1023 : -1022;
@@ -104,14 +104,14 @@ void			do_print_ldbl(t_ptf_info *info, uint_fast64_t bin_mantis,
 	padding(info, info->width, ' ');
 }
 
-void					get_floating_point_arg(t_ptf_info *info)
+void			get_floating_point_arg(t_ptf_info *info)
 {
 	t_binary64			b64;
 	t_binary80			b80;
-	const int_fast16_t	fast = (info->prec < 10
-						&& (*info->fmt == 'f' || *info->fmt == 'F')
-						&& (info->prec > 0 || !(info->flags & FLAG_ALT_FORM)));
+	int_fast16_t		fast;
 
+	fast = (info->prec < 10 && (*info->fmt == 'f' || *info->fmt == 'F')
+	&& (info->prec > 0 || !(info->flags & FLAG_ALT_FORM)));
 	if (info->flags & SIZE_LDBL && IS_LONG_DBL_DEFINED)
 	{
 		b80.val = va_arg(info->ap, long double);
