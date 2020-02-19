@@ -20,7 +20,7 @@ static inline void	get_width_n_precision(t_ptf_info *info)
 				info->prec = 10 * info->prec + (*info->fmt++ - '0');
 		else if (*info->fmt == '*')
 		{
-			info->prec = va_arg(info->ap, int);//TODO prec < 0
+			info->prec = va_arg(info->ap, int);
 			if (info->prec < 0)
 				info->flags &= ~FLAG_TRUNCATE;
 			info->prec = (info->prec < 0) ? 6 : info->prec;
@@ -86,10 +86,16 @@ static inline void	get_type(t_ptf_info *info)
 			info->prec = 1;
 		do_print_string(info, "%", 1);
 	}
-//	else if (*info->fmt == 'm')
-//		ft_printf_putstr(strerror(errno), p);//TODO known how it must working
-//	else if (*info->fmt == '{')
-//		color(p);TODO add colors
+	else if (*info->fmt == 'm')
+		if (errno >= 0 && errno < 107)
+			do_print_string(info, (char*)g_errors[errno],
+			ft_strlen(g_errors[errno]));
+		else
+			do_print_string(info, (char*)g_errors[107],
+			ft_strlen(g_errors[107]));
+	else if (*info->fmt == '~' && ft_strnequ(++info->fmt, "{ANSI-", 6)
+	&& ANSI_ECS_CODES && info->fd <= 2 && info->fd >= 0 && (info->fmt += 6))
+		set_esc_code(info);
 	else
 		do_print(info, (char*)info->fmt, 1);
 }

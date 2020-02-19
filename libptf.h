@@ -14,6 +14,7 @@ void	*ft_memmove(void *dst, const void *src, size_t len);
 int32_t	ft_moddiv(int32_t dividend, int32_t divisor, int32_t *quotient);
 void	*ft_realloc(void *ptr, size_t old_size, size_t new_size);
 
+int			ft_strnequ(char const *s1, char const *s2, size_t n);
 void		*ft_memcpy(void *dst, const void *src, size_t n);
 size_t		ft_strlen(const char *s);
 size_t		ft_wstrlen(const wchar_t *s);

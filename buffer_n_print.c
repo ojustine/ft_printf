@@ -12,21 +12,19 @@
 
 #include "ft_printf.h"
 
-#if defined(_POSIX_VERSION) || defined(__unix__) || defined(linux)
-ssize_t	flush_in_string(int fd, const void *buf, size_t nbytes)
-{
-	return (0);
-}
-#elif defined(WIN32)
-int	flush_in_string(int _file_handl, const void *_buf, unsigned int _char_count)
+void	flush_in_string(t_ptf_info *info)
 {
 	static size_t	counter;
-	unsigned char	*ptr;
 
-	ptr = ((unsigned char*)_buf) + counter;
-	return (0);
+	ft_memcpy(info->output + counter, info->buff, info->buff_index);
+	counter += info->buff_index;
+	*(info->output + counter - 1) = 0;
 }
-#endif
+
+void	flush_in_file_stream(t_ptf_info *info)
+{
+	write(info->fd, info->buff, info->buff_index);
+}
 
 void	do_print(t_ptf_info *info, char *data, size_t size)
 {
@@ -45,7 +43,7 @@ void	do_print(t_ptf_info *info, char *data, size_t size)
 		data_index += remaining_space;
 		info->buff_index += remaining_space;
 		info->printed += remaining_space;
-		write(info->fd, info->buff, info->buff_index);
+		info->flush(info);
 		info->buff_index = 0;
 	}
 	if (size == 1)

@@ -117,3 +117,32 @@ int32_t					set_prefix_fp(t_ptf_info *info, const char sign,
 		do_print(info, prefix, len);
 	return (val_len + len);
 }
+
+void					set_esc_code(t_ptf_info *info)
+{
+	info->flush(info);
+	if (ft_strnequ(info->fmt, "BLD}", 4))
+		write(info->fd, ANSI_BOLD, 7);
+	else if (ft_strnequ(info->fmt, "UND}", 4))
+		write(info->fd, ANSI_UNDERLINE, 7);
+	else if (ft_strnequ(info->fmt, "REV}", 4))
+		write(info->fd, ANSI_REVERSED, 7);
+	else if (ft_strnequ(info->fmt, "B-R}", 4))
+		write(info->fd, ANSI_BACK_RED, 7);
+	else if (ft_strnequ(info->fmt, "B-G}", 4))
+		write(info->fd, ANSI_BACK_GRN, 7);
+	else if (ft_strnequ(info->fmt, "B-Y}", 4))
+		write(info->fd, ANSI_BACK_YEL, 7);
+	else if (ft_strnequ(info->fmt, "B-B}", 4))
+		write(info->fd, ANSI_BACK_BLU, 7);
+	else if (ft_strnequ(info->fmt, "RED}", 4))
+		write(info->fd, ANSI_FONT_RED, 7);
+	else if (ft_strnequ(info->fmt, "GRN}", 4))
+		write(info->fd, ANSI_FONT_GRN, 7);
+	else if (ft_strnequ(info->fmt, "YEL}", 4))
+		write(info->fd, ANSI_FONT_YEL, 7);
+	else if (ft_strnequ(info->fmt, "BLU}", 4))
+		write(info->fd, ANSI_FONT_BLU, 7);
+	else if (ft_strnequ(info->fmt, "RES}", 4))
+		write(info->fd, ANSI_RESET, 7);
+}

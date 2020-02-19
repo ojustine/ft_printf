@@ -21,6 +21,7 @@
 # include <errno.h>
 # include <float.h>
 # include "ft_printf_const_data.h"
+# include "ft_printf_errors.h"
 # include "libptf.h"
 
 # if defined(_POSIX_VERSION) || defined(__unix__) || defined(linux)
@@ -76,6 +77,22 @@ enum					e_fxd_assets
 # define BUFF_SIZE			512
 # define MAX_INT_BITS_NUM	((sizeof(long long)) * 8 + 2)
 
+# if defined(_POSIX_VERSION) || defined(__unix__) || defined(linux)
+#  define ANSI_ECS_CODES	1
+#  define ANSI_BOLD			"033[01m"
+#  define ANSI_UNDERLINE	"033[04m"
+#  define ANSI_REVERSED		"033[07m"
+#  define ANSI_BACK_RED		"033[41m"
+#  define ANSI_BACK_GRN		"033[42m"
+#  define ANSI_BACK_YEL		"033[43m"
+#  define ANSI_BACK_BLU		"033[44m"
+#  define ANSI_FONT_RED		"033[31m"
+#  define ANSI_FONT_GRN		"033[32m"
+#  define ANSI_FONT_YEL		"033[33m"
+#  define ANSI_FONT_BLU		"033[34m"
+#  define ANSI_RESET		"033[00m"
+# endif
+
 # ifdef __GNUC__
 #  if !defined(__GNUC_STDC_INLINE__) && !defined(__GNUC_GNU_INLINE__)
 #   define __GNUC_GNU_INLINE__ 1
@@ -118,14 +135,7 @@ typedef struct			s_ptf_info
 	char				*output;
 	va_list				ap;
 	const char			*fmt;
-# if defined(_POSIX_VERSION) || defined(__unix__) || defined(linux)
-
-	ssize_t				(*flush)(int, const void*, size_t);
-# elif defined(WIN32)
-
-	int32_t				(*flush)(int, const void*, unsigned int);
-# endif
-
+	void				(*flush)(struct s_ptf_info*);
 }						t_ptf_info;
 
 typedef union			u_double
@@ -158,6 +168,8 @@ typedef struct			s_fxd
 	int_fast16_t		f0;
 }						t_fxd;
 
+void					flush_in_string(t_ptf_info *info);
+void					flush_in_file_stream(t_ptf_info *info);
 t_fxd					*fxd_get_pow_2(register int_fast16_t pow,
 						int_fast16_t is_long_dbl);
 t_fxd					*fxd_build_mantis(uint64_t bin_mantis,
@@ -189,7 +201,6 @@ int32_t					set_prefix_num(t_ptf_info *info, const char sign,
 										  const int_fast16_t base, const int_fast32_t val_len);
 void					padding(t_ptf_info *info, int_fast32_t pad_len,
 								const char pad);
-
 void					do_print(t_ptf_info *info, char *data, size_t size);
 void					get_formatted_arg(t_ptf_info *info);
 void					get_char_arg(t_ptf_info *info, int16_t is_wide_char);
@@ -199,5 +210,6 @@ void					get_signed_arg(t_ptf_info *info, int16_t base);
 void					get_unsigned_arg(t_ptf_info *info, int16_t base);
 void					do_print_string(t_ptf_info *info, char *str,
 										size_t size);
+void					set_esc_code(t_ptf_info *info);
 
 #endif

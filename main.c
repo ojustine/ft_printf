@@ -10,12 +10,11 @@ int main()
 	char str[20];
 	wchar_t *nn = L"ǑabcǑ\0";
 	wchar_t *n = L"фбв\0";
-//TODO ("{%*3d}", 5, 0) ("%.c", 0) ("%p", 0) ("{%5p}", 0) ("%.0p, %.p", 0, 0)
 	//ft_printf("%.c", 48);
 	//printf("%.c", 48);
 	//printf("%5.0i", 0);
 	//printf("% hZ%", 0);
-	ft_printf("%5", 0);
+	ft_printf("%m \033[01m 0123 \033[00m 123");
 	int y = printf("%.s\n", 0);
 	y = ft_printf("абв", 0);
 	//printf("%d\n", LDBL_MAX_10_EXP / 9);

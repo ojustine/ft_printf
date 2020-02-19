@@ -34,7 +34,7 @@ static inline int	entry(register t_ptf_info *info)
 			break ;
 		info->fmt++;
 	}
-	info->flush(info->fd, info->buff, info->buff_index);
+	info->flush(info);
 	va_end(info->ap);
 	return (info->printed);
 }
@@ -48,6 +48,7 @@ int					ft_dprintf(int fd, const char *format, ...)
 	ft_bzero(&info, sizeof(t_ptf_info));
 	info.fd = fd;
 	info.fmt = format;
+	info.flush = &flush_in_file_stream;
 	va_start(info.ap, format);
 	return (entry(&info));
 }
@@ -59,9 +60,10 @@ int					ft_sprintf(char *str, const char *format, ...)
 	if (str == NULL)
 		return (-1);
 	ft_bzero(&info, sizeof(t_ptf_info));
-	info.fd = 1;
+	info.fd = -1;
 	info.fmt = format;
 	info.output = str;
+	info.flush = &flush_in_string;
 	va_start(info.ap, format);
 	return (entry(&info));
 }
@@ -74,6 +76,6 @@ int					ft_printf(const char *format, ...)
 	info.fd = 1;
 	info.fmt = format;
 	va_start(info.ap, format);
-	info.flush = &write;
+	info.flush = &flush_in_file_stream;
 	return (entry(&info));
 }
