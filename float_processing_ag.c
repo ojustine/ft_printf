@@ -12,8 +12,8 @@
 
 #include "ft_printf.h"
 
-static inline size_t	fxd_ftoa_opt_form_f(t_printf_info *info,
-						t_fxd *fp, char *buff)
+static inline size_t	fxd_ftoa_opt_form_f(t_ptf_info *info,
+											t_fxd *fp, char *buff)
 {
 	size_t		to_print;
 
@@ -29,8 +29,8 @@ static inline size_t	fxd_ftoa_opt_form_f(t_printf_info *info,
 	return (to_print);
 }
 
-static inline size_t	fxd_ftoa_opt_form_e(t_printf_info *info,
-						t_fxd *fp, char *buff)
+static inline size_t	fxd_ftoa_opt_form_e(t_ptf_info *info,
+											t_fxd *fp, char *buff)
 {
 	size_t			to_print;
 	int_fast16_t	e_len;
@@ -57,8 +57,8 @@ static inline size_t	fxd_ftoa_opt_form_e(t_printf_info *info,
 	return (to_print);
 }
 
-size_t					fxd_ftoa_opt_form(t_printf_info *info,
-						t_fxd *fp, char *buff)
+size_t					fxd_ftoa_opt_form(t_ptf_info *info,
+											t_fxd *fp, char *buff)
 {
 	int_fast32_t	offset;
 	int_fast32_t	prec;
@@ -85,7 +85,7 @@ size_t					fxd_ftoa_opt_form(t_printf_info *info,
 	}
 }
 
-static inline void	ldtoa_hex_form_roundup(t_printf_info *info, char *buff)
+static inline void	ldtoa_hex_form_roundup(t_ptf_info *info, char *buff)
 {
 	int_fast16_t	i;
 
@@ -112,8 +112,8 @@ static inline void	ldtoa_hex_form_roundup(t_printf_info *info, char *buff)
 	}
 }
 
-size_t				ldtoa_hex_form(t_printf_info *info, uint64_t mantis,
-					int64_t exp, char *buff)
+size_t				ldtoa_hex_form(t_ptf_info *info, uint64_t mantis,
+									 int64_t exp, char *buff)
 {
 	const char	*ptr = buff;
 	size_t		ret;

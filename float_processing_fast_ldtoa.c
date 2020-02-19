@@ -76,7 +76,7 @@ static inline size_t	ft_fast_ldtoa(long double val, char *buff,
 	return ((size_t)(ptr - buff));
 }
 
-void					fast_ldtoa(t_printf_info *info, long double val)
+void					fast_ldtoa(t_ptf_info *info, long double val)
 {
 	char		buff[16];
 	const char	sign = (char)(val < 0.0);

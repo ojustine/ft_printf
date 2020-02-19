@@ -12,7 +12,7 @@
 
 #include "ft_printf.h"
 
-static inline int	entry(register t_printf_info *info)
+static inline int	entry(register t_ptf_info *info)
 {
 	register size_t	non_format_chars;
 	char			*non_format_str_beg;
@@ -41,11 +41,11 @@ static inline int	entry(register t_printf_info *info)
 
 int					ft_dprintf(int fd, const char *format, ...)
 {
-	t_printf_info	info;
+	t_ptf_info	info;
 
 	if (fd < 0 || fd > FD_SETSIZE)
 		return (-1);
-	ft_bzero(&info, sizeof(t_printf_info));
+	ft_bzero(&info, sizeof(t_ptf_info));
 	info.fd = fd;
 	info.fmt = format;
 	va_start(info.ap, format);
@@ -54,11 +54,11 @@ int					ft_dprintf(int fd, const char *format, ...)
 
 int					ft_sprintf(char *str, const char *format, ...)
 {
-	t_printf_info	info;
+	t_ptf_info	info;
 
 	if (str == NULL)
 		return (-1);
-	ft_bzero(&info, sizeof(t_printf_info));
+	ft_bzero(&info, sizeof(t_ptf_info));
 	info.fd = 1;
 	info.fmt = format;
 	info.output = str;
@@ -68,9 +68,9 @@ int					ft_sprintf(char *str, const char *format, ...)
 
 int					ft_printf(const char *format, ...)
 {
-	t_printf_info	info;
+	t_ptf_info	info;
 
-	ft_bzero(&info, sizeof(t_printf_info));
+	ft_bzero(&info, sizeof(t_ptf_info));
 	info.fd = 1;
 	info.fmt = format;
 	va_start(info.ap, format);

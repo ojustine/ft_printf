@@ -12,8 +12,8 @@
 
 #include "ft_printf.h"
 
-static inline int32_t	add_prefix(t_printf_info *info, char *buff,
-						const char sign, const int_fast16_t base)
+static inline int32_t	add_prefix(t_ptf_info *info, char *buff,
+									const char sign, const int_fast16_t base)
 {
 	register int_fast16_t	ret;
 
@@ -35,8 +35,8 @@ static inline int32_t	add_prefix(t_printf_info *info, char *buff,
 	return (ret);
 }
 
-void					padding(t_printf_info *info, int_fast32_t pad_len,
-						const char pad)
+void					padding(t_ptf_info *info, int_fast32_t pad_len,
+								const char pad)
 {
 	static const char	zeroes_pad[] = "00000000";
 	static const char	spaces_pad[] = "        ";
@@ -60,8 +60,8 @@ void					padding(t_printf_info *info, int_fast32_t pad_len,
 	}
 }
 
-int32_t					set_prefix_num(t_printf_info *info, const char sign,
-						const int_fast16_t base, const int_fast32_t val_len)
+int32_t					set_prefix_num(t_ptf_info *info, const char sign,
+										  const int_fast16_t base, const int_fast32_t val_len)
 {
 	char				prefix[3];
 	const int32_t		prefix_len = add_prefix(info, prefix, sign, base);
@@ -89,8 +89,8 @@ int32_t					set_prefix_num(t_printf_info *info, const char sign,
 	return (val_len + prefix_len + zero_len + padding_len);
 }
 
-int32_t					set_prefix_fp(t_printf_info *info, const char sign,
-						const int_fast32_t val_len)
+int32_t					set_prefix_fp(t_ptf_info *info, const char sign,
+										 const int_fast32_t val_len)
 {
 	register int32_t	len;
 	char				prefix[3];

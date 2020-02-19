@@ -12,8 +12,8 @@
 
 #include "ft_printf.h"
 
-void					fxd_ftoa_inf_nan(t_printf_info *info,
-						const uint64_t mantis, const char sign)
+void					fxd_ftoa_inf_nan(t_ptf_info *info,
+										 const uint64_t mantis, const char sign)
 {
 	const char	*inf_nan = (mantis != 0) ? "nanNAN" : "infINF";
 
@@ -23,8 +23,8 @@ void					fxd_ftoa_inf_nan(t_printf_info *info,
 	padding(info, info->width, ' ');
 }
 
-static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info,
-						t_fxd *fp, char *buff)
+static inline size_t	fxd_ftoa_dec_form_frac_part(t_ptf_info *info,
+													t_fxd *fp, char *buff)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
@@ -52,8 +52,8 @@ static inline size_t	fxd_ftoa_dec_form_frac_part(t_printf_info *info,
 	return (buff - ptr);
 }
 
-size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp,
-						char *buff)
+size_t					fxd_ftoa_dec_form(t_ptf_info *info, t_fxd *fp,
+											char *buff)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
@@ -82,8 +82,8 @@ size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp,
 	return ((buff - ptr) + fxd_ftoa_dec_form_frac_part(info, fp, buff));
 }
 
-static inline int32_t	fxd_ftoa_normalize(t_printf_info *info, t_fxd *fp,
-						const int_fast16_t inx, register int_fast32_t offset)
+static inline int32_t	fxd_ftoa_normalize(t_ptf_info *info, t_fxd *fp,
+											const int_fast16_t inx, register int_fast32_t offset)
 {
 	t_fxd			*mul;
 	int_fast16_t	i;
@@ -109,8 +109,8 @@ static inline int32_t	fxd_ftoa_normalize(t_printf_info *info, t_fxd *fp,
 	return (offset);
 }
 
-size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp,
-						char *buff)
+size_t					fxd_ftoa_exp_form(t_ptf_info *info, t_fxd *fp,
+											char *buff)
 {
 	int_fast32_t	offset;
 	int_fast16_t	inx;

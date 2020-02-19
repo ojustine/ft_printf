@@ -28,7 +28,7 @@ int	flush_in_string(int _file_handl, const void *_buf, unsigned int _char_count)
 }
 #endif
 
-void	do_print(t_printf_info *info, char *data, size_t size)
+void	do_print(t_ptf_info *info, char *data, size_t size)
 {
 	register int32_t	remaining_space;
 	register size_t		data_index;

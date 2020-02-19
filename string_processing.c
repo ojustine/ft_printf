@@ -12,14 +12,14 @@
 
 #include "ft_printf.h"
 
-void					do_print_string(t_printf_info *info, char *str,
+void					do_print_string(t_ptf_info *info, char *str,
 						size_t size)
 {
 	size_t				to_print;
 	char				pad;
 
 	pad  = (info->flags & FLAG_ZERO_PAD	&& !(info->flags & FLAG_LEFT_ALIGN))
-			? '0' : ' ';
+	? '0' : ' ';
 	if (info->flags & FLAG_TRUNCATE)
 		to_print = (info->prec < size) ? info->prec : size;
 	else
@@ -42,8 +42,8 @@ void					do_print_string(t_printf_info *info, char *str,
 		do_print(info, str, to_print);
 }
 
-static inline int32_t	print_wchar(t_printf_info *info, uint32_t wc,
-							int16_t is_single)
+static inline int32_t	print_wchar(t_ptf_info *info, uint32_t wc,
+									 int16_t is_single)
 {
 	char				utf_8[4];
 	size_t				bytes;
@@ -71,11 +71,13 @@ static inline int32_t	print_wchar(t_printf_info *info, uint32_t wc,
 	return (bytes);
 }
 
-void					get_char_arg(t_printf_info *info, int16_t is_wide_char)
+void					get_char_arg(t_ptf_info *info, int16_t is_wide_char)
 {
 	char				c;
 	wint_t				wc;
 
+	if (info->prec == 0)
+		info->prec = 1;
 	if (is_wide_char)
 	{
 		wc = va_arg(info->ap, wint_t);
@@ -88,8 +90,8 @@ void					get_char_arg(t_printf_info *info, int16_t is_wide_char)
 	}
 }
 
-void					get_string_arg(t_printf_info *info,
-							int16_t is_wide_string)
+void					get_string_arg(t_ptf_info *info,
+									   int16_t is_wide_string)
 {
 	char				*str;
 	wint_t				*wstr;

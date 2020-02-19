@@ -105,7 +105,7 @@ enum					e_fxd_assets
 ** ======================== Structures definition ==============================
 */
 
-typedef struct			s_printf_info
+typedef struct			s_ptf_info
 {
 	uint16_t			flags;
 	int_fast32_t		width;
@@ -126,7 +126,7 @@ typedef struct			s_printf_info
 	int32_t				(*flush)(int, const void*, unsigned int);
 # endif
 
-}						t_printf_info;
+}						t_ptf_info;
 
 typedef union			u_double
 {
@@ -165,39 +165,39 @@ t_fxd					*fxd_build_mantis(uint64_t bin_mantis,
 void					fxd_dbl_mul(t_fxd *res, t_fxd *a, t_fxd *b,
 						int_fast16_t is_long_dbl);
 void					fxd_roundup(t_fxd *fp, const int_fast32_t prec);
-void					get_floating_point_arg(t_printf_info *info);
-size_t					fxd_ftoa_dec_form(t_printf_info *info, t_fxd *fp,
-						char *buff);
-size_t					fxd_ftoa_exp_form(t_printf_info *info, t_fxd *fp,
-						char *buff);
-size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp,
-						char *buff);
+void					get_floating_point_arg(t_ptf_info *info);
+size_t					fxd_ftoa_dec_form(t_ptf_info *info, t_fxd *fp,
+											char *buff);
+size_t					fxd_ftoa_exp_form(t_ptf_info *info, t_fxd *fp,
+											char *buff);
+size_t					fxd_ftoa_opt_form(t_ptf_info *info, t_fxd *fp,
+											char *buff);
 t_fxd					*fxd_new(size_t frac_size, int_fast16_t is_long_dbl);
 void					fxd_del(t_fxd *fp1, t_fxd *fp2);
-void					fxd_ftoa_inf_nan(t_printf_info *info,
-						const uint64_t mantis, const char sign);
-size_t					fxd_ftoa_opt_form(t_printf_info *info, t_fxd *fp,
-						char *buff);
-void					fast_dtoa(t_printf_info *info, double val);
-void					fast_ldtoa(t_printf_info *info, long double val);
-size_t					ldtoa_hex_form(t_printf_info *info, uint64_t mantis,
-						int64_t exp, char *buff);
+void					fxd_ftoa_inf_nan(t_ptf_info *info,
+										 const uint64_t mantis, const char sign);
+size_t					fxd_ftoa_opt_form(t_ptf_info *info, t_fxd *fp,
+											char *buff);
+void					fast_dtoa(t_ptf_info *info, double val);
+void					fast_ldtoa(t_ptf_info *info, long double val);
+size_t					ldtoa_hex_form(t_ptf_info *info, uint64_t mantis,
+										 int64_t exp, char *buff);
 
-int32_t					set_prefix_fp(t_printf_info *info, const char sign,
-						const int_fast32_t val_len);
-int32_t					set_prefix_num(t_printf_info *info, const char sign,
-						const int_fast16_t base, const int_fast32_t val_len);
-void					padding(t_printf_info *info, int_fast32_t pad_len,
-						const char pad);
+int32_t					set_prefix_fp(t_ptf_info *info, const char sign,
+										 const int_fast32_t val_len);
+int32_t					set_prefix_num(t_ptf_info *info, const char sign,
+										  const int_fast16_t base, const int_fast32_t val_len);
+void					padding(t_ptf_info *info, int_fast32_t pad_len,
+								const char pad);
 
-void					do_print(t_printf_info *info, char *data, size_t size);
-void					get_formatted_arg(t_printf_info *info);
-void					get_char_arg(t_printf_info *info, int16_t is_wide_char);
-void					get_string_arg(t_printf_info *info,
-						int16_t is_wide_string);
-void					get_signed_arg(t_printf_info *info, int16_t base);
-void					get_unsigned_arg(t_printf_info *info, int16_t base);
-void					do_print_string(t_printf_info *info, char *str,
-						size_t size);
+void					do_print(t_ptf_info *info, char *data, size_t size);
+void					get_formatted_arg(t_ptf_info *info);
+void					get_char_arg(t_ptf_info *info, int16_t is_wide_char);
+void					get_string_arg(t_ptf_info *info,
+									   int16_t is_wide_string);
+void					get_signed_arg(t_ptf_info *info, int16_t base);
+void					get_unsigned_arg(t_ptf_info *info, int16_t base);
+void					do_print_string(t_ptf_info *info, char *str,
+										size_t size);
 
 #endif

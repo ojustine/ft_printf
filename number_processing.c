@@ -12,8 +12,8 @@
 
 #include "ft_printf.h"
 
-static inline void		do_print_num(t_printf_info *info, uintmax_t value,
-						const int_fast16_t base, char sign)
+static inline void		do_print_num(t_ptf_info *info, uintmax_t value,
+									   const int_fast16_t base, char sign)
 {
 	char	buff[MAX_INT_BITS_NUM];
 	size_t	to_print;
@@ -32,7 +32,8 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t value,
 			to_print = ft_uitoa_base(value, buff, base, info->cap);
 	if (info->flags & (FLAG_TRUNCATE | FLAG_LEFT_ALIGN))
 		info->flags &= ~FLAG_ZERO_PAD;
-	if (value == 0 && base != 8)
+	if ((value == 0 && base != 8 && !(info->flags & SIZE_PTR))
+	|| (value == 0 && base == 8 && !(info->flags & FLAG_TRUNCATE)))
 		info->flags &= ~FLAG_ALT_FORM;
 	if (value == 0 && info->flags & FLAG_TRUNCATE && info->prec == 0)
 		to_print = 0;
@@ -41,7 +42,7 @@ static inline void		do_print_num(t_printf_info *info, uintmax_t value,
 	padding(info, info->width, ' ');
 }
 
-void					get_signed_arg(t_printf_info *info, int_fast16_t base)
+void					get_signed_arg(t_ptf_info *info, int_fast16_t base)
 {
 	char				sign;
 	intmax_t			value;
@@ -68,7 +69,7 @@ void					get_signed_arg(t_printf_info *info, int_fast16_t base)
 	do_print_num(info, u_value, base, sign);
 }
 
-void					get_unsigned_arg(t_printf_info *info, int_fast16_t base)
+void					get_unsigned_arg(t_ptf_info *info, int_fast16_t base)
 {
 	uintmax_t			value;
 

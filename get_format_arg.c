@@ -1,35 +1,35 @@
 #include "ft_printf.h"
 
-static inline void	get_width_n_precision(t_printf_info *info)
+static inline void	get_width_n_precision(t_ptf_info *info)
 {
 	if (*info->fmt >= '0' && *info->fmt <= '9')
 		while (*info->fmt >= '0' && *info->fmt <= '9')
 			info->width = 10 * info->width + (*info->fmt++ - '0');
-	else if (*info->fmt == '*')
+	else if (*info->fmt == '*' && info->fmt++)
 	{
 		info->width = va_arg(info->ap, int);
-		++info->fmt;
 		if (info->width < 0 && (info->width = -info->width))
 			info->flags |= FLAG_LEFT_ALIGN;
 	}
-	if (*info->fmt == '.')
+	if (*info->fmt == '.' && info->fmt++)
 	{
-		++info->fmt;
 		info->prec = 0;
+		info->flags |= FLAG_TRUNCATE;
 		if (*info->fmt >= '0' && *info->fmt <= '9')
 			while (*info->fmt >= '0' && *info->fmt <= '9')
 				info->prec = 10 * info->prec + (*info->fmt++ - '0');
 		else if (*info->fmt == '*')
 		{
 			info->prec = va_arg(info->ap, int);//TODO prec < 0
+			if (info->prec < 0)
+				info->flags &= ~FLAG_TRUNCATE;
 			info->prec = (info->prec < 0) ? 6 : info->prec;
 			++info->fmt;
 		}
-		info->flags |= FLAG_TRUNCATE;
 	}
 }
-
-static inline void	get_size_modifier(t_printf_info *info)
+//TODO %~red
+static inline void	get_size_modifier(t_ptf_info *info)
 {
 	while (*info->fmt)
 	{
@@ -53,7 +53,7 @@ static inline void	get_size_modifier(t_printf_info *info)
 	}
 }
 
-static inline void	get_type(t_printf_info *info)
+static inline void	get_type(t_ptf_info *info)
 {
 	if (*info->fmt == 0)
 		return ;
@@ -94,7 +94,7 @@ static inline void	get_type(t_printf_info *info)
 		do_print(info, (char*)info->fmt, 1);
 }
 
-void				get_formatted_arg(t_printf_info *info)
+void				get_formatted_arg(t_ptf_info *info)
 {
 	info->flags = 0;
 	info->width = 0;
