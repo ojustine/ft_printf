@@ -6,16 +6,16 @@
 /*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/17 12:02:17 by slynell           #+#    #+#             */
-/*   Updated: 2020/02/17 12:02:40 by slynell          ###   ########.fr       */
+/*   Updated: 2020/02/19 13:49:32 by slynell          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
 static inline size_t	fxd_ftoa_opt_form_f(t_ptf_info *info,
-											t_fxd *fp, char *buff)
+						t_fxd *fp, char *buff)
 {
-	size_t		to_print;
+	size_t				to_print;
 
 	to_print = fxd_ftoa_dec_form(info, fp, buff);
 	if (!(info->flags & FLAG_ALT_FORM))
@@ -30,12 +30,12 @@ static inline size_t	fxd_ftoa_opt_form_f(t_ptf_info *info,
 }
 
 static inline size_t	fxd_ftoa_opt_form_e(t_ptf_info *info,
-											t_fxd *fp, char *buff)
+						t_fxd *fp, char *buff)
 {
-	size_t			to_print;
-	int_fast16_t	e_len;
-	int_fast16_t	to_remove;
-	char			*e_ptr;
+	size_t				to_print;
+	int_fast16_t		e_len;
+	int_fast16_t		to_remove;
+	char				*e_ptr;
 
 	to_print = fxd_ftoa_exp_form(info, fp, buff);
 	if (!(info->flags & FLAG_ALT_FORM))
@@ -58,11 +58,11 @@ static inline size_t	fxd_ftoa_opt_form_e(t_ptf_info *info,
 }
 
 size_t					fxd_ftoa_opt_form(t_ptf_info *info,
-											t_fxd *fp, char *buff)
+						t_fxd *fp, char *buff)
 {
-	int_fast32_t	offset;
-	int_fast32_t	prec;
-	int_fast16_t	inx;
+	int_fast32_t		offset;
+	int_fast32_t		prec;
+	int_fast16_t		inx;
 
 	inx = fp->int_len;
 	if (fp->int_len == 0 && fp->frc_len > 0)
@@ -85,9 +85,9 @@ size_t					fxd_ftoa_opt_form(t_ptf_info *info,
 	}
 }
 
-static inline void	ldtoa_hex_form_roundup(t_ptf_info *info, char *buff)
+static inline void		ldtoa_hex_form_roundup(t_ptf_info *info, char *buff)
 {
-	int_fast16_t	i;
+	int_fast16_t		i;
 
 	if (info->prec < 16)
 	{
@@ -112,11 +112,11 @@ static inline void	ldtoa_hex_form_roundup(t_ptf_info *info, char *buff)
 	}
 }
 
-size_t				ldtoa_hex_form(t_ptf_info *info, uint64_t mantis,
-									 int64_t exp, char *buff)
+size_t					ldtoa_hex_form(t_ptf_info *info, uint64_t mantis,
+						int64_t exp, char *buff)
 {
-	const char	*ptr = buff;
-	size_t		ret;
+	const char			*ptr = buff;
+	size_t				ret;
 
 	if (exp == -1022 || exp == -16381)
 		*buff++ = '0';

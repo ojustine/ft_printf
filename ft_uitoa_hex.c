@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_uitoa_hex.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/19 14:05:51 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/19 14:05:56 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libptf.h"
 
-size_t	ft_uitoa_hex(const uint32_t value, char* buff,
+size_t	ft_uitoa_hex(const uint32_t value, char *buff,
 		const int_fast16_t is_upper)
 {
 	static const char	digits[] = "0123456789abcdef0123456789ABCDEF";

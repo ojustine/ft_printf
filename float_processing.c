@@ -1,6 +1,6 @@
 #include "ft_printf.h"
 
-void	fxd_del(t_fxd *fp1, t_fxd *fp2)
+void			fxd_del(t_fxd *fp1, t_fxd *fp2)
 {
 	if (fp1 != NULL)
 	{
@@ -16,9 +16,9 @@ void	fxd_del(t_fxd *fp1, t_fxd *fp2)
 	}
 }
 
-t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl)
+t_fxd			*fxd_new(size_t frac_size, int_fast16_t is_long_dbl)
 {
-	t_fxd *fxd_new;
+	t_fxd		*fxd_new;
 
 	fxd_new = malloc(sizeof(t_fxd));
 	ft_assert(fxd_new != NULL, __FUNCTION__, "malloc error");
@@ -44,8 +44,8 @@ t_fxd	*fxd_new(size_t frac_size, int_fast16_t is_long_dbl)
 	return (fxd_new);
 }
 
-void	do_print_dbl(t_ptf_info *info, uint_fast64_t bin_mantis,
-					 int_fast16_t bias_exp, char sign)
+void			do_print_dbl(t_ptf_info *info, uint_fast64_t bin_mantis,
+				int_fast16_t bias_exp, char sign)
 {
 	t_fxd		*mantis;
 	t_fxd		*fp;
@@ -74,8 +74,8 @@ void	do_print_dbl(t_ptf_info *info, uint_fast64_t bin_mantis,
 	padding(info, info->width, ' ');
 }
 
-void	do_print_ldbl(t_ptf_info *info, uint_fast64_t bin_mantis,
-					  int_fast32_t bias_exp, char sign)
+void			do_print_ldbl(t_ptf_info *info, uint_fast64_t bin_mantis,
+				int_fast32_t bias_exp, char sign)
 {
 	t_fxd		*mantis;
 	t_fxd		*fp;
@@ -104,7 +104,7 @@ void	do_print_ldbl(t_ptf_info *info, uint_fast64_t bin_mantis,
 	padding(info, info->width, ' ');
 }
 
-void	get_floating_point_arg(t_ptf_info *info)
+void					get_floating_point_arg(t_ptf_info *info)
 {
 	t_binary64			b64;
 	t_binary80			b80;

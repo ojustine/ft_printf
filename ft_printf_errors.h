@@ -1,5 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_printf_errors.h                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/19 14:11:32 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/19 14:11:54 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_PRINTF_ERRORS_H
-#define FT_PRINTF_ERRORS_H
+# define FT_PRINTF_ERRORS_H
 
 static const char	*g_errors[108] =
 {

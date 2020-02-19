@@ -6,7 +6,7 @@
 /*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/17 11:52:46 by slynell           #+#    #+#             */
-/*   Updated: 2020/02/17 12:11:26 by slynell          ###   ########.fr       */
+/*   Updated: 2020/02/19 14:03:37 by slynell          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void					padding(t_ptf_info *info, int_fast32_t pad_len,
 }
 
 int32_t					set_prefix_num(t_ptf_info *info, const char sign,
-										  const int_fast16_t base, const int_fast32_t val_len)
+						const int_fast16_t base, const int_fast32_t val_len)
 {
 	char				prefix[3];
 	const int32_t		prefix_len = add_prefix(info, prefix, sign, base);
@@ -90,7 +90,7 @@ int32_t					set_prefix_num(t_ptf_info *info, const char sign,
 }
 
 int32_t					set_prefix_fp(t_ptf_info *info, const char sign,
-										 const int_fast32_t val_len)
+						const int_fast32_t val_len)
 {
 	register int32_t	len;
 	char				prefix[3];

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_format_arg.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/19 13:56:38 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/19 13:56:53 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_printf.h"
 
 static inline void	get_width_n_precision(t_ptf_info *info)
@@ -28,7 +40,7 @@ static inline void	get_width_n_precision(t_ptf_info *info)
 		}
 	}
 }
-//TODO %~red
+
 static inline void	get_size_modifier(t_ptf_info *info)
 {
 	while (*info->fmt)

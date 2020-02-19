@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ultoa_hex.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/19 14:06:50 by slynell           #+#    #+#             */
+/*   Updated: 2020/02/19 14:06:53 by slynell          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libptf.h"
 
-size_t	ft_ultoa_hex(const uint64_t value, char* buff,
+size_t	ft_ultoa_hex(const uint64_t value, char *buff,
 		const int_fast16_t is_upper)
 {
 	static const char	digits[] = "0123456789abcdef0123456789ABCDEF";

@@ -6,7 +6,7 @@
 /*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/17 12:01:33 by slynell           #+#    #+#             */
-/*   Updated: 2020/02/17 12:11:55 by slynell          ###   ########.fr       */
+/*   Updated: 2020/02/19 14:03:02 by slynell          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void					do_print_string(t_ptf_info *info, char *str,
 	size_t				to_print;
 	char				pad;
 
-	pad  = (info->flags & FLAG_ZERO_PAD	&& !(info->flags & FLAG_LEFT_ALIGN))
+	pad = (info->flags & FLAG_ZERO_PAD && !(info->flags & FLAG_LEFT_ALIGN))
 	? '0' : ' ';
 	if (info->flags & FLAG_TRUNCATE)
 		to_print = (info->prec < size) ? info->prec : size;
@@ -43,7 +43,7 @@ void					do_print_string(t_ptf_info *info, char *str,
 }
 
 static inline int32_t	print_wchar(t_ptf_info *info, uint32_t wc,
-									 int16_t is_single)
+						int16_t is_single)
 {
 	char				utf_8[4];
 	size_t				bytes;
@@ -91,7 +91,7 @@ void					get_char_arg(t_ptf_info *info, int16_t is_wide_char)
 }
 
 void					get_string_arg(t_ptf_info *info,
-									   int16_t is_wide_string)
+						int16_t is_wide_string)
 {
 	char				*str;
 	wint_t				*wstr;

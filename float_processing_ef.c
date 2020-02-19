@@ -6,14 +6,14 @@
 /*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/17 12:03:01 by slynell           #+#    #+#             */
-/*   Updated: 2020/02/17 12:03:24 by slynell          ###   ########.fr       */
+/*   Updated: 2020/02/19 14:12:33 by slynell          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
 void					fxd_ftoa_inf_nan(t_ptf_info *info,
-										 const uint64_t mantis, const char sign)
+						const uint64_t mantis, const char sign)
 {
 	const char	*inf_nan = (mantis != 0) ? "nanNAN" : "infINF";
 
@@ -24,7 +24,7 @@ void					fxd_ftoa_inf_nan(t_ptf_info *info,
 }
 
 static inline size_t	fxd_ftoa_dec_form_frac_part(t_ptf_info *info,
-													t_fxd *fp, char *buff)
+						t_fxd *fp, char *buff)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
@@ -53,7 +53,7 @@ static inline size_t	fxd_ftoa_dec_form_frac_part(t_ptf_info *info,
 }
 
 size_t					fxd_ftoa_dec_form(t_ptf_info *info, t_fxd *fp,
-											char *buff)
+						char *buff)
 {
 	register int_fast16_t	i;
 	register int_fast16_t	j;
@@ -83,11 +83,11 @@ size_t					fxd_ftoa_dec_form(t_ptf_info *info, t_fxd *fp,
 }
 
 static inline int32_t	fxd_ftoa_normalize(t_ptf_info *info, t_fxd *fp,
-											const int_fast16_t inx, register int_fast32_t offset)
+						const int_fast16_t inx, register int_fast32_t offset)
 {
-	t_fxd			*mul;
-	int_fast16_t	i;
-	const uint64_t	pow = ft_pow(10, (FP_R_LEN - (info->prec % FP_R_LEN)));
+	t_fxd					*mul;
+	int_fast16_t			i;
+	const uint64_t			pow = ft_pow(10, (FP_R_LEN - (info->prec % FP_R_LEN)));
 
 	mul = fxd_new((inx < 0) ? -inx : 0, fp->f0 == FP_LD_POINT + 1);
 	mul->frc_len = (inx < 0) ? -inx : 0;
@@ -110,11 +110,11 @@ static inline int32_t	fxd_ftoa_normalize(t_ptf_info *info, t_fxd *fp,
 }
 
 size_t					fxd_ftoa_exp_form(t_ptf_info *info, t_fxd *fp,
-											char *buff)
+						char *buff)
 {
-	int_fast32_t	offset;
-	int_fast16_t	inx;
-	const char		*ptr = buff;
+	int_fast32_t			offset;
+	int_fast16_t			inx;
+	const char				*ptr = buff;
 
 	inx = -fp->int_len;
 	if (fp->int_len == 0 && fp->frc_len > 0)

@@ -6,30 +6,30 @@
 /*   By: slynell <slynell@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/10 11:23:05 by ojustine          #+#    #+#             */
-/*   Updated: 2020/02/17 11:58:54 by slynell          ###   ########.fr       */
+/*   Updated: 2020/02/19 14:00:52 by slynell          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
 static inline void		do_print_num(t_ptf_info *info, uintmax_t value,
-									   const int_fast16_t base, char sign)
+						const int_fast16_t base, char sign)
 {
-	char	buff[MAX_INT_BITS_NUM];
-	size_t	to_print;
+	char				buff[MAX_INT_BITS_NUM];
+	size_t				to_print;
 
 	if (info->flags & (SIZE_LLONG | SIZE_LONG | SIZE_INTMAX | SIZE_SIZE_T))
-		if (base == 16)
-			to_print = ft_ultoa_hex(value, buff, info->cap);
-		else
-			to_print = ft_ultoa_base(value, buff, base, info->cap);
+		to_print = (base == 16) ? ft_ultoa_hex(value, buff, info->cap)
+		: ft_ultoa_base(value, buff, base, info->cap);
 	else
+	{
 		if (base == 10)
 			to_print = ft_uitoa_dec(value, buff);
 		else if (base == 16)
 			to_print = ft_uitoa_hex(value, buff, info->cap);
 		else
 			to_print = ft_uitoa_base(value, buff, base, info->cap);
+	}
 	if (info->flags & (FLAG_TRUNCATE | FLAG_LEFT_ALIGN))
 		info->flags &= ~FLAG_ZERO_PAD;
 	if ((value == 0 && base != 8 && !(info->flags & SIZE_PTR))
